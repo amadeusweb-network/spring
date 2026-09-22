@@ -190,6 +190,7 @@ function did_render_page() {
 variable('specialHumanizeReplaces', [
 	'with ai' => 'With AI',
 	'aop' => 'AO Projects',
+	'faqs' => 'FAQs',
 	'whois' => 'Who Is',
 	'whoami' => 'Who Am I',
 	'2025 02' => 'Feb 2025',
@@ -211,6 +212,9 @@ variable('specialHumanizeReplaces', [
 	'2026 07' => 'Jul 2026',
 	'2026 08' => 'Aug 2026',
 	'2026 09' => 'Sep 2026',
+	'2026 10' => 'Oct 2026',
+	'2026 11' => 'Nov 2026',
+	'2026 12' => 'Dec 2026',
 ]);
 
 function site_humanize($txt, $field = 'title', $how = false) {

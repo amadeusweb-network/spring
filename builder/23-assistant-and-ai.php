@@ -18,14 +18,17 @@ class aihelper {
 
 
 	function __construct($raw) {
-		if (contains($raw, self::FromGemini))
+		$hasGemini = contains($raw, self::HasGemini);
+		$hasChatgpt = contains($raw, self::HasChatgpt);
+
+		if ($hasGemini || contains($raw, self::FromGemini))
 			$this->type = 'gemini';
-		else if (contains($raw, self::FromChatgpt))
+		else if ($hasChatgpt || contains($raw, self::FromChatgpt))
 			$this->type = 'chatgpt';
 		else
 			$this->type = 'none';
 
-		if (contains($raw, self::HasGemini) || contains($raw, self::HasChatgpt))
+		if ($hasGemini || $hasChatgpt)
 			$this->adjust = true;
 		else
 			$this->adjust = false;
@@ -70,7 +73,9 @@ class aihelper {
 			'***' => '<p>***</p>',
 		];
 
-		foreach (['https://www.geminiexporter.com/'] as $item)
+		foreach (['https://www.geminiexporter.com/'
+					, 'https://www.chatgptexporter.com'
+				] as $item)
 			$replaces[$item] = $item . NOFOLLOWSUFFIX;
 
 

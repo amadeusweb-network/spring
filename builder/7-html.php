@@ -165,6 +165,7 @@ function replaceHtml($html) {
 			'%url%' => variable('page-url'),
 			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
 
+			'%mainSite%' => domain::mainSiteRelpath(), //workaround for bigrock where live path is www
 			'%node-assets%' => _resolveFile('', STARTATNODE),
 			'%section-assets%' => _resolveFile('', STARTATSECTION),
 			'%site-base%' => $assetsUrl = variableOr(VARWildcardUrl, variable('assets-url')),
@@ -399,8 +400,8 @@ class htmlUX {
 		self::gridRow, self::grid3, self::grid4, self::grid5, self::grid6, self::grid7, self::grid8, self::grid9,
 		//5 - articles / grid (4)
 		self::artAllClose, self::artAllHAuto, self::artAll, self::artClose,
-		//6 - articles / box (9)
-		self::artHAuto3, self::artHAuto4, self::artHAuto6, self::artHAuto12, self::art3, self::art4, self::artAlways4,self::art6, self::art12,
+		//6 - articles / box (14)
+		self::artHAuto1, self::artHAuto2, self::artHAuto3, self::artHAuto4, self::artHAuto6, self::artHAuto12, self::art1, self::art2, self::art3, self::art4, self::artAlways4,self::art6, self::art12,
 		//7 - whitespace (4)
 		self::wsNewLines2, self::wsNewLine, self::wsJustBR, self::wsCrLf,
 		//8 - generic html (6)
@@ -475,15 +476,19 @@ class htmlUX {
 	const artAllHAuto = ['ALLARTICLES-HAUTO', '<div class="row">'];
 	const artAll = ['ALLARTICLES', '<div class="portfolio row grid-container">'];
 	const artClose = ['ARTICLE-CLOSE', '</div></article>'];
-	//6 - articles / box (8)
-	const aSet3 = '-3COL'; const aSet4 = ''; const aSet50 = '-50'; const aSet100 = '-100'; const hAuto = '-HAUTO';
+	//6 - articles / box (14)
+	const aSet1 = '-1COL'; const aSet2 = '-2COL'; const aSet3 = '-3COL'; const aSet4 = ''; const aSet50 = '-50'; const aSet100 = '-100'; const hAuto = '-HAUTO';
 	static function article($aSet = 4, $hauto = true) { return 'ARTICLE' . $aSet . ($hauto ? self::hAuto : '') . '-BOX'; }
 
+	const artHAuto1 = ['ARTICLE-1COL-HAUTO-BOX', '<article class="col-md-1 col-xs-12 mb-4"><div class="content-box minh-100">'];
+	const artHAuto2 = ['ARTICLE-2COL-HAUTO-BOX', '<article class="col-md-2 col-xs-12 mb-4"><div class="content-box minh-100">'];
 	const artHAuto3 = ['ARTICLE-3COL-HAUTO-BOX', '<article class="col-lg-4 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">'];
 	const artHAuto4 = ['ARTICLE-HAUTO-BOX', '<article class="col-lg-3 col-md-6 col-xs-12 mb-4"><div class="content-box minh-100">'];
 	const artHAuto6 = ['ARTICLE-50-HAUTO-BOX', '<article class="portfolio-item col-md-6 col-sm-12 mb-4"><div class="grid-inner content-box minh-100">'];
 	const artHAuto12 = ['ARTICLE-100-HAUTO-BOX', '<article class="portfolio-item col-12 mb-4"><div class="grid-inner content-box minh-100">'];
 
+	const art1 = ['ARTICLE-1COL-BOX', '<article class="portfolio-item col-md-1 col-xs-12 mb-4"><div class="grid-inner content-box">'];
+	const art2 = ['ARTICLE-2COL-BOX', '<article class="portfolio-item col-md-2 col-xs-12 mb-4"><div class="grid-inner content-box">'];
 	const art3 = ['ARTICLE-3COL-BOX', '<article class="portfolio-item col-lg-4 col-md-6 col-xs-12 mb-4"><div class="grid-inner content-box">'];
 	const artAlways4 = ['ARTICLE-BOX-FIXED', '<article class="portfolio-item col-3 mb-4"><div class="grid-inner content-box">'];
 	const art4 = ['ARTICLE-BOX', '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12 mb-4"><div class="grid-inner content-box">'];

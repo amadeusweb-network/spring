@@ -12,6 +12,11 @@ class domain {
 			self::$current = end(self::$all);
 	}
 
+	static function mainSiteRelpath() {
+		if (is_local() || !self::$current) return '';
+		return self::$current->mainSites[0] . '/';
+	}
+
 	/**
 	 * @var domain[] All domains
 	 */

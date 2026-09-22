@@ -19,7 +19,8 @@ function network_menu($renderFn = false) {
 
 	$items = ['DAWN' => $all];
 
-	foreach (domain::$all as $item) {
+	$domains = variableOr('domains-to-loop', domain::$all);
+	foreach ($domains as $item) {
 		$fol = $item->folder;
 		if (!is_dir(ALLSITESROOT . $fol)) continue;
 
