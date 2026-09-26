@@ -12,6 +12,32 @@ class domain {
 			self::$current = end(self::$all);
 	}
 
+	//all hosted sites cache
+	static function getSites(&$items) {
+		$generate = getQueryParameter(VARQueryGenerate) == 'sites';
+		if ($generate || !disk_file_exists(self::$sitesFile)) return null;
+
+		$sheet = getSheet(self::$sitesFile, 'domain');
+		foreach ($sheet->group as $domain => $sites) {
+			$fol = $item->folder;
+			if (!is_dir(ALLSITESROOT . $fol)) continue;
+			$main = arrayGroupBy();
+		}
+	}
+
+	private static $sitesFile = ALLSITESROOT . '/sites.tsv';
+	private static $sites = ['#domain	folder	site	main	name	byline	' .
+		'iconName	local-url	live-url	sections	description'];
+	
+	static function appendSites($fol, array $items, domain $domain) {
+	}
+
+	static function saveSites() {
+		if (!is_local()) showDebugging('nice try', 'illegal operation', PleaseDie);
+		$file = str_replace('.tsv', '.gen.tsv', self::$sitesFile);
+		file_put_contents($file, implode(NEWLINE, self::$sites));
+	}
+
 	static function mainSiteRelpath() {
 		if (is_local() || !self::$current) return '';
 		return self::$current->mainSites[0] . '/';

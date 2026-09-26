@@ -226,7 +226,7 @@ function _iconImage($src) {
 }
 
 function _page_menu($siteIcon, $nodeIcon) {
-	if (!variable(VARSubmenuAtNode) || getQueryparameter('content')) return '<!--no-page-menu-->';
+	if (!variable(VARSubmenuAtNode) || getQueryparameter(VARQueryContent)) return '<!--no-page-menu-->';
 
 	$menuFile = getThemeFile('snippets/page-menu.html');
 	$menuContent = disk_file_get_contents($menuFile);

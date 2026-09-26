@@ -21,7 +21,7 @@ class main {
 	static function runAndReturn() {
 		doToBuffering(1);
 		main::analytics();
-		if (!getQueryParameter('content'))
+		if (!getQueryParameter(VARQueryContent))
 			main::chat();
 		$result = doToBuffering(2);
 		doToBuffering(3);

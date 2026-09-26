@@ -80,7 +80,7 @@ function pageMenu($file) {
 
 	print_seo();
 
-	if (variable('no-page-menu') || !sectionValue() || hasPageParameter('embed') || getQueryParameter('content')) return;
+	if (variable('no-page-menu') || !sectionValue() || hasPageParameter('embed') || getQueryParameter(VARQueryContent)) return;
 
 	$breadcrumbs = variable('breadcrumbs');
 

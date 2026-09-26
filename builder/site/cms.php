@@ -8,7 +8,7 @@ function before_render() {
 	addStyle('v9-spring', assetManager::core);
 	addStyle('v9-features', assetManager::core);
 	addStyle('typography', assetManager::core);
-	if (!getQueryParameter('content'))
+	if (!getQueryParameter(VARQueryContent))
 		addScript('v9-content', assetManager::core);
 
 	if (function_exists('beforeSectionSet') && beforeSectionSet()) return;

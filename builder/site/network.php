@@ -8,8 +8,10 @@ function network_menu($renderFn = false) {
 	$wantsRender = $renderFn != false;
 	if (variable(VARDAWNMenu) === BOOLNoString) return;
 
+	/*
 	if (variable(VARNetwork) != BOOLNoString && !$wantsRender)
 		flatMenu(variable('networkSites'), variable(VARNetwork));
+	*/
 
 	$urlKey = _getUrlKeySansPreview();
 
@@ -17,9 +19,9 @@ function network_menu($renderFn = false) {
 	foreach (domain::$all as $item)
 		$all[] = getSiteInfo($item->mainSites[0], $urlKey);
 
-	$items = ['DAWN' => $all];
+	$items = ['DAWN DOMAINS' => $all];
 
-	$domains = variableOr('domains-to-loop', domain::$all);
+	$domains = domain::getSites($items) ?? variableOr('domains-to-loop', domain::$all);
 	foreach ($domains as $item) {
 		$fol = $item->folder;
 		if (!is_dir(ALLSITESROOT . $fol)) continue;
@@ -39,15 +41,20 @@ function network_menu($renderFn = false) {
 		foreach ($item->subFolders as $slug) {
 			if (!is_dir(ALLSITESROOT . $fol . $slug)) continue;
 			$item->currentSubfolder = $slug;
-			$items[humanize($slug)] = setupNetwork($fol . $slug, $item);
+			$items[humanize($slug)] = $sites = setupNetwork($fol . $slug, $item);
+			domain::appendSites($slug, $sites, $item);
 			$item->cleanSubfolder();
 		}
 	}
 
-	if ($wantsRender)
+	if ($wantsRender) {
 		$renderFn($items);
-	else
-		twoLevelMenu($items, NETWORKABBR);
+		return;
+	}
+
+	twoLevelMenu($items, NETWORKABBR);
+	if (getQueryParameter(VARQueryGenerate) == 'sites')
+		domain::saveSites();
 }
 
 function setupNetwork(string | bool $where = false, domain $domain = null) {

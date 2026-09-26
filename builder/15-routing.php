@@ -41,7 +41,7 @@ function getSiteUrlKey() {
 }
 
 function wants_only_content($ctaCheck = true) {
-	$result = getQueryParameter('content');
+	$result = getQueryParameter(VARQueryContent);
 	if ($ctaCheck AND getQueryParameter('cta'))
 		$result = false;
 	return $result;
@@ -50,6 +50,7 @@ function wants_only_content($ctaCheck = true) {
 DEFINE('CDNAUTO', 'auto');
 function setup_cdn($fol = CDNAUTO, $local = true, $live = true) {
 	if (!domain::$current) showDebugging('domain::$current not set', [$fol], PleaseDie, IncludeTrace);
+	if (getQueryParameter('cdn')) showDebugging('domain::$current', [domain::$current], PleaseDie, IncludeTrace);
 	$key = domain::$current->key;
 	define('ROOTCDNPATH', ALLSITESROOT . $key . '/_cdn/');
 

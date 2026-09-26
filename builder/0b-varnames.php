@@ -24,6 +24,7 @@ DEFINE('VARPageSlider', 'slider');
 DEFINE('VARQueryContent', 'content');
 DEFINE('VARQueryName', 'name');
 DEFINE('VARQueryHeadings', 'headings');
+DEFINE('VARQueryGenerate', 'generate');
 
 //4-array.php
 DEFINE('NOWRAPREPLACE', VAREMPTY);
