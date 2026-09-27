@@ -1,27 +1,40 @@
 <?php
 function showSite($allItems) {
+	$subdomainHack = false;
 	echo tagUX::tagStart(tagUX::Div, cssUX::CenterContainer);
 	$urlKey = _getUrlKeySansPreview();
-	$slim = variableOr('slim', getQueryParameter('slim'));
+	$slim = nodeIs(SITEHOME) || variableOr('slim', getQueryParameter('slim'));
+	$sites = [];
+	$lite = variable('only-description');
 	foreach ($allItems as $menu => $items) {
 		if ($items == MENUSEPARATOR) continue;
 		if ($slim) tagUX::contentBox(urlize($menu));
-		h2($menu);
+		if (!$lite) h2($menu);
 		foreach ($items as $item) {
 			$site = site::cast($item);
+			if ($lite) {
+				$sites[] = $site->asItem($urlKey, $menu);
+				continue;
+			}
+
 			$link = $site->getUrl($urlKey);
-			$img = $site->getUrl($urlKey, true) . $site->key . '-logo.png';
+			$img = $site->getUrl($urlKey, $subdomainHack) . $site->key . '-logo.png';
+
+			$append = '';
+			if (is_local())
+				$append = getLink($item->getUrl(site::local), $item->getUrl(site::local), 'btn btn-secondary')
+					. ' &mdash; ' . getLink($item->getUrl(site::live), $item->getUrl(site::live), 'btn btn-success');
+
 			if ($slim) {
 				echo
 					'<hr /><a class="text-center" href="' . $link . '" target="_blank">' . 
 					'	<img class="img-fluid img-max-200" src="' . $img . '" />' . BRNL .
 					'	<b>' . $site->siteName . '</b>' . BRNL .
-					'</a>' . NEWLINE;
+					'</a>' . $append . NEWLINE;
 				continue;
 			}
 
 			tagUX::contentBox($site->key);
-
 			echo
 				//'<input class="img-fluid text-center" value="' . $img . '" />' . BRNL .
 				'<a class="text-center" href="' . $link . '" target="_blank">' . 
@@ -29,6 +42,7 @@ function showSite($allItems) {
 				'	<b>' . $site->siteName . '</b>' . BRNL .
 				'	<i>' . $site->byline . '</i>' . BRNL .
 				//'	<input class="img-fluid text-center" value="' . $item[$urlKey] . '" />' . BRNL .
+				$append .
 				'</a>' . NEWLINE;
 			
 			$file = ALLSITESROOT . $site->path . '/whois/introduction/home.md';
@@ -43,8 +57,15 @@ function showSite($allItems) {
 
 			tagUX::contentBoxEnd();
 		}
+
 		if ($slim) tagUX::contentBoxEnd();
 	}
+
+	if ($lite) {
+		features::ensureTables();
+		(new tableBuilder('explore', $sites, explode(VARTab, site::$cols)))->render();
+	}
+
 	echo tagUX::tagEnd(tagUX::Div);
 }
 ?>

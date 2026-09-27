@@ -3,7 +3,7 @@
 IF EXIST "assets.zip" (
 	echo "zip found"
 ) ELSE (
-	powershell -Command "Invoke-WebRequest https://spring.joyfulearth.org/themes/canvas/assets.zip -OutFile assets.zip"
+	powershell -Command "Invoke-WebRequest https://spring.amadeusweb.in/themes/canvas/assets.zip -OutFile assets.zip"
 )
 
 IF EXIST "assets" (

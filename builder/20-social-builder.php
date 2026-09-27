@@ -9,11 +9,19 @@ class socialBuilder {
 
 	private $items = [];
 	function getItems() { return $this->items; }
+	function append($items = []) {
+		$this->items = array_merge($this->items, $items);
+		return $this;
+	}
 
-	static function default($builtin = true, $hr = 'after') {////$hr = before|after|both
-		return self::create()
+	static function default($builtin = true, $hr = 'after', $items = []) {////$hr = before|after|both
+		return self::create($items)
 			->setSocialCaption()
 			->addHR($hr == 'after')
+			->addDawn(true, true)
+			->addGithubGroup()
+			->addUtilityGroup()
+			->addHR()
 			->addBuiltin($builtin ? self::readme : false, $builtin ? self::license : false)
 			->addSignup()
 			->addSmithy()
@@ -77,9 +85,10 @@ class socialBuilder {
 	const readme = 'fa fa-book-reader bg-success';
 	const license = 'fa fa-legal bg-danger';
 	function addBuiltin($readme = self::readme, $license = self::license) {
+		$spring = getSiteUrl(SITESPRING);
 		return $this
-			->addInternal('readme', 'ReadMe', $readme, !$readme)
-			->addInternal('license', 'License', $license, !$license);
+			->addInternal($spring . 'readme/', 'DAWN ReadMe', $readme, !$readme)
+			->addInternal($spring . 'license/', 'Spring License', $license, !$license);
 	}
 
 	function addSignup($class = 'fa fa-door-open bg-info') {
@@ -135,9 +144,11 @@ class socialBuilder {
 	function addImranPersonal($who = true, $technologist = true, $builder = true) {
 		$base = getSiteUrl(SITEIMRAN);
 		return $this
-			->addInternal($base . 'whoami/on-linkedin/', 'Who Is Imran', 'fa-brands fa-redhat bg-danger', !$who)
+			->addLinkedIn('in/imran-ali-namazi/', 'Imran Ali Namazi')
+			->addInternal($base . 'whoami/', 'Who Is Imran', 'fa-brands fa-redhat bg-danger', !$who)
+			->addInternal($base . 'whoami/the-humanist/world-family/', 'The Humanist', 'fa-brands fa-redhat bg-danger', !$who)
 			->addInternal($base . 'whoami/the-technologist/', 'The IT Guy', 'fa-brands fa-linkedin bg-linkedin text-light', !$technologist)
-			->addInternal($base . '#dare-i-build', 'Darfe I Build', self::imranBtn, !$builder)
+			->addInternal($base . 'at-42/selections/dare-i-build--2018/', 'Dare I Build', self::imranBtn, !$builder)
 			;
 	}
 
@@ -155,8 +166,8 @@ class socialBuilder {
 	function addGithubGroup() {
 		return $this
 			->addHR()
-			->addGithub('joyfulearth/www', 'JoyfulEarth')
-			->addGithub('amadeus-web/spring', 'AW Spring')
+			->addGithub('amadeusweb-network/www', 'DAWN')
+			->addGithub('amadeusweb-network/spring', 'AW Spring')
 			->addGithub(variable('github-repo'), 'This Site', !variable('github-repo'))
 			;
 	}

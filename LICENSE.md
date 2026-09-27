@@ -20,15 +20,15 @@
 Ours is strictly a PROPRIETARY platform / network.
 To work with us, you need to consent to the:
 
- * [oases/courtesies/](https://amadeusweb.world/oases/courtesies/)
- * [oases/courtesies/before-we-begin](https://amadeusweb.world/oases/courtesies/before-we-begin/)
- * [oases/courtesies/in-good-faith](https://amadeusweb.world/oases/courtesies/in-good-faith/)
+ * [oases/courtesies/](https://amadeusweb.in/log/2025/oases/courtesies/)
+ * [oases/courtesies/before-we-begin](https://amadeusweb.in/log/2025/oases/courtesies/before-we-begin/)
+ * [oases/courtesies/in-good-faith](https://amadeusweb.in/log/2025/oases/courtesies/in-good-faith/)
 
 And then act as per the:
 
- * [oases/courtesies/whatis/a-token-of-goodwill](https://amadeusweb.world/oases/courtesies/whatis/a-token-of-goodwill/)
- * [oases/courtesies/whatis/a-whois-declaration](https://amadeusweb.world/oases/courtesies/whatis/a-whois-declaration/)
- * [oases/courtesies/whatis/entering-freewheeling-mode](https://amadeusweb.world/oases/courtesies/whatis/entering-freewheeling-mode/)
+ * [oases/courtesies/whatis/a-token-of-goodwill](https://amadeusweb.in/log/2025/oases/courtesies/whatis/a-token-of-goodwill/)
+ * [oases/courtesies/whatis/a-whois-declaration](https://amadeusweb.in/log/2025/oases/courtesies/whatis/a-whois-declaration/)
+ * [oases/courtesies/whatis/entering-freewheeling-mode](https://amadeusweb.in/log/2025/oases/courtesies/whatis/entering-freewheeling-mode/)
 
 And wait for acceptance from `Imran` before "GOING LIVE."
 
@@ -36,5 +36,5 @@ And wait for acceptance from `Imran` before "GOING LIVE."
 
 ## Explaining all this
 
- * [2025-11/05--whois--building-trust-in-an-era-where-honesty-is-scarce](https://amadeusweb.world/imran/2025-11/01-to-05/05--whois--building-trust-in-an-era-where-honesty-is-scarce/)
- * [2025-11/04--the-enthroning-of-grace/](https://amadeusweb.world/imran/2025-11/01-to-05/04--the-enthroning-of-grace/)
+ * [2025-11/05--whois--building-trust-in-an-era-where-honesty-is-scarce](https://imran.amadeusweb.in/2025-11/01-to-05/05--whois--building-trust-in-an-era-where-honesty-is-scarce/)
+ * [2025-11/04--the-enthroning-of-grace/](https://imran.amadeusweb.in/2025-11/01-to-05/04--the-enthroning-of-grace/)

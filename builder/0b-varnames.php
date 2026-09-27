@@ -9,6 +9,8 @@ function is_local() { return variable(VARLocal); }
 DEFINE('VARLive', 'live');
 function is_live() { return !is_local(); }
 
+function is_spring() { return contains(SITEPATH, 'spring'); }
+
 DEFINE('VARUsePreview', 'use-preview');
 define('VARUseAmadeusWeb', '--use-amadeusweb');
 
@@ -160,6 +162,7 @@ DEFINE('SITEROOT', 'root');
 DEFINE('SITESPRING', 'spring');
 DEFINE('SITEIMRAN', 'imran');
 DEFINE('NODEINTRODUCTION', 'introduction');
+DEFINE('NODESTART', 'start');
 
 //site/node-menu.php
 DEFINE('VARNodesHaveFiles', 'nodes-have-files');

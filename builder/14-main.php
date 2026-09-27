@@ -1,14 +1,5 @@
 <?php
 class main {
-	static function defaultSocial($prepend = []) {
-		return socialBuilder::create($prepend)
-			->addLinkedIn('in/imran-ali-namazi/', 'Imran Ali Namazi')
-			->addDawn(true, true)
-			->addGithubGroup()
-			->addUtilityGroup()
-			->getItems();
-	}
-
 	static function defaultSearches() {
 		return [
 			'amadeusweb' => ['code' => 'c0a96edc60a44407a', 'name' => 'AmadeusWeb Network&nbsp;&nbsp;', 'description' => 'All AmadeusWeb sites from 2025'],

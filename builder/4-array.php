@@ -271,8 +271,11 @@ class sheet {
 		return valueIfSet($item, $this->columns[$columnName]);
 	}
 
-	public function getValue($item, $columnName, $default = VAREMPTY, $urlize = false) {
-		if (!isset($item[$this->columns[$columnName]])) showDebugging('Invalid Column: ' . $columnName . ' of file: ' . $this->filePath, $item, false, IncludeTrace);
+	public function getValue($item, $columnName, $default = VAREMPTY, $urlize = false, $fail = true) {
+		if (!isset($item[$this->columns[$columnName]])) {
+			if (!$fail) return $default;
+			showDebugging('Invalid Column: ' . $columnName . ' of file: ' . $this->filePath, $item, false, IncludeTrace);
+		}
 		$result = $item[$this->columns[$columnName]];
 		if ($urlize && $result) $result = urlize($result);
 		return $result ? $result : $default;

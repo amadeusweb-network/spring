@@ -1,11 +1,13 @@
 #key	value
-name	AmadeusWeb Spring v9.8
+name	AmadeusWeb Spring v9.9
 byline	Spiritualized Simplified Tech
 year	2019
 
 |labels and messages
-iconName	AW Spring v9.8
+iconName	AW Spring v9.9
 siteMenuName	AmadeusWeb Spring
+description	The Offline First Ultralight Proprietary Technology Powering the Internet Of Missions, Seeded by the Dynamic AmadeusWeb Network. See it's Smithy for How it Works.
+notes	Illegal to Host on a Server, this has been serving YieldMore and DAWN Since Oct 2019 and is the culmination of 25 years of Imran's Tinkering with Code, Web and File Based Systems.
 welcome-message	This is the "Proprietary" Web Builder - with Pull Plug Rights held by [Imran](%urlOf-imran%BTNSUCCESS) of [DAWN](%urlOf-spring%/dawn/BTNINFO).
 footer-message	Fostering transparency and accountability by making content / interactions public record.
 

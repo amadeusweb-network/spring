@@ -19,6 +19,7 @@ function network_menu($renderFn = false) {
 	foreach (domain::$all as $item)
 		$all[] = getSiteInfo($item->mainSites[0], $urlKey);
 
+	$all[] = getSiteInfo('spring', $urlKey);
 	$items = ['DAWN DOMAINS' => $all];
 
 	$domains = domain::getSites($items) ?? variableOr('domains-to-loop', domain::$all);

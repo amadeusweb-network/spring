@@ -25,7 +25,7 @@ function getSpecialUrl($name) {
 	else if ($name == 'signup')
 		return getSiteUrl(SITEROOT, 'services/signup/');
 	else if ($name == 'smithy')
-		return getSiteUrl(SITESPRING, NODEINTRODUCTION . '/');
+		return getSiteUrl(SITESPRING, NODESTART . '/');
 	else throw new Error('Unknown SpecialUrl: ' . $name);
 }
 
@@ -62,6 +62,11 @@ class site {
 	public string $path;
 	public string $folder;
 
+	public string $description;
+	public string $notes;
+	public string $year;
+	public string $sections;
+
 	public function __construct(sheet $site, $relativePath) {
 		$this->key = $site->getValue($site->firstOfGroup(VARSafeName), 'value');
 		$this->name = $site->getValue($site->firstOfGroup(VARIconName), 'value');
@@ -72,6 +77,22 @@ class site {
 		$this->localUrl = $site->getValue($site->firstOfGroup('local-url'), 'value');
 		$this->liveUrl = $site->getValue($site->firstOfGroup('live-url'), 'value');
 		$this->folder = self::getFolder($this->path = $relativePath);
+
+		$this->description = $site->getValue($site->firstOfGroup('description', '', false), 'value', VAREMPTY, false, BOOLNo);
+		$this->notes = $site->getValue($site->firstOfGroup('notes', '', false), 'value', VAREMPTY, false, BOOLNo);
+		$this->year = $site->getValue($site->firstOfGroup('year'), 'value');
+		$this->sections = $site->getValue($site->firstOfGroup('sections'), 'value');
+	}
+
+	static $cols = 'name	description	info';
+
+	function asItem($key, $menu) {
+		return [
+			'name' => '<a href="' . $this->getUrl($key) . '" target="_blank">' . $this->name . '</a>',
+			'description' => $this->description . ($this->notes ? '<hr />' : '') . $this->notes,
+			'info' => $this->folder . ' (' . $this->year . ') in <b>' . $menu . '</b><br />' .
+				'<u>Sections</u>: ' . $this->sections,
+		];
 	}
 
 	function getUrl(string $key, $wildcard = false) {

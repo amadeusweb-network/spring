@@ -315,7 +315,7 @@ function siteWidgets() {
 	if ($showNetwork) $colsInUse += 1;
 
 	$showSocial = !variable(VARNoFooterSocial);
-	if ($showSocial) $showSocial = count($social = variableOr(socialBuilder::variableName, main::defaultSocial()));
+	if ($showSocial) $showSocial = count($social = variableOr(socialBuilder::variableName, socialBuilder::default()));
 	if ($showSocial) $colsInUse += 1;
 
 	if ($colsInUse == 0) return '';
