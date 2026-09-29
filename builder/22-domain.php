@@ -1,5 +1,8 @@
 <?php
 class domain {
+	const OnlyThis = 'only-this';
+	public static $skipRest = false;
+
 	static function includeAll() {
 		$sheet = getSheet(AMADEUSSITEDATA . 'domains.tsv', false);
 		foreach ($sheet->rows as $item) {
@@ -8,7 +11,7 @@ class domain {
 			disk_include_once(ALLSITESROOT . $site . '/domain.php');
 		}
 
-		if (!self::$current && !DEFINED('SITEPATH'))
+		if (!self::$current && count(self::$all))
 			self::$current = end(self::$all);
 	}
 
@@ -61,7 +64,9 @@ class domain {
 			self::$current = $item;
 			DEFINE('NETWORKPATH', $folder);
 		}
+		if (self::$skipRest) return;
 		self::$all[$key] = $item;
+		if ($skipIfNotMatching == self::OnlyThis) self::$skipRest = true;
 	}
 
 	static function remove(string $key) {

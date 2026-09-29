@@ -1,6 +1,10 @@
 #site	repo
+
+|onlies first
+spanda/www	https://github.com/amadeusweb-members/spanda.git
+|aztras/www	https://github.com/joyfulearth/aztras.git
+
 amadeusweb/www	https://github.com/amadeusweb-in/www.git
 missions/www	//TODO
 homes/www	//TODO
 biz/www	//TODO
-|aztras/www	https://github.com/joyfulearth/aztras.git

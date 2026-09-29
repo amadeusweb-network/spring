@@ -1,6 +1,6 @@
 <?php
 DEFINE('NETWORKDEFINEDAT', DEFINED('NETWORKPATH') ? NETWORKPATH . '/' : AMADEUSSITEDATA);
-DEFINE('NETWORKABBR', 'DAWN');
+DEFINE('NETWORKABBR', variableOr('NetworkMenuName', 'DAWN'));
 
 setupNetwork();
 
@@ -19,8 +19,8 @@ function network_menu($renderFn = false) {
 	foreach (domain::$all as $item)
 		$all[] = getSiteInfo($item->mainSites[0], $urlKey);
 
-	$all[] = getSiteInfo('spring', $urlKey);
-	$items = ['DAWN DOMAINS' => $all];
+	if (!domain::$skipRest) $all[] = getSiteInfo('spring', $urlKey);
+	$items = [NETWORKABBR . ' DOMAINS' => $all];
 
 	$domains = domain::getSites($items) ?? variableOr('domains-to-loop', domain::$all);
 	foreach ($domains as $item) {
