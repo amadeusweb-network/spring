@@ -6,11 +6,12 @@ variable('network-panels', [
 
 function renderSides(string $group) {
 	$sheet = getSheet(NETWORKPATH . '/data/sites.tsv', 'group');
-	$relativePrefix = domain::$current->folder;
+	$relativePrefix = defined('NETWORKRELPATH') ? NETWORKRELPATH . '/' : domain::$current->folder;
+	$key = _getUrlKeySansPreview();
 	foreach ($sheet->group[$group] as $item) {
 		$slug = $sheet->getValue($item, 'slug');
 		if (!disk_is_dir(ALLSITESROOT . $relativePrefix . $slug)) continue;
-		$site = getSiteInfo($relativePrefix . $slug);
+		$site = getSiteInfo($relativePrefix . $slug, $key, domain::$current);
 		$class = ' site-' . $site->key . '-bgd';
 		echo sprintf(subVariable('network-panels', 'sectionFormat'), $class . ' site-button', '');
 		renderNetworkPanel($site, ['h3-class' => $class, 'side' => true]);
@@ -28,8 +29,9 @@ function renderCenter(string $logo) {
 function renderNetworkPanel(site $site, array $settings) {
 	$result = [];
 
-	$url = $site->getUrl(_getUrlKeySansPreview());
-	$logo = '<img src="' . $url . valueIfSet($settings, 'logo', $site->key . '-logo.png') . '" height="100" class="img-fluid img-max-400 content-network-logo" />';
+	$url = $site->getUrl($key = _getUrlKeySansPreview());
+	$imgBase = $site->getUrl($key, true);
+	$logo = '<img src="' . $imgBase . valueIfSet($settings, 'logo', $site->key . '-logo.png') . '" height="100" class="img-fluid img-max-400 content-network-logo" />';
 	$result[] = '<div class="text-center">' . $logo . '</div>';
 
 	if (valueIfSet($settings, 'in-center')) {

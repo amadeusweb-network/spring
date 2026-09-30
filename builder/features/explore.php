@@ -8,8 +8,12 @@ function showSite($allItems) {
 	$lite = variable('only-description');
 	foreach ($allItems as $menu => $items) {
 		if ($items == MENUSEPARATOR) continue;
-		if ($slim) tagUX::contentBox(urlize($menu));
-		if (!$lite) h2($menu);
+		if (!$lite && startsWith($menu, MENUGROUP)) { printH1InDivider(substr($menu, 1), false); continue; }
+		if (is_string($menu)) {
+			if (!$lite && $slim) tagUX::contentBox(urlize($menu));
+			if (!$lite) h2($menu);
+		}
+		if (!is_array($items)) $items = [$items];
 		foreach ($items as $item) {
 			$site = site::cast($item);
 			if ($lite) {
@@ -58,7 +62,7 @@ function showSite($allItems) {
 			tagUX::contentBoxEnd();
 		}
 
-		if ($slim) tagUX::contentBoxEnd();
+		if (!$lite && $slim) tagUX::contentBoxEnd();
 	}
 
 	if ($lite) {

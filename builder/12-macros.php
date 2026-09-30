@@ -145,7 +145,9 @@ function replaceCodeSnippets($html, $files = false, $fol = false) {
 		$key = '%' . $fwoe . $core . 'codesnippet%';
 		if (!contains($html, $key)) continue;
 
-		$html = str_replace($key, include $fol . $file, $html);
+		$with = include $fol . $file;
+		if ($with === null) showDebugging(149, 'file returned null: ' . $fol . $file, PleaseDie, IncludeTrace);
+		$html = str_replace($key, $with, $html);
 	}
 
 	return $html;

@@ -373,6 +373,7 @@ class cssUX {
 	//start with caps for prebuilt concatenations
 	const CenterContainer = 'container text-center my-3';
 
+	const AlsoContent = 'also-content';
 	const container = 'container';
 	const standout = 'standout';
 	const pt4 = 'pt-4';

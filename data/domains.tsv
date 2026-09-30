@@ -1,10 +1,13 @@
 #site	repo
 
+amadeusweb/www	https://github.com/amadeusweb-sites/www.git
+
 |onlies first
 spanda/www	https://github.com/amadeusweb-members/spanda.git
-|aztras/www	https://github.com/joyfulearth/aztras.git
+aztras/www	https://github.com/amadeusweb-members/aztras.git
 
-amadeusweb/www	https://github.com/amadeusweb-in/www.git
-missions/www	//TODO
-homes/www	//TODO
-biz/www	//TODO
+missions/www	https://github.com/amadeusweb-network/missions.git
+homes/www	https://github.com/amadeusweb-network/homes.git
+biz/www	https://github.com/amadeusweb-network/biz.git
+
+legacy/www	https://github.com/imran-ali-namazi/archives.git

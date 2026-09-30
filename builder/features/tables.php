@@ -204,7 +204,8 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	$useDatatables = valueIfSetAndNotEmpty($values, 'use-datatables');
 	$allowCards = valueIfSetAndNotEmpty($values, 'allow-cards', false, TYPEBOOLEAN);
 
-	$datatableClass = ($isInList ? '' : 'amadeus-table ') . ($useDatatables ? ' amadeus-data-table ' : '');
+	$datatableClass = ($isInList ? '' : 'amadeus-table') . ($useDatatables ? ' amadeus-data-table ' : '');
+	if ($css = valueIfSet($values, 'classes')) $datatableClass .= $css . ' ';
 	$datatableParams = '';
 	if ($useDatatables && $rg = valueIfSetAndNotEmpty($values, 'row-group')) $datatableParams .= 'data-row-group="' . $rg . '" ';
 

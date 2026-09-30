@@ -1,6 +1,7 @@
 <?php
 variable('toggle-list', 'toggle-list-below');
 
+DEFINE('MENUGROUP', '~');
 DEFINE('MENUSEPARATOR', '----');
 DEFINE('MENUPADLEFT', '							');
 DEFINE('NOPAGESTART', '--page-start--'); //todo: document this!
@@ -256,7 +257,7 @@ function menu($folderRelative = false, $settings = []) {
 			$isDir = disk_is_dir($folder . $file);
 			if ($isDir) $extension = '';
 
-			if ($file && $file[0] != '~' && !$extension && !$isDir) {
+			if ($file && $file[0] != MENUGROUP && !$extension && !$isDir) {
 				if (is_local())
 					showDebugging('file with no extension - skipping', [ 'folder' => $folder, 'file' => $file, 'settings' => $settings], PleaseDie);
 				continue;
@@ -268,7 +269,7 @@ function menu($folderRelative = false, $settings = []) {
 		}
 
 		$indented = '';
-		if (startsWith($file, '~')) {
+		if (startsWith($file, MENUGROUP)) {
 			if (variable('thisSection') && !$indented) { $result .= '<hr>'; variable('hadMenuSection', true); }
 			$inner = substr($file, 1);
 			if ($inner[0] == '[') $inner = returnLine($inner);
@@ -362,7 +363,7 @@ function tsvSlugs($sheetFile) {
 	$name = $sheet->hasColumn('name');
 	foreach ($sheet->rows as $item) {
 		$slug = $sheet->getValue($item, 'slug');
-		if (startsWith($slug, '~')) {
+		if (startsWith($slug, MENUGROUP)) {
 			if ($items) $result[$lastName] = $items;
 			$items = [];
 			$lastName = substr($slug, 1);
@@ -429,6 +430,12 @@ function twoLevelMenu($items, $topName) {
 		if ($subItems == MENUSEPARATOR) {
 			echo '	<li class="menu-break"><hr></li>' . NEWLINE;
 			continue;
+		} else if (!is_array($subItems)) {
+			$site = site::cast($item);
+			$subName = $site->name;
+			if ($wrapTextInADiv) $subName = '<div>' . $subName . $topLevelAngle . '</div>';
+			echo '			<li class="' . $itemClass . ' ' . $subMenuClass . '">' . getLink($subName, $site->getUrl($urlKey), $anchorClass, true) . '</li>' . NEWLINE;
+			continue;
 		}
 
 		$menuClass = ' inner-menu-' . urlize($name);
@@ -436,6 +443,11 @@ function twoLevelMenu($items, $topName) {
 		echo '	<ul class="' . $ulClass . '">' . NEWLINE;
 
 		foreach ($subItems as $item) {
+			if (is_string($item) && startsWith($item, MENUGROUP)) {
+				echo '			<li class="' . $itemClass . '">' . substr($item, 1) . '</li>' . NEWLINE;
+				continue;
+			}
+
 			$site = site::cast($item);
 			$subName = $site->name;
 			if ($wrapTextInADiv) $subName = '<div>' . $subName . $topLevelAngle . '</div>';

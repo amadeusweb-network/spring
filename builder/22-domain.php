@@ -1,6 +1,15 @@
 <?php
 class domain {
 	const OnlyThis = 'only-this';
+	const SkipList = 'skip-list';
+
+	/**
+	 * @return domain Cast the domain
+	 */
+	static function cast($item) {
+		return $item;
+	}
+
 	public static $skipRest = false;
 
 	static function includeAll() {
@@ -13,6 +22,9 @@ class domain {
 
 		if (!self::$current && count(self::$all))
 			self::$current = end(self::$all);
+
+		if (self::$current)
+			self::$current->isCurrent = true;
 	}
 
 	//all hosted sites cache
@@ -56,17 +68,25 @@ class domain {
 	 */
 	static $current;
 
-	static function add(string $key, string $folder, bool $skipIfNotMatching, domain $item) {
+	static function add(string $key, string $folder, bool | string $skipRule, domain $item) {
 		$path = DEFINED('ALLSITENAME') ? ALLSITENAME : (DEFINED('SITEPATH') ? SITEPATH : false);
 		$match = $path && contains($path, $key); //doesnt handle substring collision
-		if ($skipIfNotMatching && !$match && !DEFINED('ALLSITENAME')) return;
+
+		if ($skipRule && $skipRule != self::SkipList && !$match && !DEFINED('ALLSITENAME')) return;
+
 		if ($match && !DEFINED('NETWORKPATH')) {
 			self::$current = $item;
 			DEFINE('NETWORKPATH', $folder);
 		}
+
 		if (self::$skipRest) return;
+
+		$item->hasRule = is_string($skipRule);
+		if ($skipRule == self::SkipList) $item->skip = true;
+		if ($skipRule == self::OnlyThis) $item->only = true;
+
 		self::$all[$key] = $item;
-		if ($skipIfNotMatching == self::OnlyThis) self::$skipRest = true;
+		if ($match && $item->skip) self::$skipRest = true;
 	}
 
 	static function remove(string $key) {
@@ -79,6 +99,10 @@ class domain {
 	public string $currentSubfolder = '';
 
 	public string $key;
+	public bool $skip = false;
+	public bool $only = false;
+	public bool $hasRule = false;
+	public bool $isCurrent = false;
 
 	public string $folder;
 	public string $heading;
@@ -87,7 +111,7 @@ class domain {
 	public string $localBase;
 	public string $liveBase;
 	public array $mainSites;
-	public array $subFolders;
+	public array | bool $subFolders;
 
 	public function prepareMainSite($site) {
 		$site = substr($site, strlen($this->folder));

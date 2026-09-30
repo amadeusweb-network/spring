@@ -1,5 +1,6 @@
 <?php
-if (variable(VARSafeName) != 'amadeuswebworld') return ''; //TODO: in_array
+return ''; //deprecated - use new explore via www-bottom
+if (!contains(variable(VARSafeName), 'amadeusweb')) return ''; //TODO: in_array
 
 doToBuffering(1);
 
