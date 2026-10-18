@@ -18,7 +18,7 @@ function _sections($current) {
 	echo 'Section: ' . variable('nl');
 	foreach (variable('sections') as $item) {
 		//TODO: reinstate - if (cannot_access($item)) continue;
-		echo sprintf(variable('nl') . '<a class="btn btn-%s" href="%s">%s</a> ',
+		echo sprintf(variable('nl') . '<a class="btn btn-%s m-1" href="%s">%s</a> ',
 			$item == $current ? 'primary' : 'secondary',
 			pageUrl($item),
 			humanize($item)

@@ -33,22 +33,30 @@ function renderEngage($name, $raw, $echo = true, $meta = [], $settings = []) {
 		'" data-site-name="' . variable('name') .
 		'" data-salutation="' . $salutation . '">' . NEWLINE;
 
-	$replaces = [];
-	if (disk_file_exists($note = (AMADEUSDATA . 'engage-note.md'))) {
-		$replaces[VAREngageNote] = tryEnrichEngageNote('<div class="engage-note-hint d-none">' . returnLine($note) . '</div>', VAREngageNote);
-		if (disk_file_exists($note2 = (AMADEUSDATA . 'engage-note-above.md')))
-			$replaces[VAREngageNoteAbove] = tryEnrichEngageNote(returnLine($note2), VAREngageNoteAbove);
-		$replaces[VAREmail] = $email;
-		$replaces[VARWhatsapp] = getHtmlVariable(VARWhatsapp) . getHtmlVariable('enquiry');
-	}
+	$result .= renderMarkdown($raw, [replacer::replaces => getEngageReplaces($email, $whatsapp), 'echo' => false]);
 
-	$result .= renderMarkdown($raw, [replacer::replaces => $replaces, 'echo' => false]);
-
-	$result .= getSnippet('engage-toolbox', CORESNIPPET);
+	$result .= getEngageToolbox();
 	
 	$result .= '</div>' . NEWLINE;
 	if (!$echo) return $result;
 	echo $result;
+}
+
+function getEngageReplaces($email = false, $whatsapp = false) {
+	if (!disk_file_exists($note = (AMADEUSDATA . 'engage-note.md'))) return [];
+
+	if (!$email) $email = variable(VAREmail);
+	if (!$whatsapp) $whatsapp = variable(VARWhatsapp);
+	return [
+		VAREngageNote => tryEnrichEngageNote('<div class="engage-note-hint d-none">' . returnLine($note) . '</div>', VAREngageNote),
+		VAREngageNoteAbove => disk_file_exists($note2 = (AMADEUSDATA . 'engage-note-above.md')) ? tryEnrichEngageNote(returnLine($note2), VAREngageNoteAbove) : '',
+		VAREmail => $email,
+		VARWhatsapp => $whatsapp . getHtmlVariable('enquiry'),
+	];
+}
+
+function getEngageToolbox() {
+	return getSnippet('engage-toolbox', CORESNIPPET);
 }
 
 function tryEnrichEngageNote($content, $where) {

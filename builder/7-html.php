@@ -163,6 +163,7 @@ function replaceHtml($html) {
 		variable(VARHtmlVariables, $replaces = [
 			//Also, we should incorporate dev tools like w3c & broken link checkers
 			'%url%' => variable('page-url'),
+			'%wildcard-safe-url%' => variableOr(VARWildcardUrl, variable('page-url')), //TODO: will this work on mobile?
 			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
 
 			'%mainSite%' => domain::mainSiteRelpath(), //workaround for bigrock where live path is www
@@ -381,6 +382,8 @@ class cssUX {
 	const m2 = 'm-2';
 	const mauto = 'm-auto';
 
+	const underline = 'text-decoration-underline';
+
 	static function concat($param1, $param2 = null) {
 		$params = is_array($param1) ? $param1 : func_get_args();
 		return implode(' ', $params);
@@ -405,8 +408,8 @@ class htmlUX {
 		self::artHAuto1, self::artHAuto2, self::artHAuto3, self::artHAuto4, self::artHAuto6, self::artHAuto12, self::art1, self::art2, self::art3, self::art4, self::artAlways4,self::art6, self::art12,
 		//7 - whitespace (4)
 		self::wsNewLines2, self::wsNewLine, self::wsJustBR, self::wsCrLf,
-		//8 - generic html (6)
-		self::cbOPEN, self::cbCNO, self::cbOWC, self::cbCLOSE, self::tagDivStart, self::tagCloseGT,
+		//8 - generic html (8)
+		self::hintOpen, self::hintClose, self::cbOPEN, self::cbCNO, self::cbOWC, self::cbCLOSE, self::tagDivStart, self::tagCloseGT,
 	];
 
 	private static function ensureVars() {
@@ -500,7 +503,10 @@ class htmlUX {
 	const wsNewLine = [' NEWLINE', '<br />' . NEWLINE];
 	const wsJustBR = [' JUSTBR', '<br />'];
 	const wsCrLf = [' CRLF', NEWLINE];
-	//8 - generic html (6)
+	//8 - generic html (8)
+	const hintOpen = ['[hint]', '<br /> &mdash; <small class="hint">'];
+	const hintClose = ['[/hint]', '</small><!--end .hint-->'];
+
 	const cbOPEN = ['[cb-open]', VARCustom];
 	const cbCNO = ['[cb-close-and-open]', VARCustom];
 	const cbOWC = ['[cb-open-with-container]', VARCustom];
@@ -575,6 +581,7 @@ class bootstrapAndUX extends builderBase {
 		'DOWNLOAD' => 'btn btn-lg btn-primary" target="_blank',
 		'SITE' => 'btn btn-info',
 		'SECURE' => 'btn btn-danger m-2 bi bi-shield-lock icon-2x',
+		'PAY' => 'btn btn-danger m-2 bi bi-bank2',
 		'TODO' => 'btn btn-warning bi bi-journal-check" target="_blank',
 		'PHONE' => 'btn btn-has-icon btn-info bi bi-telephone ls-2" style="color: #fff;' . NOFOLLOWSUFFIX,
 		'WHATSAPP' => 'btn btn-has-icon btn-success bi bi-whatsapp ls-2', //nofollow taken care of in prepareLinks

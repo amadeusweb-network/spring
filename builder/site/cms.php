@@ -46,8 +46,8 @@ function before_render() {
 
 		if ($canHaveFiles) {
 			if ($slug == $node) {
-				$level0 = [$slug == $node ? $sectionsRoot . '/' . $slug . '/home.' :
-					$sectionsRoot . '/' . $slug . '/' . $node . '.'];
+				$level0 = $slug == $node ? $sectionsRoot . '/' . $slug . '/home.' :
+					$sectionsRoot . '/' . $slug . '/' . $node . '.';
 				if (setFileIfExists($slug, $level0, false, false)) return;
 			}
 

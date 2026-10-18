@@ -21,6 +21,9 @@ function _table_row_values($item, $cols, $tsv, $values, $template) {
 		if (is_numeric($key)) $key = $c;
 		$value = $item[$c];
 
+		if (contains($value, '[field]'))
+			$value = replaceItems($value, ['[field]' => '<ul><li>amount</li><li>note</li></ul>']);
+
 		if (contains($template, $mr = '%' . $key . '_mr%'))
 			$r[$key . '_mr'] = urlize($value);
 
@@ -203,8 +206,9 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	$isInList = variable('is-in-directory');
 	$useDatatables = valueIfSetAndNotEmpty($values, 'use-datatables');
 	$allowCards = valueIfSetAndNotEmpty($values, 'allow-cards', false, TYPEBOOLEAN);
+	$engage = valueIfSet($values, 'engage') == 'yes';
 
-	$datatableClass = ($isInList ? '' : 'amadeus-table') . ($useDatatables ? ' amadeus-data-table ' : '');
+	$datatableClass = ($isInList ? '' : 'amadeus-table ') . ($useDatatables ? 'amadeus-data-table ' : '');
 	if ($css = valueIfSet($values, 'classes')) $datatableClass .= $css . ' ';
 	$datatableParams = '';
 	if ($useDatatables && $rg = valueIfSetAndNotEmpty($values, 'row-group')) $datatableParams .= 'data-row-group="' . $rg . '" ';
@@ -213,6 +217,14 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 
 	if ($beforeContent = valueIfSetAndNotEmpty($values, 'before-content')) echo returnLine(pipeToBR($beforeContent));
 	if ($allowCards) echo '<div class="text-center"><button data-table-id="amadeus-table-' . $id . '" class="amadeus-table-' . $id . '-card-view">toggle card view</button></div>' . BRNL;
+
+	if ($engage) {
+		runFeature(features::engage);
+		$email = valueIfSet($values, 'email');
+		if (startsWith($email, '+')) $email = plus_email(variable(VAREmail), substr($email, 1));
+		$replaces = getEngageReplaces($email, valueIfSet($values, 'whatsapp'));
+		echo '<div class="engage">' . replaceItems(WRAPREPLACE . VAREngageNoteAbove . WRAPREPLACE, $replaces, WRAPREPLACE);
+	}
 
 	if ($customHead) echo replaceHtmlShortcuts($values['head-template']);
 	else if ($wantsBSRow) echo '<div id="amadeus-bs-row-' . $id . '" class="row">';
@@ -260,6 +272,11 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	</tbody>
 </table>
 ';
+	if ($engage) {
+		echo replaceItems(WRAPREPLACE . VAREngageNote . WRAPREPLACE, $replaces, WRAPREPLACE);
+		echo getEngageToolbox() . NEWLINES2 . '</div><!--end .engage-->';
+	}
+
 	if (contains($template, '_Embed')) echo NEWLINES2 . IGEMBED;
 	if ($useDatatables) _includeDatatables($rg);
 	if ($useDatatables) _includeTableAssets($template);

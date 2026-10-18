@@ -21,7 +21,7 @@ class domain {
 		}
 
 		if (!self::$current && count(self::$all))
-			self::$current = end(self::$all);
+			self::$current = self::$all[array_keys(self::$all)[0]];
 
 		if (self::$current)
 			self::$current->isCurrent = true;
