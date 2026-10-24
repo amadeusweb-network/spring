@@ -63,6 +63,10 @@ function tryEnrichEngageNote($content, $where) {
 	return function_exists('enrichEngageNote') ? enrichEngageNote($content, $where) : $content;
 }
 
+function renderEngageFields($raw) {
+	return replaceItems($raw, ['[field]' => '<ul><li>amount</li><li>note</li></ul>']);
+}
+
 function runEngageFromSheet($pageName, $sheetName) {
 	$sheet = getSheet($sheetName);
 	$contentIndex = $sheet->columns['content'];

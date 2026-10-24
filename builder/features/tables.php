@@ -21,8 +21,8 @@ function _table_row_values($item, $cols, $tsv, $values, $template) {
 		if (is_numeric($key)) $key = $c;
 		$value = $item[$c];
 
-		if (contains($value, '[field]'))
-			$value = replaceItems($value, ['[field]' => '<ul><li>amount</li><li>note</li></ul>']);
+		if (features::hasEngageFields($value))
+			$value = features::replaceEngageFields($value);
 
 		if (contains($template, $mr = '%' . $key . '_mr%'))
 			$r[$key . '_mr'] = urlize($value);

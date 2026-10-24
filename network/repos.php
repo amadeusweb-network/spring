@@ -1,10 +1,14 @@
 <?php
-if (isset($variables) && isset($variables['items'])) {
+$check = getQueryParameter('check');
+$checkLink = is_local() ? getLink('Check Clone Urls', './?check=1', 'btn btn-primary') : false;
+
+if (!$check && isset($variables) && isset($variables['items'])) {
 	$items = (array)$variables['items'];
 	$values = (array)$variables['values'];
 	$sheet = (object)$variables['sheet'];
 
 	h2('ROOT ~/' . $values['cloneAt']);
+	if ($checkLink) echo $checkLink;
 	$isMobile = variable('is-mobile');
 	$yes = '<span class="btn btn-success">yes</span>';
 	$no = '<span class="btn btn-warning">no</span>';
@@ -35,14 +39,13 @@ if (isset($variables) && isset($variables['items'])) {
 	cbCloseAndOpen(cssUX::container);
 } else {
 	echo tagUX::tagStart(tagUX::Div, cssUX::CenterContainer);
-	$check = getQueryParameter('check');
-	if (is_local())
-		echo getLink('Check Clone Urls', './?check=1', 'btn btn-primary');
+	if ($checkLink) echo $checkLink;
 	if ($check) {
-		$files = _skipNodeFiles(scandir(defined('REPOSPATH') ? REPOSPATH : __DIR__), 'md, php');
+		$path = defined('REPOSPATH') ? REPOSPATH : __DIR__;
+		$files = _skipNodeFiles(scandir($path), 'md, php');
 		foreach ($files as $page) {
 			echo tagUX::h2Plain($page, 'after-content mt-2');
-			$sheet = getSheet(__DIR__ . '/' . $page . '.tsv', false);
+			$sheet = getSheet($path . '/' . $page . '.tsv', false);
 			$where = ALLSITESROOT . $sheet->values['cloneAt'];
 			$hasIssues = false;
 			$op = [];

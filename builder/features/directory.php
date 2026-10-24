@@ -15,10 +15,10 @@ function _sections($current) {
 	if (!nodeIsSection()) return;
 
 	contentBox('', 'toolbar text-align-left');
-	echo 'Section: ' . variable('nl');
+	echo 'Section: ' . NEWLINE;
 	foreach (variable('sections') as $item) {
 		//TODO: reinstate - if (cannot_access($item)) continue;
-		echo sprintf(variable('nl') . '<a class="btn btn-%s m-1" href="%s">%s</a> ',
+		echo sprintf(NEWLINE . '<a class="btn btn-%s m-1" href="%s">%s</a> ',
 			$item == $current ? 'primary' : 'secondary',
 			pageUrl($item),
 			humanize($item)

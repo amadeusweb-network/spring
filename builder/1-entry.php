@@ -118,6 +118,9 @@ class features {
 	static function runMultiple($what, $vars = []) { runFeatureMultiple($what, $vars); }
 	static function runWithFile($what, $file) { self::runMultiple($what, ['file' => $file]); }
 	static function runPollen($items = []) { runFeature(self::pollen, ['items' => $items]); }
+
+	static function hasEngageFields($raw) { return contains($raw, '[field'); }
+	static function replaceEngageFields($raw) { self::ensureEngage(); return renderEngageFields($raw); }
 }
 
 function before_bootstrap() {

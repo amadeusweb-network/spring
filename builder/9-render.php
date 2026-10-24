@@ -244,6 +244,9 @@ function _renderImplementation($fileOrRaw, $settings) {
 	$replacer = new replacer($settings);
 	$raw = $replacer->replaceAll($raw);
 
+	if (features::hasEngageFields($raw))
+		$raw = features::replaceEngageFields($raw);
+
 	$autop = $raw != '' && contains($raw, WANTSAUTOPARA);
 	$md = $raw != '' && ($raw[0] == '#' || startsWith($raw, WANTSMARKDOWN));
 	$engage = new engageable;
