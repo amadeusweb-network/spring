@@ -223,7 +223,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 		$email = valueIfSet($values, 'email');
 		if (startsWith($email, '+')) $email = plus_email(variable(VAREmail), substr($email, 1));
 		$replaces = getEngageReplaces($email, valueIfSet($values, 'whatsapp'));
-		echo '<div class="engage">' . replaceItems(WRAPREPLACE . VAREngageNoteAbove . WRAPREPLACE, $replaces, WRAPREPLACE);
+		echo '<div class="engage"' . getEngageData($values, true) . '>' . replaceItems(WRAPREPLACE . VAREngageNoteAbove . WRAPREPLACE, $replaces, WRAPREPLACE);
 	}
 
 	if ($customHead) echo replaceHtmlShortcuts($values['head-template']);

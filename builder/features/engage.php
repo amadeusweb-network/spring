@@ -2,10 +2,7 @@
 addStyle(features::engage, assetManager::core);
 addScript(features::engage, assetManager::core);
 
-//TODO: Make a toggle-more when the md contains <!--more-->
-function renderEngage($name, $raw, $echo = true, $meta = [], $settings = []) {
-	//if (!$open) echo engageButton($name, $class);
-
+function getEngageData($meta = [], $onlyAttributes = false) {
 	$salutation = variableOr('salutation', 'Dear ' . variable('name')) . ',';
 	$addressee = '';
 	$additionalCC = '';
@@ -22,18 +19,29 @@ function renderEngage($name, $raw, $echo = true, $meta = [], $settings = []) {
 	$systemIncluded = contains($addressee, VARSystemEmail) || contains($additionalCC, VARSystemEmail);
 	$defaultCC = $systemIncluded ? '' : VARSystemEmail;
 
-	$class = valueIfSet($settings, VARNoContentBoxes) ? features::engage : _getCBClassIfWanted(features::engage);
-	$class = '" class="' . $class . '" ';
-
-	$result = '	<div id="engage-' . urlize($name) . $class .
-		//($open ? '' : 'style="display: none" ') .
-		'data-to="' . ($email = $addressee . variable(VAREmail)) .
+	$attributes = ' data-to="' . ($email = $addressee . variable(VAREmail)) .
 		'" data-cc="' . $additionalCC . $defaultCC .
 		'" data-whatsapp="' . $whatsapp .
 		'" data-site-name="' . variable('name') .
-		'" data-salutation="' . $salutation . '">' . NEWLINE;
+		'" data-salutation="' . $salutation . '"';
+	if ($onlyAttributes) return $attributes;
+	return ['attributes' => $attributes, 'email' => $email, 'whatsapp' => $whatsapp];
+}
 
-	$result .= renderMarkdown($raw, [replacer::replaces => getEngageReplaces($email, $whatsapp), 'echo' => false]);
+//TODO: Make a toggle-more when the md contains <!--more-->
+function renderEngage($name, $raw, $echo = true, $meta = [], $settings = []) {
+	//if (!$open) echo engageButton($name, $class);
+
+	$class = valueIfSet($settings, VARNoContentBoxes) ? features::engage : _getCBClassIfWanted(features::engage);
+	$class = '" class="' . $class . '"';
+
+	$data = getEngageData($meta);
+
+	$result = '	<div id="engage-' . urlize($name) . $class .
+		//($open ? '' : 'style="display: none" ') .
+		$data['attributes'] . '>' . NEWLINE;
+
+	$result .= renderMarkdown($raw, [replacer::replaces => getEngageReplaces($data['email'], $data['whatsapp']), 'echo' => false]);
 
 	$result .= getEngageToolbox();
 	
