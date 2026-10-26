@@ -4,17 +4,29 @@ function showSite($allItems) {
 	echo tagUX::tagStart(tagUX::Div, cssUX::CenterContainer);
 	$urlKey = _getUrlKeySansPreview();
 	$slim = nodeIs(SITEHOME) || variableOr('slim', getQueryParameter('slim'));
+	$boxes = variableOr('boxes', getQueryParameter('boxes'));
+	if ($boxes) { $slim = false; }
+	$result = [htmlUX::valueOf(htmlUX::artAll)];
+
 	$sites = [];
 	$lite = variable('only-description');
+
 	foreach ($allItems as $menu => $items) {
 		if ($items == MENUSEPARATOR) continue;
-		if (!$lite && startsWith($menu, MENUGROUP)) { printH1InDivider(substr($menu, 1), false); continue; }
+		if (!$lite && !$boxes && startsWith($menu, MENUGROUP)) { printH1InDivider(substr($menu, 1), false); continue; }
 		if (is_string($menu)) {
 			if (!$lite && $slim) tagUX::contentBox(urlize($menu));
-			if (!$lite) h2($menu);
+			if (!$lite && !$boxes) h2($menu);
+
+			if ($boxes) {
+				if (count($result) > 1)
+					$result[] = htmlUX::valueOf(htmlUX::artClose);
+				$result[] = htmlUX::valueOf(htmlUX::art3);
+				$result[] = '<h3>' . $menu . '</h3>' . NEWLINES2;
+			}
 		}
 		if (!is_array($items)) $items = [$items];
-		foreach ($items as $item) {
+		foreach ($items as $ix => $item) {
 			$site = site::cast($item);
 			if ($lite) {
 				$sites[] = $site->asItem($urlKey, $menu);
@@ -22,7 +34,12 @@ function showSite($allItems) {
 			}
 
 			$link = $site->getUrl($urlKey);
-			$img = $site->getUrl($urlKey, $subdomainHack) . $site->key . '-logo.png';
+			$img = ($imgBase = $site->getUrl($urlKey, $subdomainHack) . $site->key) . '-logo.png';
+
+			if ($boxes) {
+				$result[] = '<a href="' . $link . '" target="_blank"><img width="40" src="' . $imgBase . '-icon.png" /> ' . $site->siteName . '</a> &mdash; ' . $site->description . '<hr />';
+				continue;
+			}
 
 			$append = '';
 			if (is_local())
@@ -63,6 +80,12 @@ function showSite($allItems) {
 		}
 
 		if (!$lite && $slim) tagUX::contentBoxEnd();
+	}
+
+	if ($boxes) {
+		$result[] = htmlUX::valueOf(htmlUX::artClose);
+		$result[] = htmlUX::valueOf(htmlUX::artAllClose);
+		echo implode(NEWLINE, $result);
 	}
 
 	if ($lite) {
