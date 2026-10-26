@@ -1,13 +1,14 @@
 ~Core
-joyfulearth/www
+amadeusweb/people/imran
+amadeusweb/www
 spring
 
-~Us
-joyfulearth/ours/imran
-joyfulearth/ours/ganymede
-joyfulearth/ours/goodness
+~Shasa
+amadeusweb/shasa/ganymede
+amadeusweb/shasa/goodness
 
-~Channels
-joyfulearth/sunlight/work
-joyfulearth/serenity/vishwas
-joyfulearth/symphony/roottrust
+~Domains
+aztras/www
+mssions/www
+homes/www
+spanda/www

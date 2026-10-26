@@ -78,8 +78,6 @@ function network_menu($renderFn = false) {
 function setupNetwork(string | bool $where = false, domain $domain = null) {
 	$networkSites = [];
 
-	$networkName = variable(VARNetwork);
-
 	$items = [];
 	$urlKey = _getUrlKeySansPreview();
 	$returnArray = false;
@@ -90,8 +88,9 @@ function setupNetwork(string | bool $where = false, domain $domain = null) {
 		foreach ($fols as $fol) $items[] = $where . $slash . $fol;
 		$returnArray = true;
 	} else {
-		if (!disk_file_exists($txt = NETWORKDEFINEDAT . $networkName . '.txt'))
-			return;
+		$txt = ALLSITESROOT . 'spring/data/Webring.txt';
+		if (disk_file_exists($txt2 = ALLSITESROOT . domain::$current->mainSites[0] . '/Webring.txt'))
+			$txt = $txt2;
 
 		$items = textToList(disk_file_get_contents($txt));
 	}

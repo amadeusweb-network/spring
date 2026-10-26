@@ -135,9 +135,9 @@ variables($op = [
 	'page-url' => scriptSafeUrl($url),
 ]);
 
+domain::includeAll();
 runFrameworkFile('site/network');
 runFrameworkFile('site/cms');
-domain::includeAll();
 
 if (disk_file_exists($fn = SITEPATH . '/functions.php'))
 	disk_include_once($fn);
