@@ -409,13 +409,14 @@ class htmlUX {
 		//7 - whitespace (4)
 		self::wsNewLines2, self::wsNewLine, self::wsJustBR, self::wsCrLf,
 		//8 - generic html (8)
-		self::hintOpen, self::hintClose, self::cbOPEN, self::cbCNO, self::cbOWC, self::cbCLOSE, self::tagDivStart, self::tagCloseGT,
+		self::hintOpen, self::hintClose, self::cbOPEN, self::cbCNO, self::cbCC, self::cbOWC, self::cbCLOSE, self::tagDivStart, self::tagCloseGT,
 	];
 
 	private static function ensureVars() {
 		$custom = [
 			self::cbOPEN[0] => contentBox('', '', true),
 			self::cbCNO[0] => cbCloseAndOpen('container my-5'),
+			self::cbCC[0] => '</div><div class="container my-5">',
 			self::cbOWC[0] => contentBox('', 'container', true),
 			self::cbCLOSE[0] => contentBox('end', 'mb-2', true),
 		];
@@ -509,6 +510,7 @@ class htmlUX {
 
 	const cbOPEN = ['[cb-open]', VARCustom];
 	const cbCNO = ['[cb-close-and-open]', VARCustom];
+	const cbCC = ['[cb-close-and-container]', VARCustom];
 	const cbOWC = ['[cb-open-with-container]', VARCustom];
 	const cbCLOSE = ['[cb-close]', VARCustom];
 
