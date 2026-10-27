@@ -3,6 +3,7 @@ class CanvasTheme {
 	const beauty = 'beauty';
 	const realEstate = 'real-estate';
 	const spa = 'spa';
+	const supplements = 'supplements';
 	const dontUseTag = false;
 
 	static function addAssets($page) {
@@ -34,6 +35,8 @@ class CanvasTheme {
 			$css[] = sprintf($format, $demo . $page . '.css');
 			$css[] = sprintf($format, $demo . 'css/font-icons.css');
 		} else if ($page == self::beauty) {
+			$css[] = sprintf($format, $demo . $page . '.css');
+		} else if ($page == self::supplements) {
 			$css[] = sprintf($format, $demo . $page . '.css');
 		}
 		return $css;

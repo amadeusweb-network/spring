@@ -212,7 +212,7 @@ function replaceHtml($html) {
 			'%section%' => sectionValue(),
 			'%section_r%' => humanizeThis(SECTIONVAR),
 
-			'%gmail-reponses%' => 'https://mail.google.com/mail/u/0/?ogbl#advanced-search/subject=responds+on+website',
+			'%gmail-reponses%' => 'https://mail.google.com/mail/u/0/?ogbl#advanced-search/subject=[' . NETWORKABBR . ']',
 			'%site-engage-btn%' => engageButton('Engage With Us', 'btn btn-lg btn-site'),
 
 			'%nodeUrlUptoLeaf%' => $loc = variable('all_page_parameters'), //experimental

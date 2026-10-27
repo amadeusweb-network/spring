@@ -24,7 +24,7 @@ abstract class builderBase {
 
 	function set($override = []) {
 		foreach ($override as $key => $value)
-		$this->settings[$key] = $value;
+			$this->settings[$key] = $value;
 		return $this;
 	}
 

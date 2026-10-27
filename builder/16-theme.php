@@ -71,6 +71,30 @@ function _useAltFooterDesign() {
 	return variableOr(VARFooterVariation, FooterWidgetsBelow) == FooterWidgetsBelow && !variable('no-footer-alt-design');
 }
 
+class themePart extends builderBase {
+	const aboveContent = 'optional-above-content';
+
+	public static function header() : themePart {
+		return (new themePart)->set([
+			'theme' => getThemeBaseUrl(), //TODO: /version can be maintained on the individual file?
+			'optional-page-menu' => '',
+			self::aboveContent => '<!--no-above-content-->',
+			'optional-slider' => '', //this could be a page title too
+			'optional-right-button' => '',
+			'optional-after-menu' => '',
+			'optional-search-trigger' => '',
+			'optional-search' => '',
+			//deprecate! 'header-align' => '', //an addon class needed if video page title has an image and wants content on right
+			'search-url' => searchUrl(),
+			//deprecate! 'app-static' => assetMeta(COREASSETS)['location'],
+		]);
+	}
+
+	function get($key) {
+		return $this->getSetting($key);
+	}
+}
+
 function runThemePart($what) {
 	if (!($content = variable('theme-template'))) {
 		$file = getThemeFile(variable('sub-theme') . '.html');
@@ -84,27 +108,16 @@ function runThemePart($what) {
 	$nodeIcon = getLogoOrIcon('icon', 'node');
 
 	if ($what == 'header') {
-		$vars = [
-			'theme' => getThemeBaseUrl(), //TODO: /version can be maintained on the individual file?
-			'optional-page-menu' => '',
-			'optional-slider' => '', //this could be a page title too
-			'optional-right-button' => '',
-			'optional-after-menu' => '',
-			'optional-search-trigger' => '',
-			'optional-search' => '',
-			//deprecate! 'header-align' => '', //an addon class needed if video page title has an image and wants content on right
-			'search-url' => searchUrl(),
-			//deprecate! 'app-static' => assetMeta(COREASSETS)['location'],
-		];
+		$vars = themePart::header();
 
 		$icon = '<link rel="icon" href="' . $nodeIcon . '" sizes="192x192">';
 
 		if (wants_only_content())
 			add_body_class('wants-only-content');
 
-		$vars['head-includes'] = '<title>' . title() . '</title>' . NEWLINE . '	' . $icon . NEWLINE . main::runAndReturn();
-		$vars['seo'] = seo_tags(true);
-		$vars['body-classes'] = body_classes(true);
+		$vars->setValue('head-includes', '<title>' . title() . '</title>' . NEWLINE . '	' . $icon . NEWLINE . main::runAndReturn());
+		$vars->setValue('seo', seo_tags(true));
+		$vars->setValue('body-classes', body_classes(true));
 
 		//TODO: icon link to node home, should have 2nd menu & back to home
 		$baseUrl = hasVariable(VARNodeSafeName) && !variable(VARDontOverwriteLogo) ? pageUrl(nodeValue()) : pageUrl();
@@ -113,18 +126,18 @@ function runThemePart($what) {
 		$imgOrText = mediakit::getVar(mediakit::noLogo) ? $baseName : concatStrings('',
 			$indent, '	<img src="', getLogoOrIcon('logo', 'node'), '" class="img-fluid img-max-',
 			variableOr('footer-logo-max-width', '500'), '" alt="', $baseName, '">');
-		$vars['logo'] = replaceItems($indent . '<a href="%url%">%inner%</a>' . BRNL,
-			['url' => $baseUrl . variableOr('nodeChildSlug', ''), 'inner' => $imgOrText], WRAPREPLACE);
+		$vars->setValue('logo', replaceItems($indent . '<a href="%url%">%inner%</a>' . BRNL,
+			['url' => $baseUrl . variableOr('nodeChildSlug', ''), 'inner' => $imgOrText], WRAPREPLACE));
 
-		$vars['optional-page-css'] = [];
-		$vars['optional-page-menu'] = _page_menu($siteIcon, $nodeIcon);
+		$vars->setValue('optional-page-css', []);
+		$vars->setValue('optional-page-menu', _page_menu($siteIcon, $nodeIcon));
 
 		if (!variable(VARNoSearch)) {
-			$vars['optional-search-trigger'] = getThemeSnippet('search-trigger');
-			$vars['optional-search'] = replaceItems(getThemeSnippet('search'), ['search-url' => searchUrl()], '##');
+			$vars->setValue('optional-search-trigger', getThemeSnippet('search-trigger'));
+			$vars->setValue('optional-search', replaceItems(getThemeSnippet('search'), ['search-url' => searchUrl()], '##'));
 		}
 
-		$header = _substituteThemeVars($content, 'header', $vars);
+		$header = _substituteThemeVars($content, 'header', $vars->settings, $vars);
 
 		$bits = explode('##menu##', $header);
 
@@ -169,10 +182,10 @@ function runThemePart($what) {
 				'credits' => _credits('', true),
 			];
 
-			$vars['footer-widgets'] = _substituteThemeVars($content, 'footer-widgets', $fwVars);
+			$vars['footer-widgets'] = _substituteThemeVars($content, 'footer-widgets', $fwVars, null);
 		}
 
-		$footer = _substituteThemeVars($content, 'footer', $vars);
+		$footer = _substituteThemeVars($content, 'footer', $vars, null);
 
 		$atBody = !contains($footer, '##footer-includes##');
 		$bits = explode($atBody ? '</body>' : '##footer-includes##', $footer);
@@ -256,9 +269,9 @@ function _page_menu($siteIcon, $nodeIcon) {
 	return $result;
 }
 
-function _substituteThemeVars($content, $what, $vars) {
+function _substituteThemeVars($content, $what, $vars, $part) {
 	if (function_exists('enrichThemeVars'))
-		$vars = enrichThemeVars($vars, $what);
+		$vars = enrichThemeVars($vars, $what, $part);
 
 	if ($what == 'header') {
 		$vars['optional-page-css'] = implode($vars['optional-page-css']);

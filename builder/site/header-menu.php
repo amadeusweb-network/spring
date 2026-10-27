@@ -46,6 +46,7 @@ if ($groups = variable('section-groups')) {
 }
 
 subsitesMenu();
+if (function_exists('before_network_menu')) before_network_menu();
 if (function_exists('network_menu')) network_menu(); //for the actual menu
 
 if (function_exists('pollenAt')) pollenAt(PINICONS);
