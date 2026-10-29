@@ -1,11 +1,14 @@
 /**
- * v3 of the engage feature - a part of spring.amadeusweb.world (v9.2)
- * **** Get Emails with details on each call to action.
+ * Get Emails/WhatsApp with details on each call to action.
+ * 
+ * v3 of the engage feature - a part of spring.amadeusweb.in (v9.9)
+ * file lives at: https://github.com/amadeusweb-network/spring/blob/main/assets/engage.js
+ * terms: https://spring.amadeusweb.in/license/#code-terms
  * 
  * DO NOTE: This is proprietary software by Imran Ali Namazi.
  * It cannot be reused, distributed or derived without
  * prior written consent after paying a royalty for it.
- */
+  */
 
 if (typeof($) === 'undefined') $ = jQuery.noConflict();
 
@@ -24,6 +27,7 @@ $(document).ready(function() {
 
 	divs.each(function(ix, div) {
 		div = $(div);
+		generateId(div);
 		$('textarea', div).on('change, input', textAreaAutoHeight);
 		$('.prepare-message', div).click(prepareMessage);
 	});
@@ -42,6 +46,15 @@ $(document).ready(function() {
 		}
 	});
 
+	function generateId(div) {
+		const caseId = div.data('case-id') ?? URL.createObjectURL(new Blob()).substr(-8).toUpperCase();
+		if (!div.data('case-id')) {
+			div.data('case-id', caseId);
+			$('[data-field="TicketId"]:not(input)', div).text(caseId);
+			$('input[data-field="TicketId"]', div).val(caseId);
+		}
+		return caseId;
+	}
 
 	function prepareMessage() {
 		var div = $(this).closest('.engage');
@@ -58,8 +71,10 @@ $(document).ready(function() {
 		}
 		
 		const siteName = div.data('site-name');
-		let salutation = div.data('salutation');
-		if (!salutation) salutation = 'Dear Amadeus Web World,';
+		let salutation = $('.salutation', div).text().replace(/\r?\n/g, "\r\n\r\n");
+		if (!salutation) salutation = div.data('salutation');
+		if (!salutation) salutation = 'Dear AmadeusWeb Network,';
+
 		var headings = {}, firstHeading = true, output = salutation + "\r\n\r\n";
 
 		items.each(function() {
@@ -76,7 +91,8 @@ $(document).ready(function() {
 			output += "\r\n\r\n" + item.text() + "\r\n -> " + note.val();
 		});
 
-		const caseId = URL.createObjectURL(new Blob()).substr(-6).toUpperCase();
+		const caseId = generateId(div);
+
 		const date_r = new Date().toDateString();
 		output += "\r\n\r\nRegards,\r\n --- [Me]\r\n\r\n[Case Number:"
 			+ caseId + ", Date Raised: " + date_r + "]";

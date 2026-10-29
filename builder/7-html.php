@@ -174,6 +174,7 @@ function replaceHtml($html) {
 			'%core-assets%' => _resolveFile('', STARTATCORE),
 			'##theme##' => getThemeBaseUrl(),
 
+			'%%cdn%%' => getWhatIsLink('cdn'), //has to be here
 			'%cdn%' => variableOr('cdn', ((variable('is-mobile') || variable('live-cdn')) ? variable('live-url') : $assetsUrl) . 'assets/cdn/'),
 
 			'%currentUrl%' => currentUrl(),
@@ -398,8 +399,8 @@ class htmlUX {
 		self::divLargeListSep, self::divLargeListLA, self::divLargeListLR, self::divLargeList, self::divLargeList,
 		//2 - divs (5)
 		self::divContainer, self::divContainerBox, self::divCenter500, self::divCenter, self::divRight,
-		//3 - divs (7)
-		self::divClear, self::divBox, self::divLinks, self::divStart, self::divClose, self::divSFClose, self::divSF,
+		//3 - divs (8)
+		self::divClear, self::divBox, self::divLinks, self::divStart, self::divSalutation, self::divClose, self::divSFClose, self::divSF,
 		//4 - bs grid (6)
 		self::gridRow, self::grid3, self::grid4, self::grid5, self::grid6, self::grid7, self::grid8, self::grid9,
 		//5 - articles / grid (4)
@@ -459,11 +460,12 @@ class htmlUX {
 	const divCenter500 = ['DIV-MAX-500-CENTER', '<div class="m-auto img-max-500">'];
 	const divCenter = ['DIV-CENTER', '<div class="text-center">'];
 	const divRight = ['DIV-RIGHT', '<div class="float-right">'];
-	//3 - divs (7)
+	//3 - divs (8)
 	const divClear = ['DIV-CLEAR', '<div class="clearfix"></div>'];
 	const divBox = ['DIV-WITHBOX', '<div class="content-box">'];
 	const divLinks = ['DIV-LINKS', '<div class="aws-links content-box float-right mr-3 mb-2 p-1 small">'];
 	const divStart = ['DIV-START', '<div>'];
+	const divSalutation = ['DIV-SALUTATION', '<div class="p-2 rounded-3 bg-secondary dark salutation">'];
 	const divClose = ['DIV-CLOSE', TAGDIVEND];
 	const divSFClose = ['DIV-SPACEFIX-CLOSE', TAGDIVEND];
 	const divSF = ['DIV-SPACEFIX', '<div>'];

@@ -29,6 +29,10 @@ function getSpecialUrl($name) {
 	else throw new Error('Unknown SpecialUrl: ' . $name);
 }
 
+function getWhatIsLink($name) {
+	return getLink('&nbsp;' . $name . '&nbsp;', getSiteUrl(SITESPRING) . '#todo/what-is/cdn/', 'rounded-2 p-1 text-black fw-bolder bg-info');
+}
+
 class site {
 	/**
 	 * @return site Cast the site

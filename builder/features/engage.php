@@ -72,7 +72,10 @@ function tryEnrichEngageNote($content, $where) {
 }
 
 function renderEngageFields($raw) {
-	return replaceItems($raw, ['[field]' => '<ul><li>amount</li><li>note</li></ul>']);
+	return replaceItems($raw, [
+		'[field]' => '<ul><li>amount</li><li>note</li></ul>',
+		'[field-TicketId]' => '<span class="bg-info dark p-2 fs-5 rounded-2 listened-field" data-field="TicketId">%TicketId%</span>',
+	]);
 }
 
 function runEngageFromSheet($pageName, $sheetName) {

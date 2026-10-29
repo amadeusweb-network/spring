@@ -74,9 +74,10 @@ class domain {
 
 		if ($skipRule && $skipRule != self::SkipList && !$match && !DEFINED('ALLSITENAME')) return;
 
-		if ($match && !DEFINED('NETWORKPATH')) {
+		if ($match) {
 			self::$current = $item;
-			DEFINE('NETWORKPATH', $folder);
+			if (!DEFINED('NETWORKPATH'))
+				DEFINE('NETWORKPATH', $folder);
 		}
 
 		if (self::$skipRest) return;
