@@ -211,6 +211,8 @@ function getQueryParameter($param, $or = false) {////use: VARQuery[$param]
 
 ////NOTE: needed before header is called
 class fileResolver {
+	public static $echoRawHtml = false;
+
 	public string | bool $rootFile;
 	public string | bool $contentFile;
 
@@ -281,8 +283,13 @@ function render() {
 		$rendered = true;
 	} else if ($resolver->contentFile) {
 		$rendered = true;
-		builtinOrRender($resolver->contentFile, false, !variable('skip-container-for-this-page'));
-		pageMenu($resolver->contentFile);
+		if (fileResolver::$echoRawHtml) {
+			$file = disk_file_get_contents($resolver->contentFile);
+			echo replaceHtml($file);
+		} else {
+			builtinOrRender($resolver->contentFile, false, !variable('skip-container-for-this-page'));
+			pageMenu($resolver->contentFile);
+		}
 	} else {
 		$rendered = false;
 	}
