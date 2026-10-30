@@ -206,6 +206,8 @@ function hasPageParameter($param) {////use: VARPage[$param]
 }
 
 function getQueryParameter($param, $or = false) {////use: VARQuery[$param]
+	if (hasVariable($key = VARQueryPrefix . $param))
+		return variable($key);
 	return isset($_GET[$param]) ? $_GET[$param] : $or;
 }
 

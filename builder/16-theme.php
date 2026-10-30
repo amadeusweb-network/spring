@@ -119,7 +119,7 @@ function runThemePart($what) {
 
 		$icon = '<link rel="icon" href="' . $nodeIcon . '" sizes="192x192">';
 
-		if (wants_only_content())
+		if (wants_only_content() && !hasVariable(VARQueryPrefix . VARQueryContent))
 			add_body_class('wants-only-content');
 
 		$vars->setValue(themePart::headIncludes, '<title>' . title() . '</title>' . NEWLINE . '	' . $icon . NEWLINE . main::runAndReturn());

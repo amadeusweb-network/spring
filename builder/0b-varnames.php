@@ -23,6 +23,7 @@ function wrap_variable($var) { return VARWrapper . $var / VARWrapper; }
 
 //1-entry.php
 DEFINE('VARPageSlider', 'slider');
+DEFINE('VARQueryPrefix', 'query-');
 DEFINE('VARQueryContent', 'content');
 DEFINE('VARQueryName', 'name');
 DEFINE('VARQueryHeadings', 'headings');
