@@ -88,18 +88,18 @@ function _getSnippetPath($fol, $type = 'plain') {
 	return (defined('NETWORKDATA') ? NETWORKDATA : SITEPATH . '/data/') . $result;
 }
 
-function getSnippet($name, $fol = false) {
+function getSnippet($name, $fol = false, $type = 'html, md') {
 	$core = $fol == CORESNIPPET ? '-core' : '-';
 
 	$fileFol = _getSnippetPath($fol); //plain
 
-	$ext = disk_one_of_files_exist($fileFol . $name . '.', 'html, md');
+	$ext = disk_one_of_files_exist($fileFol . $name . '.', $type);
 	if (!$ext) return '';
 	
-	return replaceSnippets('%' . $name . $core . 'snippet%', [$name . '.' . $ext], $fol);
+	return replaceSnippets('%' . $name . $core . 'snippet%', [$name . '.' . $ext], $fol, $type);
 }
 
-function replaceSnippets($html, $files = false, $fol = false) {
+function replaceSnippets($html, $files = false, $fol = false, $type = 'html, md') {
 	$prefix = $fol == CORESNIPPET ? '-core' : ($fol == NODESNIPPET ? '-node' : '-');
 	if (!$fol || $fol == CORESNIPPET || $fol == NODESNIPPET) $fol = _getSnippetPath($fol, $fol == NODESNIPPET ? 'node' : 'plain'); //plain	
 
@@ -108,17 +108,17 @@ function replaceSnippets($html, $files = false, $fol = false) {
 	foreach ($files as $file) {
 		if ($file[0] == '.') continue;
 
-		$fwoe = replaceItems($file, ['.md' => '', '.html' => '']);
-		$ext = disk_one_of_files_exist($fol . $fwoe . '.', 'html, md');
+		$fwoe = replaceItems($file, ['.md' => '', '.html' => '', '.json' => '']);
+		$ext = disk_one_of_files_exist($fol . $fwoe . '.', $type);
 		$key = '%' . $fwoe . $prefix . 'snippet%';
 
 		if (!contains($html, $key)) continue;
-		$op = renderMarkdown($fol . $file, [
+		$op = $ext == 'json' ? disk_file_get_contents($fol . $file) : renderMarkdown($fol . $file, [
 			'echo' => false,
 			'raw' => $ext == 'html',
 		]);
 
-		if ($ext == 'html')
+		if (in_array($ext, ['html', 'json']))
 			$op = replaceHtml($op);
 
 		$html = str_replace($key, $op, $html);

@@ -205,7 +205,9 @@ function replaceHtml($html) {
 			'%timings%' => variableOr('timings', '[no-timings]'),
 			'%address-url%' => variableOr('address-url', '#no-link'),
 
-			'%welcome-message%' => markdown(pipeToNL(variable(VARWelcomeMessage))), //links will get picked up
+			'%welcome-message-raw%' => $welcome = variable(VARWelcomeMessage),
+			'%welcome-message%' => markdown(pipeToNL($welcome)), //links will get picked up
+
 			'%siteName%' => $sn = variable('name'),
 			'%siteName_subject%' => urlencode($sn),
 			'%byline%' =>  variable(VARByline),

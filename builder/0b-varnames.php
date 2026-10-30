@@ -66,6 +66,7 @@ function wants_md_in_parser($raw) { return contains($raw, '<!--markdown-when-pro
 
 //12-macros.php
 DEFINE('VARCTAONLY', '?cta=1&content=1');
+DEFINE('VARUPI', 'upi');
 
 //14-main.php
 DEFINE('VARSystemEmail', 'imran@amadeusweb.in');

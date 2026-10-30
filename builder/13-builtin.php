@@ -3,6 +3,7 @@ DEFINE('CONTENTFILES', 'php, md, tsv, txt, html');
 DEFINE('CONTENTFILEEXTENSIONS', explode(', ', CONTENTFILES));
 DEFINE('ENGAGEFILES', 'md, tsv');
 DEFINE('FILESWITHMETA', 'md, tsv, php');
+DEFINE('JSONFILE', 'json');
 
 DEFINE('ExcludedFolders', $xc = ['assets', 'data']);
 $xc[] = 'home';

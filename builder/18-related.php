@@ -9,6 +9,12 @@ function relatedMetaFile($file) {
 	return pathinfo($file, PATHINFO_DIRNAME) . '/' . pathinfo($file, PATHINFO_FILENAME) . '--meta==.md';
 }
 
+function relatedJsonFile($file) {
+	$file = pathinfo($file, PATHINFO_DIRNAME) . '/_/' . pathinfo($file, PATHINFO_FILENAME) . '.json';
+	if (!disk_file_exists($file)) return false;
+	return replaceHtml(disk_file_get_contents($file));
+}
+
 function printRelatedPages($file) {
 	$fol = pathinfo($file, PATHINFO_DIRNAME) . '/_/' . pathinfo($file, PATHINFO_FILENAME) . '/';
 	if (!disk_is_dir($fol)) return;

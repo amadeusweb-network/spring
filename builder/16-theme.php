@@ -73,6 +73,7 @@ function _useAltFooterDesign() {
 
 class themePart extends builderBase {
 	const aboveContent = 'optional-above-content';
+	const headIncludes = 'head-includes';
 
 	public static function header() : themePart {
 		return (new themePart)->set([
@@ -92,6 +93,12 @@ class themePart extends builderBase {
 
 	function get($key) {
 		return $this->getSetting($key);
+	}
+
+	function append($key, $content, $type = 'raw') {
+		if ($type == 'json')
+			$content = '<script type="application/ld+json">' . NEWLINE . $content . NEWLINE . '</script>';
+		$this->setValue($key, $this->get($key) . NEWLINE . $content . NEWLINE);
 	}
 }
 
@@ -115,7 +122,7 @@ function runThemePart($what) {
 		if (wants_only_content())
 			add_body_class('wants-only-content');
 
-		$vars->setValue('head-includes', '<title>' . title() . '</title>' . NEWLINE . '	' . $icon . NEWLINE . main::runAndReturn());
+		$vars->setValue(themePart::headIncludes, '<title>' . title() . '</title>' . NEWLINE . '	' . $icon . NEWLINE . main::runAndReturn());
 		$vars->setValue('seo', seo_tags(true));
 		$vars->setValue('body-classes', body_classes(true));
 

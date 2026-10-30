@@ -209,6 +209,41 @@ function getQueryParameter($param, $or = false) {////use: VARQuery[$param]
 	return isset($_GET[$param]) ? $_GET[$param] : $or;
 }
 
+////NOTE: needed before header is called
+class fileResolver {
+	public string | bool $rootFile;
+	public string | bool $contentFile;
+
+	public function __construct() {
+		$this->contentFile = $this->rootFile = in_array(nodeValue(), ['readme', 'license']) ? SITEPATH . '/' . strtoupper(nodeValue()) . '.md' : false;
+		$folder = SITEPATH . '/' . (variable('folder') ? variable('folder') : '');
+		if ($this->rootFile) return; //seo?
+
+		$ext = disk_one_of_files_exist($fwe = $folder . nodeValue() . '.', CONTENTFILES);
+		if ($ext) {
+			$this->contentFile = $fwe . $ext;
+		} else if (nodeIsSection() && !getPageParameterAt()) {
+			$fwe = SITEPATH . '/' . nodeValue() . '/home.';
+			if ($ext = disk_one_of_files_exist($fwe, CONTENTFILES))
+				$this->contentFile = $fwe . $ext;
+		}
+
+		if ($this->contentFile)
+			read_seo($this->contentFile, true); //support seo
+	}
+
+	private static $root;
+
+	static function getRoot() : fileResolver {
+		return self::$root ?? (self::$root = new fileResolver);
+	}
+
+	static function rootOrFile() {
+		$root = self::getRoot();
+		return $root->contentFile ? $root->contentFile : SITEPATH . variable('file');
+	}
+}
+
 function render() {
 	if (function_exists('before_render')) before_render();
 	ob_start();
@@ -216,29 +251,13 @@ function render() {
 	$theme = variable('theme');
 	$embed = variable('embed');
 
-	$fileWanted = $rootFile = in_array(nodeValue(), ['readme', 'license']) ? SITEPATH . '/' . strtoupper(nodeValue()) . '.md' : false;
-	$folder = SITEPATH . '/' . (variable('folder') ? variable('folder') : '');
-	if (!$rootFile) {
-		//asumes logic below will never go to else part
-		$contentExt = disk_one_of_files_exist($contentFWE = $folder . nodeValue() . '.', CONTENTFILES);
-		if ($contentExt) {
-			$fileWanted = $contentFWE . $contentExt;
-		} else if (nodeIsSection() && !getPageParameterAt()) {
-			$sectionFWE = SITEPATH . '/' . nodeValue() . '/home.';
-			if ($sectionExt = disk_one_of_files_exist($sectionFWE, CONTENTFILES))
-				$fileWanted = $sectionFWE . $sectionExt;
-		}
-	}
-
-	if ($fileWanted) {
-		read_seo($fileWanted, true); //support seo
-	}
-
 	if (!$embed) {
 		renderThemeFile('header', $theme);
 		if (function_exists('network_before_file')) network_before_file();
 		if (function_exists('before_file')) before_file();
 	}
+
+	$resolver = fileResolver::getRoot();
 
 	if (variable(features::underConstruction)) {
 		runFeature(features::underConstruction);
@@ -254,19 +273,18 @@ function render() {
 		$rendered = true; //dont want to render content. and needed here as it shouldnt support "content" menu pages
 	} else if (variable('skip-content-render')) {
 		$rendered = false;
-	} else if ($rootFile) {
+	} else if ($resolver->rootFile) {
 		h2(variable('name') . ' &mdash; ' . humanizeThis(), cssUX::CenterContainer);
 		contentBox('root-file', 'container content-box');
-		renderAny($rootFile);
+		renderAny($resolver->rootFile);
 		contentBox('end');
 		$rendered = true;
+	} else if ($resolver->contentFile) {
+		$rendered = true;
+		builtinOrRender($resolver->contentFile, false, !variable('skip-container-for-this-page'));
+		pageMenu($resolver->contentFile);
 	} else {
 		$rendered = false;
-		if ($contentExt) {
-			$rendered = true;
-			builtinOrRender($file = $contentFWE . $contentExt, false, !variable('skip-container-for-this-page'));
-			pageMenu($file);
-		}
 	}
 
 	if (!$rendered) {

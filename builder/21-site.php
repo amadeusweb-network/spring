@@ -35,6 +35,11 @@ function getWhatIsLink($name) {
 
 class site {
 	/**
+	 * @var site Current site
+	 */
+	static $current;
+
+	/**
 	 * @return site Cast the site
 	 */
 	static function cast($item) {
