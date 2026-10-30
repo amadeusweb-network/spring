@@ -32,7 +32,7 @@ function renderNetworkPanel(site $site, array $settings) {
 	$url = $site->getUrl($key = _getUrlKeySansPreview());
 	$imgBase = $site->getUrl($key, true);
 	$logo = '<img src="' . $imgBase . valueIfSet($settings, 'logo', $site->key . '-logo.png') . '" height="100" class="img-fluid img-max-400 content-network-logo" />';
-	$result[] = '<div class="text-center">' . $logo . '</div>';
+	$result[] = '<div class="text-center"><a href="' . $url . '">' . $logo . '</a></div>';
 
 	if (valueIfSet($settings, 'in-center')) {
 		echo implode(NEWLINE, $result);
@@ -41,7 +41,7 @@ function renderNetworkPanel(site $site, array $settings) {
 
 	$h3Class = valueIfSet($settings, 'h3-class', '');
 
-	$link = '<h3 class="site-button text-center' . $h3Class . '"><a href="' . $url . '">' . $site->siteName . '</a></h3>';
+	$link = '<h3 class="site-button m-1 text-center' . $h3Class . '"><a href="' . $url . '">' . $site->siteName . '</a></h3>';
 
 	$result[] = $link;
 	$result[] = '<small>' . $site->byline . '</small>';

@@ -64,11 +64,17 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		} else if (contains($raw, '<!--is-family-tree-->')) {
 			features::runWithFile(features::familyTree, $file);
 		} else {
-			$wantsNoCB = variable('skip-content-box-for-this-page') || contains(disk_file_get_contents($file), WANTSNOCONTENTBOX);
-			$settings = ['use-content-box' => !$wantsNoCB];
-			if ($useHeading) $settings['heading'] = $pageName;
-			if (variable(FIRSTSECTIONONLY)) $settings[FIRSTSECTIONONLY] = true;
-			renderAny($file, $settings);
+			$set = renderSET::create();
+
+			if (!variable('skip-content-box-for-this-page') && !contains(disk_file_get_contents($file), WANTSNOCONTENTBOX))
+				$set->setValue(VARUseContentBox, true);
+			
+			if ($useHeading) $set->heading($pageName);
+
+			if (nodeIs(SITEHOME)) $set->setValue(renderSET::notice, site::$current->description);
+
+			if (variable(FIRSTSECTIONONLY)) $set->setValue(FIRSTSECTIONONLY, true);
+			$set->render($file);
 		}
 
 		if (!$embed) sectionEnd();

@@ -1,6 +1,8 @@
 <?php
 class renderSET extends builderBase {
 	const default = 'implementation';
+	const heading = 'heading';
+	const notice = 'notice';
 
 	private $method, $pageId;
 
@@ -46,6 +48,10 @@ class renderSET extends builderBase {
 
 	function noCB($yes = BOOLYes) {
 		return $this->setValue(VARNoContentBoxes, $yes);
+	}
+
+	function heading($val) {
+		return $this->setValue(self::heading, $val);
 	}
 }
 
@@ -316,7 +322,10 @@ function _renderImplementation($fileOrRaw, $settings) {
 	else if (!$engage->wants_engage)
 		$output = str_replace(HRTAG, cbCloseAndOpen('container'), $output);
 
-	if (!$noReplaces && isset($settings['heading'])) $output = variableOr('custom-heading', h2($settings['heading'], 'amadeus-heading amadeus-icon', BOOLYes)) . NEWLINES2 . $output;
+	if ($notice = valueIfSet($settings, renderSET::notice))
+		$output = '<div class="bg-info text-center dark p-2 mb-4">' . replaceHtml($notice) . '</div>' . NEWLINES2 . $output;
+
+	if (!$noReplaces && isset($settings[renderSET::heading])) $output = variableOr('custom-heading', h2($settings[renderSET::heading], 'amadeus-heading amadeus-icon', BOOLYes)) . NEWLINES2 . $output;
 
 	if ($engage->endContent) {
 		features::ensureEngage();
