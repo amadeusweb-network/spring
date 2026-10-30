@@ -117,6 +117,11 @@ function runThemePart($what) {
 	if ($what == 'header') {
 		$vars = themePart::header();
 
+		if (wants_only_content()) {
+			includeThemeManager();
+			themeScripts();
+		}
+
 		$icon = '<link rel="icon" href="' . $nodeIcon . '" sizes="192x192">';
 
 		if (wants_only_content() && !hasVariable(VARQueryPrefix . VARQueryContent))

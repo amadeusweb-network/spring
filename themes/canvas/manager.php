@@ -58,3 +58,8 @@ class CanvasTheme {
 		];
 	}
 }
+
+function themeScripts() {
+	addScript('js/plugins.min', assetManager::theme);
+	addScript('js/functions.bundle', assetManager::theme);
+}

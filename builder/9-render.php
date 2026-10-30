@@ -198,6 +198,10 @@ class replacer extends builderBase {
 		}
 		return $raw;
 	}
+
+	static function replace($raw) {
+		return replaceHtml((new replacer([]))->replaceAll($raw));
+	}
 }
 
 //_ denotes its not to be called from outside - see flavours above + remove deprecated

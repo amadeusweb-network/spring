@@ -662,7 +662,7 @@ class linkBuilder extends builderBase {
 	const selectedLink = 'btn-success margins noPageUrl';
 	const innerLink = 'btn-secondary margins';
 
-	static function factory($text, $href, $setting, $echo = false) {
+	static function factory($text, $href, $setting, $echo = false, $class = false) {
 		$do = explode(' ', $setting);
 
 		if (in_array('strip-extension', $do))
@@ -713,6 +713,9 @@ class linkBuilder extends builderBase {
 
 		if (in_array('block', $do))
 			$result->addClass('d-block me-3 mb-3');
+
+		if ($class)
+			$result->addClass($class);
 
 		if (in_array('lightbox', $do)) {
 			$result->attrs .= ' data-lightbox="iframe"';
