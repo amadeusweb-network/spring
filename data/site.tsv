@@ -17,6 +17,6 @@ mediakit	?palette=default
 fonts	cursive=Eagle+Lake&menu=Quintessential&menu-size=1.3rem
 
 |technical
-sections	smithy, network, whois
+sections	smithy, whois
 local-url	http://localhost/spring/
 live-url	https://spring.amadeusweb.in/

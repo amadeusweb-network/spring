@@ -28,6 +28,8 @@ DEFINE('AMADEUSFEATURES', AMADEUSBUILDER . 'features/');
 DEFINE('AMADEUSMODULES', AMADEUSBUILDER . 'modules/');
 DEFINE('AMADEUSDATA', AMADEUSBUILDER . 'data/');
 
+DEFINE('AMADEUSREPOSPATH', AMADEUSSITEROOT . 'whois/network/repos.php');
+
 function handoverSansStats() {
 	$critical = [
 		AMADEUSBUILDER . '0a-process.php', //for parsing when ?process=1
