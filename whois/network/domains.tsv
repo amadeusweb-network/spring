@@ -1,0 +1,16 @@
+|is-table
+||cloneAt: 
+||renderWith: repos.php
+||Description: AmadeusWeb Domains
+||Primary Keyword: DAWN
+||Keywords: AW Domains
+#at	from
+
+amadeusweb/www	https://github.com/amadeusweb-sites/www.git
+
+homes/www	https://github.com/amadeusweb-network/homes.git
+biz/www	https://github.com/amadeusweb-network/biz.git
+missions/www	https://github.com/amadeusweb-network/missions.git
+
+sites/spanda/www	https://github.com/amadeusweb-members/spanda.git
+sites/aztras/www	https://github.com/amadeusweb-members/aztras.git

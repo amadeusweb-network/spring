@@ -13,9 +13,9 @@ class domain {
 	public static $skipRest = false;
 
 	static function includeAll() {
-		$sheet = getSheet(AMADEUSSITEDATA . 'domains.tsv', false);
+		$sheet = getSheet(AMADEUSSITEROOT . 'whois/network/domains.tsv', false);
 		foreach ($sheet->rows as $item) {
-			$site = $sheet->getValue($item, 'site');
+			$site = $sheet->getValue($item, 'at');
 			if (!disk_is_dir(ALLSITESROOT . $site)) continue;
 			disk_include_once(ALLSITESROOT . $site . '/domain.php');
 		}

@@ -51,7 +51,7 @@ function _color($palette, $key, $default) {
 	return $val == 'no' ? 'transparent' : '#' . $val;
 }
 
-$content = _color($palette, 'content', 'e9f2ff');
+$content = _color($palette, 'content-bgd', 'e9f2ff');
 
 echo replaceItems($op, [
 	'header' => _color($palette, 'header', 'no'),
