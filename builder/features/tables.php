@@ -214,6 +214,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	if ($useDatatables && $rg = valueIfSetAndNotEmpty($values, 'row-group')) $datatableParams .= 'data-row-group="' . $rg . '" ';
 
 	$skipItemFn = isset($values['skipItem']) ? $values['skipItem'] : false;
+	$enrichItemFn = isset($values['enrichItem']) ? $values['enrichItem'] : false;
 
 	if ($beforeContent = valueIfSetAndNotEmpty($values, 'before-content')) echo returnLine(pipeToBR($beforeContent));
 	if ($allowCards) echo '<div class="text-center"><button data-table-id="amadeus-table-' . $id . '" class="amadeus-table-' . $id . '-card-view">toggle card view</button></div>' . BRNL;
@@ -254,6 +255,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 		}
 
 		if ($skipItemFn && $skipItemFn($row)) continue;
+		if ($enrichItemFn) $row = $enrichItemFn($row);
 		if (valueIfSet($row, 'Skip') || valueIfSet($row, 'skip')) continue;
 
 		if ($wantsBSEnricher) {

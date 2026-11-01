@@ -350,13 +350,14 @@ function siteWidgets() {
 	$colspan = $grid[$colsInUse];
 
 	$start = sprintf('<div id="footer-[WHAT]" class="col-md-%s mt-sm-2 pt-xs-3"><hr class="d-sm-none">', $colspan) . NEWLINE;
+	$h4 = '<h4 class="mb-1 bg-light p-2 d-inline-block rounded-6">';
 
 	//TODO: Showcase + Misc
 	$op = [];
 
 	if ($showSections) {
 		$op[] = str_replace('[WHAT]', 'sections', $start);
-		$op[] = '<h4 class="mb-1 bg-light p-2 d-inline-block rounded-6">Sections</h4>' . BRNL;
+		$op[] = $h4 . 'Sections</h4>' . BRNL;
 		$class = variableOr('sections-class', '') . ' m-1 p-2 d-inline-block %bgd% dark rounded-6';
 		foreach ($sections as $slug)
 			$op[] = getLink(humanize($slug), pageUrl($slug),
@@ -366,13 +367,13 @@ function siteWidgets() {
 
 	if ($showNetwork) {
 		$op[] = str_replace('[WHAT]', 'network', $start);
-		$op[] = '<h4 class="mb-1">' . networkLink() . '</h4>';
+		$op[] = $h4 . networkLink() . '</h4>' . BRNL;
 
 		$urlKey = _getUrlKeySansPreview();
 		$brYes = _useAltFooterDesign() ? NEWLINE : BRNL;
 		foreach ($sites as $ix => $item) {
 			if (is_string($item)) {
-				$op[] =  ($ix > 0 ? BRNL : '') . '<u class="m-1 ms-3">' . substr($item, 1) . '</u>';
+				$op[] =  ($ix > 0 ? BRNL : '') . '<u class="m-1 ms-3 bg-light p-1">' . substr($item, 1) . '</u>';
 				continue;
 			}
 			$site = site::cast($item);
@@ -384,7 +385,7 @@ function siteWidgets() {
 
 	if ($showSocial) {
 		$op[] = str_replace('[WHAT]', socialBuilder::variableName, $start);
-		$op[] = '<h4 class="mb-1">' . variableOr('social-caption', 'Social') . '</h4>';
+		$op[] = $h4 . variableOr('social-caption', 'Social') . '</h4>' . BRNL;
 		appendSocial($social, $op);
 		$op[] = '</div>'; $op[] = '';
 	}

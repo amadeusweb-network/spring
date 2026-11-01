@@ -78,7 +78,7 @@ function _visane($siteVars) {
 		[VARFonts, ''], //used in mediakit.php
 		[VARDescription, false],
 		[VARWelcomeMessage, 'Welcomes you!'],
-		[VARNoSearch, true], //TODO: GPSE - high
+		[VARNoSearch, false],
 		[VARNetwork, 'Webring'],
 		[VARDAWNMenu, true],
 	];
@@ -130,7 +130,9 @@ $safeName = $siteVars[VARSafeName];
 variables($op = [
 	'folder' => 'content/',
 	'siteHumanizeReplaces' => siteHumanize(),
-	'scaffold' => isset($siteVars['scaffold']) ? explode(', ', $siteVars['scaffold']) : [],
+	'scaffold' => isset($siteVars['scaffold'])
+		? explode(', ', $siteVars['scaffold'])
+		: ['search'], //TODO: sitemap
 
 	'path' => SITEPATH,
 	'assets-url' => $url,

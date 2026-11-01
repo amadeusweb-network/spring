@@ -84,7 +84,7 @@ class socialBuilder {
 	//#region begin
 	const readme = 'fa fa-book-reader bg-success';
 	const license = 'fa fa-legal bg-danger';
-	const terms = 'fa fa-legal bg-danger';
+	const terms = 'fa fa-legal bg-primary';
 	function addBuiltin($readme = self::readme, $license = self::license, $terms = false) {
 		$spring = getSiteUrl(SITESPRING);
 		return $this
@@ -139,9 +139,9 @@ class socialBuilder {
 	}
 
 	//#region begin
-	function addShare() {
+	function addShare($share = self::shareBtn) {
 		return $this
-			->addInternal(getPageParameters(VARSlash . features::shareQS), 'Share Via&hellip;', self::shareBtn);
+			->addInternal(getPageParameters(VARSlash . features::shareQS) . NOFOLLOWSUFFIX, 'Share Via&hellip;', $share);
 	}
 
 	function addImranPersonal($who = true, $technologist = true, $builder = true) {

@@ -110,3 +110,46 @@ class aihelper {
 		]);
 	}
 }
+
+class search {
+	public $key;
+	public $name;
+	public $code;
+	public $description;
+
+	function __construct($key, $name, $code, $description) {
+		$this->key = $key;
+		$this->name = $name;
+		$this->code = $code;
+		$this->description = $description;
+	}
+
+	public const GoogleAdminUrl = 'https://programmablesearchengine.google.com/controlpanel/overview?cx=';
+
+
+	public const dawn = 'dawn';
+	public const imran = 'imran';
+	public const defaults = [self::dawn, self::imran, 'msa'];
+	public const names = 'searchNames';
+	public const items = 'searchItems';
+
+	static function getItems($id, search | null &$engine) {
+		$names = variableOr(self::names, self::defaults);
+		$searches = variableOr(self::items, []);
+
+		$searches = array_merge([
+			'dawn' => new search('dawn', 'All DAWN', '6759b2f9b58c247af', 'All AmadeusWeb.in sites'),
+			'imran' => new search('imran', 'All Imran', 'f26c9d08384bc4ce7', 'All Imran\'s Writing'),
+			'msa' => new search('msa', 'Mother Sri Aurobindo', '84d24b3918cbd5f1a', 'Resource Sites of the Aurobindonian World'),
+		], $searches);
+
+		$result = [];
+		foreach ($names as $key) {
+			$item = $searches[$key];
+			if ($item->key == $id) $engine = $item;
+			$result[] = get_object_vars($item);
+		}
+
+		return $result;
+	}
+}

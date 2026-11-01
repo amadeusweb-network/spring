@@ -296,6 +296,7 @@ class tagUX {
 	const HorizontalRule = 'hr';
 	const Div = 'div';
 	public const orientations = ['portrait', 'landscape'];
+	public const appearChecked = '<input class="form-check-input" type="radio" checked />';
 
 	static function selfClosetag($name, $classes, $attributes = []) {
 		$attrs = '';
