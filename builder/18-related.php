@@ -1,6 +1,6 @@
 <?php
 function relatedDataFile($name) {
-	$file = variable('file');
+	$file = nodeIsSection() ? SITEPATH . '/' . sectionValue() . '/home.md' : variable('file');
 	if (!$file) showDebugging('"file" not set', 'function: relatedDataFile', true);
 	return pathinfo($file, PATHINFO_DIRNAME) . '/data/' . $name . '.tsv';
 }

@@ -356,10 +356,11 @@ function siteWidgets() {
 
 	if ($showSections) {
 		$op[] = str_replace('[WHAT]', 'sections', $start);
-		$op[] = '<h4 class="mb-1">Sections</h4>';
-		$class = variableOr('sections-class', '');
+		$op[] = '<h4 class="mb-1 bg-light p-2 d-inline-block rounded-6">Sections</h4>' . BRNL;
+		$class = variableOr('sections-class', '') . ' m-1 p-2 d-inline-block %bgd% dark rounded-6';
 		foreach ($sections as $slug)
-			$op[] = getLink(humanize($slug), pageUrl($slug), $class) . ($class ? '' : BRNL);
+			$op[] = getLink(humanize($slug), pageUrl($slug),
+				str_replace('%bgd%', $slug == sectionValue() ? 'bg-success' : 'bg-primary', $class)) . BRNL;
 		$op[] = '</div>'; $op[] = '';
 	}
 

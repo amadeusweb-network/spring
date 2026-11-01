@@ -12,7 +12,9 @@ class sectionsTsv extends sheet {
 		//showDebugging(9, $this->group, PleaseDie);
 		$groups = [];
 		$items = [];
+		$local = $this->hasColumn('local') && !is_local();
 		foreach ($this->rows as $item) {
+			if ($local && $this->getValue($item, 'local') == 'Y') continue;
 			$group = $this->getValue($item, 'group');
 			$items[] = $name = $this->getValue($item, 'section');
 			if (!isset($groups[$group])) $groups[$group] = [];

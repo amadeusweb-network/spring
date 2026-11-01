@@ -1,6 +1,6 @@
 %countdown-corecodesnippet%
 
-<img class="img-fluid img-max-150 float-md-end" src="%site-base%%safeName%-icon.png" />
+<img class="img-fluid img-max-250 float-md-end" src="%site-base%%safeName%-icon.png" />
 # %siteName%
 
 %welcome-message%

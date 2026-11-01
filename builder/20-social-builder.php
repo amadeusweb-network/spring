@@ -84,11 +84,14 @@ class socialBuilder {
 	//#region begin
 	const readme = 'fa fa-book-reader bg-success';
 	const license = 'fa fa-legal bg-danger';
-	function addBuiltin($readme = self::readme, $license = self::license) {
+	const terms = 'fa fa-legal bg-danger';
+	function addBuiltin($readme = self::readme, $license = self::license, $terms = false) {
 		$spring = getSiteUrl(SITESPRING);
 		return $this
 			->addInternal($spring . 'readme/', 'DAWN ReadMe', $readme, !$readme)
-			->addInternal($spring . 'license/', 'Spring License', $license, !$license);
+			->addInternal($spring . 'license/', 'Spring License', $license, !$license)
+			->addInternal(variable('page-url') . 'terms/', 'Terms', $terms, !$terms)
+			;
 	}
 
 	function addSignup($class = 'fa fa-door-open bg-info') {
