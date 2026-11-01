@@ -871,8 +871,12 @@ define('DEBUGPLAIN', '1');
 define('DEBUGSPECIAL', 'special');
 define('DEBUGVERBOSE', 'verbose');
 
+function is_debug($type = DEBUGPLAIN) {
+	return getQueryParameter('debug') == $type;
+}
+
 function debug($file, $function, $vars, $type = DEBUGPLAIN) {
-	if (getQueryParameter('debug') != $type) return;
+	if (!is_debug($type)) return;
 	
 	$file = shortPath($file);
 	echo NEWLINE . '<!--' . NEWLINE

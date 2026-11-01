@@ -52,8 +52,16 @@ class site {
 	}
 
 	static function getFolder($relativePath) {
-		$bits = explode('/', $relativePath);
+		$bits = explode(DIRECTORY_SEPARATOR, _makeSlashesConsistent($relativePath));
 		return array_pop($bits);
+	}
+
+	static function getPrefix($relativePath, &$file) {
+		if (!defined('ALLSITESDATA') || !in_array($f = site::getFolder($relativePath), ALLSITESNAMES))
+			return '';
+
+		$file = ALLSITESDATA;
+		return $f . '_';
 	}
 
 	const local = 'local-url';
@@ -76,21 +84,21 @@ class site {
 	public string $year;
 	public string $sections;
 
-	public function __construct(sheet $site, $relativePath) {
-		$this->key = $site->getValue($site->firstOfGroup(VARSafeName), 'value');
-		$this->name = $site->getValue($site->firstOfGroup(VARIconName), 'value');
+	public function __construct(sheet $site, $relativePath, $prefix = '') {
+		$this->key = $site->getValue($site->firstOfGroup($prefix . VARSafeName), 'value');
+		$this->name = $site->getValue($site->firstOfGroup($prefix . VARIconName), 'value');
 
-		$this->siteName = $site->getValue($site->firstOfGroup('name'), 'value');
-		$this->byline = $site->getValue($site->firstOfGroup(VARByline), 'value');
+		$this->siteName = $site->getValue($site->firstOfGroup($prefix . 'name'), 'value');
+		$this->byline = $site->getValue($site->firstOfGroup($prefix . VARByline), 'value');
 
-		$this->localUrl = $site->getValue($site->firstOfGroup('local-url'), 'value');
-		$this->liveUrl = $site->getValue($site->firstOfGroup('live-url'), 'value');
+		$this->localUrl = $site->getValue($site->firstOfGroup($prefix . 'local-url'), 'value');
+		$this->liveUrl = $site->getValue($site->firstOfGroup($prefix . 'live-url'), 'value');
 		$this->folder = self::getFolder($this->path = $relativePath);
 
-		$this->description = $site->getValue($site->firstOfGroup('description', '', false), 'value', VAREMPTY, false, BOOLNo);
-		$this->notes = $site->getValue($site->firstOfGroup('notes', '', false), 'value', VAREMPTY, false, BOOLNo);
-		$this->year = $site->getValue($site->firstOfGroup('year'), 'value');
-		$this->sections = $site->getValue($site->firstOfGroup('sections'), 'value');
+		$this->description = $site->getValue($site->firstOfGroup($prefix . 'description', '', false), 'value', VAREMPTY, false, BOOLNo);
+		$this->notes = $site->getValue($site->firstOfGroup($prefix . 'notes', '', false), 'value', VAREMPTY, false, BOOLNo);
+		$this->year = $site->getValue($site->firstOfGroup($prefix . 'year'), 'value');
+		$this->sections = $site->getValue($site->firstOfGroup($prefix . 'sections'), 'value');
 	}
 
 	static $cols = 'name	description	info';
@@ -121,13 +129,16 @@ function getSiteInfo($relativePath, $urlKey = false, domain $domain = null) : si
 	if ($result) return $result;
 
 	$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
+	$prefix = site::getPrefix($relativePath, $file);
+	//showDebugging(133, [site::getFolder($relativePath), $relativePath, $file, $prefix]);
+
 	//need the check again as it may be called from subsites/
 	if (!sheetExists($file)) {
-		if (is_local()) debug(__FILE__, 'getSiteInfo', ['missing for' => $relativePath, 'TSV missing' => $file], DEBUGSPECIAL);
+		if (is_local()) showDebugging('137 getSiteInfo', ['missing for' => $relativePath, 'TSV missing' => $file], PleaseDie, IncludeTrace);
 		return false;
 	}
 
-	$site = new site(getSheet($file, 'key'), $relativePath);
+	$site = new site(getSheet($file, 'key'), $relativePath, $prefix);
 
 	if ($domain) $site->setWildcardUrl($domain);
 

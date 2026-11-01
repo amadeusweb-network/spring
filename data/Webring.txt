@@ -8,7 +8,9 @@ amadeusweb/shasa/ganymede
 amadeusweb/shasa/goodness
 
 ~Domains
-aztras/www
-mssions/www
+missions/www
 homes/www
-spanda/www
+
+~Other
+sites/aztras/www
+sites/spanda/www

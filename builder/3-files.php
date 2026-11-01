@@ -174,10 +174,12 @@ function disk_include($file, $variables = []) {
 	return $result;
 }
 
+DEFINE('SEPARATORS', ['/', '\\']);
+
 //Added 15 Jan 2025 as seems path separators usage behaviour seems to no longer allow mixing
 function _makeSlashesConsistent($path) {
-	$fromTo = DIRECTORY_SEPARATOR == '/' ? ['\\', '/'] : ['/', '\\'];
-	return str_replace($fromTo[0], $fromTo[1], $path);
+	$ix = DIRECTORY_SEPARATOR == SEPARATORS[0] ? [1, 0] : [0, 1];
+	return str_replace(SEPARATORS[$ix[0]], SEPARATORS[$ix[1]], $path);
 }
 
 //Needed only when traversing up..

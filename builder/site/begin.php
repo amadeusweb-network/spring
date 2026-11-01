@@ -1,18 +1,23 @@
 <?php
 getSiteUrlKey(); //get only needed for testing which should come soon
 
-$sheet = getSheet('site', 'key');
+$relativePath = substr(SITEPATH, strlen(ALLSITESROOT));
+$file = 'site';
+$prefix = site::getPrefix($relativePath, $file);
+
+$sheet = getSheet($file, 'key');
 $cols = $sheet->columns;
 
 $siteVars = [];
 foreach ($sheet->rows as $row) {
 	$key = $row[$cols['key']];
+	if ($prefix) $key = str_replace($prefix, '', $key);
 	if (!$key || $key[0] == '|') continue;
 	if (!isset($row[$cols['value']])) showDebugging(16, 'site.tsv - value column missing for row: ' . $key, PleaseDie);
 	$siteVars[$key] = $row[$cols['value']];
 }
 
-site::$current = new site($sheet, substr(SITEPATH, strlen(ALLSITESROOT)));
+site::$current = new site($sheet, $relativePath, $prefix);
 
 if (DEFINED('SITEINFO'))
 	variable(VARWildcardUrl, site::getWildcardUrl(SITEINFO, site::getFolder(SITEPATH)));

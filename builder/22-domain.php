@@ -13,7 +13,7 @@ class domain {
 	public static $skipRest = false;
 
 	static function includeAll() {
-		$sheet = getSheet(AMADEUSSITEROOT . 'whois/network/domains.tsv', false);
+		$sheet = getSheet(DEFINED('DOMAINFILE') ? DOMAINFILE : AMADEUSSITEROOT . 'whois/network/domains.tsv', false);
 		foreach ($sheet->rows as $item) {
 			$site = $sheet->getValue($item, 'at');
 			if (!disk_is_dir(ALLSITESROOT . $site)) continue;
@@ -135,7 +135,12 @@ class domain {
 		$this->liveBase = $vars['live-base'];
 		foreach ($mainSites as $ix => $val) {
 			if (contains($val, '%folder%'))
-				$mainSites[$ix] = replaceItems($val, ['folder' => $this->folder], WRAPREPLACE);
+				$val = replaceItems($val, ['folder' => $this->folder], WRAPREPLACE);
+
+			if (endsWith($val, '/'))
+				$val = removeSlash($val, 'end');
+
+			$mainSites[$ix] = $val;
 		}
 		$this->mainSites = $mainSites;
 		$this->subFolders = $subFolders;
