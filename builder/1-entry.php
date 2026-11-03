@@ -29,6 +29,7 @@ DEFINE('AMADEUSMODULES', AMADEUSBUILDER . 'modules/');
 DEFINE('AMADEUSDATA', AMADEUSBUILDER . 'data/');
 
 DEFINE('AMADEUSREPOSPATH', AMADEUSSITEROOT . 'whois/network/repos.php');
+DEFINE('AMADEUSWWWPATH', ALLSITESROOT . 'amadeusweb/www/');
 
 function handoverSansStats() {
 	$critical = [

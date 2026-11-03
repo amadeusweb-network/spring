@@ -17,6 +17,9 @@ function runAllMacros($html) {
 	if (contains($html, '-corecodesnippet%'))
 		$html = replaceCodeSnippets($html, false, CORESNIPPET);
 
+	if (contains($html, '-opus%'))
+		$html = replaceOpusSnippets($html);
+
 	if (contains($html, '#upi') || contains($html, '%upi'))
 		$html = replaceUPIs($html);
 
@@ -150,6 +153,35 @@ function replaceCodeSnippets($html, $files = false, $fol = false) {
 		$html = str_replace($key, $with, $html);
 	}
 
+	return $html;
+}
+
+function replaceOpusSnippets($html) {
+	$path = AMADEUSWWWPATH . 'opus/';
+	if (!disk_is_dir($path)) {
+		$msg = '<b>opus folder missing</b>: ' . $path . BRNL;
+		if (!contains($html, $msg)) $html = bootstrapAndUX::colouredDiv($msg, bootstrapAndUX::warning, 'opus-folder') . $html;
+		return $html;
+	} else if (!disk_file_exists($fols = $path . '_macros.txt')) {
+		$msg = '<b>opus folder list missing</b>: ' . $fols . BRNL;
+		if (!contains($html, $msg)) $html = bootstrapAndUX::colouredDiv($msg, bootstrapAndUX::warning, 'opus-list') . $html;
+		return $html;
+	}
+	$fols = textToList(disk_file_get_contents($fols));
+	//$html = bootstrapAndUX::colouredDiv(implode(', ', $fols), bootstrapAndUX::info, 'opus-items') . $html;
+	foreach ($fols as $fol) {
+		if (!contains($html, '-' . $fol . '-opus%')) continue;
+		foreach (_skipExcludedFiles(disk_scandir($path . $fol), 'home', 'png') as $file) {
+			$name = pathinfo($file, PATHINFO_FILENAME);
+			$ext = pathinfo($file, PATHINFO_EXTENSION);
+
+			if (!contains($html, $key = '%' . $name . '-' . $fol . '-opus%')) continue;
+
+			$with = renderMarkdown($path . $fol . '/' . $file, [ 'echo' => false, 'raw' => $ext == 'html', ]);
+
+			$html = str_replace($key, $with, $html);
+		}
+	}
 	return $html;
 }
 

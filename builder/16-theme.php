@@ -336,7 +336,7 @@ function siteWidgets() {
 	if ($showSections) $colsInUse += 1;
 
 	$showNetwork = !variable(VARNoFooterNetwork) && variable('network');
-	if ($showNetwork) $showNetwork = count($sites = variableOr('networkSites', []));
+	if ($showNetwork) $showNetwork = count($sites = getSites(''));
 	if ($showNetwork) $colsInUse += 1;
 
 	$showSocial = !variable(VARNoFooterSocial);

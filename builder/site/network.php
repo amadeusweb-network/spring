@@ -2,16 +2,9 @@
 DEFINE('NETWORKDEFINEDAT', DEFINED('NETWORKPATH') ? NETWORKPATH . '/' : AMADEUSSITEDATA);
 DEFINE('NETWORKABBR', variableOr('NetworkMenuName', 'DAWN'));
 
-setupNetwork();
-
 function network_menu($renderFn = false) {
 	$wantsRender = $renderFn != false;
 	if (variable(VARDAWNMenu) === BOOLNoString) return;
-
-	/*
-	if (variable(VARNetwork) != BOOLNoString && !$wantsRender)
-		flatMenu(variable('networkSites'), variable(VARNetwork));
-	*/
 
 	$urlKey = _getUrlKeySansPreview();
 
@@ -51,12 +44,12 @@ function network_menu($renderFn = false) {
 			if (startsWith($slug, MENUGROUP)) { $items[$slug] = []; continue; }
 			if (!is_dir(ALLSITESROOT . $item->folder . $slug)) continue;
 			$item->currentSubfolder = $slug;
-			$items[humanize($slug)] = $sites = setupNetwork($item->folder . $slug, $item);
+			$items[humanize($slug)] = $sites = getSites($item->folder . $slug, $item);
 			domain::appendSites($slug, $sites, $item);
 			$item->cleanSubfolder();
 		} else {
 			$slug = substr($item->folder, -1);
-			$sites = setupNetwork($item->folder, $item);
+			$sites = getSites($item->folder, $item);
 			foreach ($sites as $site) {
 				if ($site->folder == 'www') continue;
 				$items[$site->folder] = $site;
@@ -70,23 +63,20 @@ function network_menu($renderFn = false) {
 		return;
 	}
 
+	//showDebugging('', $items, PleaseDie);
 	twoLevelMenu($items, NETWORKABBR);
 	if (getQueryParameter(VARQueryGenerate) == 'sites')
 		domain::saveSites();
 }
 
-function setupNetwork(string | bool $where = false, domain $domain = null) {
-	$networkSites = [];
-
+function getSites(string $where, domain $domain = null) {
 	$items = [];
 	$urlKey = _getUrlKeySansPreview();
-	$returnArray = false;
 
 	if ($where) {
 		$fols = _skipNodeFiles(scandir(ALLSITESROOT . $where), ONLYFOLDERS);
 		$slash = endsWith($where, '/') ? '' : '/';
 		foreach ($fols as $fol) $items[] = $where . $slash . $fol;
-		$returnArray = true;
 	} else {
 		$txt = ALLSITESROOT . 'spring/data/Webring.txt';
 		if (disk_file_exists($txt2 = ALLSITESROOT . domain::$current->mainSites[0] . '/Webring.txt'))
@@ -95,6 +85,7 @@ function setupNetwork(string | bool $where = false, domain $domain = null) {
 		$items = textToList(disk_file_get_contents($txt));
 	}
 
+	$sites = [];
 	foreach ($items as $item) {
 		if (startsWith($item, MENUGROUP)) {
 			$networkSites[] = $item;
@@ -105,9 +96,8 @@ function setupNetwork(string | bool $where = false, domain $domain = null) {
 
 		if ($item === false) continue;
 
-		$networkSites[] = $item;
+		$sites[] = $item;
 	}
 
-	if ($returnArray) return $networkSites;
-	variable('networkSites', $networkSites);
+	return $sites;
 }
