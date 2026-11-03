@@ -32,4 +32,7 @@ define('SITEPATH', ALLSITEPATH);
 if (DEFINED('SKIPBOOTSTRAP'))
 	before_bootstrap();
 
+$loader = ALLSITESROOT . domain::$current->mainSites[0] . '/loader.php';
+if (disk_file_exists($loader)) disk_include_once($loader);
+
 runFrameworkFile('site/begin');
