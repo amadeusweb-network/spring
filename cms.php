@@ -4,5 +4,6 @@ variables([
 ]);
 
 function site_before_render() {
-	autosetPageMenu([VARLinkToNodeHome => true, DontOverwriteLogo => true]);
+	$logo = in_array(nodeValue(), ['health']);
+	autosetPageMenu([VARLinkToNodeHome => true, DontOverwriteLogo => !$logo]);
 }

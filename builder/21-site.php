@@ -147,6 +147,12 @@ function getSiteInfo($relativePath, $urlKey = false, domain $domain = null) : si
 	return $site;
 }
 
+function getSiteLink($relativePath, domain $domain) {
+	$site = getSiteInfo($relativePath, false, $domain);
+	if (!$site) return 'missing: ' . $relativePath;
+	return getLink($site->siteName, $site->getUrl(_getUrlKeySansPreview()));
+}
+
 function getUrlFrom($relativePath, $urlKey = false) {
 	if (!$urlKey) $urlKey = _getUrlKeySansPreview();
 	$result = getSiteInfo($relativePath);

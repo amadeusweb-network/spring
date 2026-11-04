@@ -87,6 +87,8 @@ function cbWrapAndReplaceHr($raw, $class = '') {
 	return $start . $raw . $end;
 }
 
+DEFINE('CBCO', NEWLINE . cbCloseAndOpen(cssUX::container)) . NEWLINE;
+
 function cbCloseAndOpen($class = '') {
 	return contentBox('end', '', true) . contentBox('', $class, true);
 }
@@ -382,8 +384,10 @@ class cssUX {
 	const container = 'container';
 	const standout = 'standout';
 	const pt4 = 'pt-4';
+	const m0 = 'm-0';
 	const m1 = 'm-1';
 	const m2 = 'm-2';
+	const mt3 = 'mt-3';
 	const mauto = 'm-auto';
 
 	const underline = 'text-decoration-underline';
