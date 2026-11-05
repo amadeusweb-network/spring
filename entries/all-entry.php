@@ -15,7 +15,7 @@ if (count($siteInfo->subFolders)) {
 	$found = false;
 	foreach ($siteInfo->subFolders as $item) {
 		if (is_dir($fol . $item . '/' . $name)) {
-			$siteInfo->folder .= $item . '/'; ////TODO: HI: this smells
+			$siteInfo->siteFolder = $item . '/';
 			$found = true;
 			break;
 		}
@@ -23,7 +23,7 @@ if (count($siteInfo->subFolders)) {
 	if (!$found) die($name . ' not found in: ' . $fol);
 }
 
-DEFINE('ALLSITEPATH', $rootPath . $siteInfo->folder . domain::$currentName);
+DEFINE('ALLSITEPATH', $rootPath . $siteInfo->folder . $siteInfo->siteFolder . domain::$currentName);
 
 define('SITEINFO', $siteInfo);
 define('SITEPATH', ALLSITEPATH);

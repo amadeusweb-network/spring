@@ -17,7 +17,7 @@ foreach ($sheet->rows as $row) {
 	$siteVars[$key] = $row[$cols['value']];
 }
 
-site::$current = new site($sheet, $relativePath, $prefix);
+site::$current = (new site($sheet, $relativePath, $prefix))->linkDomain(domain::$current); //does again below if needed
 
 variables([
 	'site-vars' => $siteVars,

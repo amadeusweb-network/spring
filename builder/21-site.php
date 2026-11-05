@@ -98,7 +98,9 @@ class site {
 	}
 	
 	function linkDomain(domain $domain = null) {
-		$this->assetUrl = $domain ? $domain->getBaseInfo($this->folder) : $this->getUrl(_getUrlKeySansPreview());
+		$this->assetUrl = $domain
+			? $domain->getBaseInfo(removeSlash($domain->siteFolder, 'end')) . $this->folder . '/'
+			: $this->getUrl(_getUrlKeySansPreview());
 		return $this;
 	}
 
@@ -125,7 +127,7 @@ function getSiteInfo($relativePath, $urlKey = false, domain $domain = null) : si
 
 	$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
 	$prefix = site::getPrefix($relativePath, $file);
-	//showDebugging(133, [site::getFolder($relativePath), $relativePath, $file, $prefix]);
+	//showDebugging('getSiteInfo()', [site::getFolder($relativePath), $relativePath, $file, $prefix]);
 
 	//need the check again as it may be called from subsites/
 	if (!sheetExists($file)) {

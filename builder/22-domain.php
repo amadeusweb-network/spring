@@ -122,6 +122,8 @@ class domain {
 	public bool $hasRule = false;
 	public bool $isCurrent = false;
 
+	public string $siteFolder = '';
+
 	public string $folder;
 	public string $heading;
 	public string $local;
