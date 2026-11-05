@@ -19,18 +19,12 @@ foreach ($sheet->rows as $row) {
 
 site::$current = new site($sheet, $relativePath, $prefix);
 
-if (DEFINED('SITEINFO'))
-	variable(VARWildcardUrl, site::getWildcardUrl(SITEINFO, site::getFolder(SITEPATH)));
-
 variables([
 	'site-vars' => $siteVars,
 	'local-url' => $siteVars['local-url'],
 	'live-url' => $siteVars['live-url'],
 	'showIn' => isset($siteVars['showIn']) ? $siteVars['showIn'] : false,
 ]);
-
-if (isset($siteVars[VARWildcardUrl]))
-	variable(VARWildcardUrl, $siteVars[VARWildcardUrl]);
 
 if (contains($url = $siteVars[variable(SITEURLKEY)], 'localhost'))
 	$url = replaceItems($url, ['localhost' => 'localhost' . variable('port')]);
@@ -145,6 +139,8 @@ variables($op = [
 ]);
 
 domain::includeAll();
+site::$current->linkDomain(domain::$current);
+
 runFrameworkFile('site/network');
 runFrameworkFile('site/cms');
 

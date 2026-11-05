@@ -46,12 +46,8 @@ class site {
 		return $item;
 	}
 
-	static function getWildcardUrl(domain $domain, string $folder) {
-		$base = is_local() ? $domain->localBase : $domain->liveBase;
-		return replaceSiteInfo($base, '--unused--', $domain->currentSubfolder) . $folder . '/';
-	}
-
 	static function getFolder($relativePath) {
+		//todo - slashes to text
 		$bits = explode(DIRECTORY_SEPARATOR, _makeSlashesConsistent($relativePath));
 		return array_pop($bits);
 	}
@@ -74,7 +70,7 @@ class site {
 
 	public string $localUrl;
 	public string $liveUrl;
-	public string $wildcardUrl = '';
+	public string $assetUrl;
 
 	public string $path;
 	public string $folder;
@@ -100,6 +96,11 @@ class site {
 		$this->year = $site->getValue($site->firstOfGroup($prefix . 'year'), 'value');
 		$this->sections = $site->getValue($site->firstOfGroup($prefix . 'sections'), 'value');
 	}
+	
+	function linkDomain(domain $domain = null) {
+		$this->assetUrl = $domain ? $domain->getBaseInfo($this->folder) : $this->getUrl(_getUrlKeySansPreview());
+		return $this;
+	}
 
 	static $cols = 'name	description	info';
 
@@ -112,14 +113,8 @@ class site {
 		];
 	}
 
-	function getUrl(string $key, $wildcard = false) {
-		if ($wildcard && $this->wildcardUrl) return $this->wildcardUrl;
+	function getUrl(string $key) {
 		return $key == self::local ? $this->localUrl : $this->liveUrl;
-	}
-
-	function setWildcardUrl(domain $domain) {
-		if (!$domain->currentSubfolder) return;
-		$this->wildcardUrl = self::getWildcardUrl($domain, $this->folder);
 	}
 }
 
@@ -138,9 +133,7 @@ function getSiteInfo($relativePath, $urlKey = false, domain $domain = null) : si
 		return false;
 	}
 
-	$site = new site(getSheet($file, 'key'), $relativePath, $prefix);
-
-	if ($domain) $site->setWildcardUrl($domain);
+	$site = (new site(getSheet($file, 'key'), $relativePath, $prefix))->linkDomain($domain);
 
 	if ($urlKey) addNetworkUrl($relativePath, $site->getUrl($urlKey));
 	if (count(domain::$all)) variable($key, $site);
@@ -158,8 +151,4 @@ function getUrlFrom($relativePath, $urlKey = false) {
 	$result = getSiteInfo($relativePath);
 	if (!$result) return '#missing-' . $relativePath;
 	return $result->getUrl($urlKey);
-}
-
-function replaceSiteInfo($input, $name, $subfolder) {
-	return str_replace('%subfol%', $subfolder, str_replace('%site%', $name, $input));
 }

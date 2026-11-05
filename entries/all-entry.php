@@ -15,13 +15,12 @@ if (count($siteInfo->subFolders)) {
 	$found = false;
 	foreach ($siteInfo->subFolders as $item) {
 		if (is_dir($fol . $item . '/' . $name)) {
-			$siteInfo->currentSubfolder = $item;
-			$siteInfo->folder .= $item . '/';
+			$siteInfo->folder .= $item . '/'; ////TODO: HI: this smells
 			$found = true;
 			break;
 		}
 	}
-	if (!$found) die($name . ' not found in: ' . $fol . ' - checked: ' . $siteInfo->currentSubfolder);
+	if (!$found) die($name . ' not found in: ' . $fol);
 }
 
 DEFINE('ALLSITEPATH', $rootPath . $siteInfo->folder . domain::$currentName);

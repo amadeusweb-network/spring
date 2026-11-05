@@ -18,7 +18,7 @@ function network_menu($renderFn = false) {
 	if (!domain::$skipRest) $all[] = getSiteInfo('spring', $urlKey);
 	$items = [NETWORKABBR . ' DOMAINS' => $all];
 
-	$domains = domain::getSites($items) ?? variableOr('domains-to-loop', domain::$all);
+	$domains = variableOr('domains-to-loop', domain::$all);
 	foreach ($domains as $d) {
 		$item = domain::cast($d);
 
@@ -31,7 +31,6 @@ function network_menu($renderFn = false) {
 			if (!is_dir(ALLSITESROOT . $slug)) continue;
 			$item->prepareMainSite($slug);
 			$these[] = getSiteInfo($slug, $urlKey, $item);
-			$item->cleanSubfolder();
 		}
 
 		if (!$wantsRender)
@@ -43,18 +42,10 @@ function network_menu($renderFn = false) {
 		if ($item->subFolders) foreach ($item->subFolders as $slug) {
 			if (startsWith($slug, MENUGROUP)) { $items[$slug] = []; continue; }
 			if (!is_dir(ALLSITESROOT . $item->folder . $slug)) continue;
-			$item->currentSubfolder = $slug;
-			$items[humanize($slug)] = $sites = getSites($item->folder . $slug, $item);
-			domain::appendSites($slug, $sites, $item);
-			$item->cleanSubfolder();
+			$items[humanize($slug)] = $item->getSites($slug);
 		} else {
 			$slug = substr($item->folder, -1);
-			$sites = getSites($item->folder, $item);
-			foreach ($sites as $site) {
-				if ($site->folder == 'www') continue;
-				$items[$site->folder] = $site;
-			}
-			domain::appendSites($slug, $sites, $item);
+			$items[humanize($slug)] = $item->getSites($slug);
 		}
 	}
 
@@ -63,38 +54,29 @@ function network_menu($renderFn = false) {
 		return;
 	}
 
-	//showDebugging('', $items, PleaseDie);
+	if (domain::isDebugging(2)) showDebugging(57, $items, PleaseDie);
 	twoLevelMenu($items, NETWORKABBR);
 	if (getQueryParameter(VARQueryGenerate) == 'sites')
 		domain::saveSites();
 }
 
-function getSites(string $where, domain $domain = null) {
-	$items = [];
+function getWebring() {
 	$urlKey = _getUrlKeySansPreview();
 
-	if ($where) {
-		$fols = _skipNodeFiles(scandir(ALLSITESROOT . $where), ONLYFOLDERS);
-		$slash = endsWith($where, '/') ? '' : '/';
-		foreach ($fols as $fol) $items[] = $where . $slash . $fol;
-	} else {
-		$txt = ALLSITESROOT . 'spring/data/Webring.txt';
-		if (disk_file_exists($txt2 = ALLSITESROOT . domain::$current->mainSites[0] . '/Webring.txt'))
-			$txt = $txt2;
+	$txt = ALLSITESROOT . 'spring/data/Webring.txt';
+	if (disk_file_exists($txt2 = ALLSITESROOT . domain::$current->mainSites[0] . '/Webring.txt'))
+		$txt = $txt2;
 
-		$items = textToList(disk_file_get_contents($txt));
-	}
+	$items = textToList(disk_file_get_contents($txt));
 
 	$sites = [];
 	foreach ($items as $item) {
 		if (startsWith($item, MENUGROUP)) {
-			$networkSites[] = $item;
+			$sites[] = $item;
 			continue;
 		}
 
-		$item = getSiteInfo($item, $urlKey, $domain);
-
-		if ($item === false) continue;
+		$item = getSiteInfo($item, $urlKey, domain::$current);
 
 		$sites[] = $item;
 	}

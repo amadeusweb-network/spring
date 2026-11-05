@@ -164,8 +164,9 @@ function assetUrl($file, $location) {
 
 	$meta = assetManager::meta($location);
 	$match = $meta['location'];
-	if (hasVariable(VARWildcardUrl))
-		$match = str_replace(variable('assets-url'), variable(VARWildcardUrl), $match);
+
+	$site = site::$current;
+	$match = replaceItems($match, [$site->getUrl(_getUrlKeySansPreview()) => $site->assetUrl]);
 
 	return $match . $file . (contains($file, '.') ? $meta['version'] : '');
 }

@@ -336,7 +336,7 @@ function siteWidgets() {
 	if ($showSections) $colsInUse += 1;
 
 	$showNetwork = !variable(VARNoFooterNetwork) && variable('network');
-	if ($showNetwork) $showNetwork = count($sites = getSites(''));
+	if ($showNetwork) $showNetwork = count($sites = getWebring());
 	if ($showNetwork) $colsInUse += 1;
 
 	$showSocial = !variable(VARNoFooterSocial);
@@ -394,7 +394,7 @@ function siteWidgets() {
 }
 
 function networkLink($class= '', $prefix = '') {
-	if (!DEFINED('SITENETWORK')) return 'Network';
+	if (!DEFINED('SITENETWORK')) return 'Webring';
 	return $prefix . getLink('Our Network', subVariableOr('networkHome', 'url', '#todo/') . 'our-network/', $class, true);
 }
 

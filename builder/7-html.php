@@ -162,22 +162,29 @@ function replaceHtml($html) {
 }
 
 class urlBuilder extends builderBase {
-	public function __construct($pageUrl, $wildcardUrl) {
+	public function __construct(site | bool $site = false) {
+		if (!$site) $site = site::$current;
 		$this->set([
-			//TODO: cleanup all usage and make all start same like %urlSite
 			'%url%' => variable('page-url'),
-			'%wildcard-safe-url%' => variableOr(VARWildcardUrl, variable('page-url')), //TODO: will this work on mobile?
+			'%urlCurrent%' => currentUrl(),
 			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
+
+			'%urlAssets%' => $site->assetUrl,
+			'%urlSection%' => $site->assetUrl . sectionValue() . '/assets/',
+			'%urlNode%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/assets/',
+
+			'##theme##' => getThemeBaseUrl(),
+			'%%cdn%%' => getWhatIsLink('cdn'), //has to be here
+			'%cdn%' => variableOr('cdn', ((variable('is-mobile') || variable('live-cdn')) ? variable('live-url') : $site->assetUrl) . 'assets/cdn/'),
+
+			//TODO: cleanup all usages
+			'%wildcard-safe-url%' => $site->assetUrl,
+			'%site-base%' => $site->assetUrl, //todo: deprecate assets-url
 			'%mainSite%' => domain::mainSiteRelpath(), //workaround for bigrock where live path is www
 			'%node-assets%' => _resolveFile('', STARTATNODE),
 			'%section-assets%' => _resolveFile('', STARTATSECTION),
-			'%site-base%' => $assetsUrl = variableOr(VARWildcardUrl, variable('assets-url')),
 			'%site-assets%' => _resolveFile('', STARTATSITE),
 			'%core-assets%' => _resolveFile('', STARTATCORE),
-			'##theme##' => getThemeBaseUrl(),
-			'%%cdn%%' => getWhatIsLink('cdn'), //has to be here
-			'%cdn%' => variableOr('cdn', ((variable('is-mobile') || variable('live-cdn')) ? variable('live-url') : $assetsUrl) . 'assets/cdn/'),
-			'%currentUrl%' => currentUrl(),
 		]);
 	}
 }
@@ -261,7 +268,7 @@ function replaceSiteHtml($html, $relativePath = false) {
 
 	if (!$replaces) {
 		$replaces = _replaceVars($suffix, [
-			'urls' => new urlBuilder(variable('page-url'), variableOr(VARWildcardUrl, variable('assets-url'))),
+			'urls' => new urlBuilder(),
 			'node' => new nodeBuilder(nodeValue()),
 			'site' => new siteBuilder(),
 		]);

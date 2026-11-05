@@ -27,26 +27,43 @@ class domain {
 			self::$current->isCurrent = true;
 	}
 
-	//all hosted sites cache
-	static function getSites(&$items) {
+	function getSitesOf($folder = '') {
 		$generate = getQueryParameter(VARQueryGenerate) == 'sites';
 		if ($generate || !disk_file_exists(self::$sitesFile)) return null;
 
 		$sheet = getSheet(self::$sitesFile, 'domain');
 		foreach ($sheet->group as $domain => $sites) {
-			$fol = $item->folder;
+			$fol = $this->folder;
 			if (!is_dir(ALLSITESROOT . $fol)) continue;
 			$main = arrayGroupBy();
 		}
 	}
 
-	private static $sitesFile = ALLSITESROOT . '/sites.tsv';
+	static function isDebugging($stage = '') {
+		return getQueryParameter('domain') == 'debug' . $stage;
+	}
+
+	public function getSites($folder = '') {
+		$urlKey = _getUrlKeySansPreview();
+		$items = [];
+		if ($folder) $folder .= '/';
+
+		$search = _skipNodeFiles(scandir(ALLSITESROOT . $this->folder . $folder), ONLYFOLDERS);
+
+		foreach ($search as $item) {
+			$site = getSiteInfo($where = $this->folder . $folder . $item, $urlKey, $this);
+			if (!$site) {
+				if (is_local() || self::isDebugging()) showDebugging('couldnt get site info: ', $where, PleaseDie, IncludeTrace);
+			}
+			$items[] = $site;
+		}
+
+		return $items;
+	}
+
 	private static $sites = ['#domain	folder	site	main	name	byline	' .
 		'iconName	local-url	live-url	sections	description'];
 	
-	static function appendSites($fol, array $items, domain $domain) {
-	}
-
 	static function saveSites() {
 		if (!is_local()) showDebugging('nice try', 'illegal operation', PleaseDie);
 		$file = str_replace('.tsv', '.gen.tsv', self::$sitesFile);
@@ -121,10 +138,6 @@ class domain {
 		$this->currentSubfolder = $bits[0];
 	}
 
-	public function cleanSubfolder() {
-		$this->currentSubfolder = '';
-	}
-
 	public function __construct(array $vars, array $mainSites, $subFolders = []) {
 		$this->folder = $vars['folder'];
 		$this->key = removeSlash($this->folder, 'end');
@@ -144,5 +157,17 @@ class domain {
 		}
 		$this->mainSites = $mainSites;
 		$this->subFolders = $subFolders;
+	}
+
+	public function getBaseInfo($folder, $where = 'auto') {
+		$local = ($where == 'auto' && is_local()) || $where == VARLocal;
+		$format = $local ? $this->localBase : $this->liveBase;
+		return replaceItems($format, ['subfol' => $folder], WRAPREPLACE);
+	}
+
+	public function getSiteInfo($folder, $site, $where = 'auto') {
+		$local = ($where == 'auto' && is_local()) || $where == VARLocal;
+		$format = $local ? $this->local : $this->live;
+		return replaceItems($format, ['subfol' => $folder, 'site' => $site], WRAPREPLACE);
 	}
 }

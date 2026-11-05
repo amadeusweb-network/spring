@@ -31,8 +31,8 @@ function _handleSlashes($file, $handle, $useMDash) {
 	return $useMDash ? join(' &mdash; ', $bits) : array_pop($bits);
 }
 
-function _skipNodeFiles($files, $excludeExtensions = 'pdf', array $excludeNames = ExcludedFolders) {
-	return _skipExcludedFiles($files, $excludeNames, $excludeExtensions, true);
+function _skipNodeFiles($files, $excludeExtensions = 'pdf', array $excludeNames = ExcludedFolders, $stripExtension = true) {
+	return _skipExcludedFiles($files, $excludeNames, $excludeExtensions, $stripExtension);
 }
 
 define('ONLYFOLDERS', 'FOLDER'); //only folders without dots
@@ -43,6 +43,9 @@ function _skipExcludedFiles($files, $excludeNames = 'home', $excludeExtensions =
 
 	if (!is_array($excludeNames))
 		$excludeNames = explode(', ', $excludeNames);
+
+	$excludeNames[] = 'cgi-bin'; //server
+
 	$checkNames = count($excludeNames) > 0;
 
 	$onlyFolders = $excludeExtensions == ONLYFOLDERS;
