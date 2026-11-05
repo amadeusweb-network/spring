@@ -158,16 +158,16 @@ function setHtmlVariable($key, $value) {
 }
 
 function replaceHtml($html) {
-	//TODO: MEDIUM: Warning if called before bootstrap!
-	$replaces = variable(VARHtmlVariables);
-	if (!$replaces) {
-		$node = nodeValue();
-		variable(VARHtmlVariables, $replaces = [
-			//Also, we should incorporate dev tools like w3c & broken link checkers
+	return replaceSiteHtml($html);
+}
+
+class urlBuilder extends builderBase {
+	public function __construct($pageUrl, $wildcardUrl) {
+		$this->set([
+			//TODO: cleanup all usage and make all start same like %urlSite
 			'%url%' => variable('page-url'),
 			'%wildcard-safe-url%' => variableOr(VARWildcardUrl, variable('page-url')), //TODO: will this work on mobile?
 			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
-
 			'%mainSite%' => domain::mainSiteRelpath(), //workaround for bigrock where live path is www
 			'%node-assets%' => _resolveFile('', STARTATNODE),
 			'%section-assets%' => _resolveFile('', STARTATSECTION),
@@ -175,11 +175,17 @@ function replaceHtml($html) {
 			'%site-assets%' => _resolveFile('', STARTATSITE),
 			'%core-assets%' => _resolveFile('', STARTATCORE),
 			'##theme##' => getThemeBaseUrl(),
-
 			'%%cdn%%' => getWhatIsLink('cdn'), //has to be here
 			'%cdn%' => variableOr('cdn', ((variable('is-mobile') || variable('live-cdn')) ? variable('live-url') : $assetsUrl) . 'assets/cdn/'),
-
 			'%currentUrl%' => currentUrl(),
+		]);
+	}
+}
+
+class nodeBuilder extends builderBase {
+	public function __construct($node) {
+		$this->set([
+			//Also, we should incorporate dev tools like w3c & broken link checkers
 			'%nodeSlug%' => $node,
 			'%nodeName%' => humanizeThis(),
 			'%nodeUrl%' => pageUrl($node),
@@ -190,8 +196,16 @@ function replaceHtml($html) {
 			'%nodeItem3%' => $ni = getPageParameterAt(3, ''),
 			'%nodeItem3_r%' => humanize($ni),
 			'%nodeFullUrl%' => pageUrl(variableOr('nodeSlug', '##no-nodeSlug')),
-			'%leafNodeAssets%' => assetManager::get(assetManager::leafNode),
+			'%nodeLeafAssets%' => assetManager::get(assetManager::leafNode),
+			'%section%' => sectionValue(),
+			'%section_r%' => humanizeThis(SECTIONVAR),
+		]);
+	}
+}
 
+class siteBuilder extends builderBase {
+	public function __construct() {
+		$this->set([
 			'%email%' => variableOr(VAREmail, ''),
 			'%email2%' => variableOr(VAREmail2, ''),
 			'%email3%' => variableOr(VAREmail3, ''),
@@ -214,27 +228,51 @@ function replaceHtml($html) {
 			'%siteName_subject%' => urlencode($sn),
 			'%byline%' =>  variable(VARByline),
 			'%safeName%' =>  variable(VARSafeName),
-			'%section%' => sectionValue(),
-			'%section_r%' => humanizeThis(SECTIONVAR),
-
-			'%gmail-reponses%' => 'https://mail.google.com/mail/u/0/?ogbl#advanced-search/subject=[' . NETWORKABBR . ']',
-			'%site-engage-btn%' => engageButton('Engage With Us', 'btn btn-lg btn-site'),
 
 			'%nodeUrlUptoLeaf%' => $loc = variable('all_page_parameters'), //experimental
 			'%enquiry%' => str_replace(' ', '+', 'enquiry (for) ' . $sn . ' (at) ' . $loc),
-			'%optional-content-box-class%' => _getCBClassIfWanted(''),
-			'<marquee>' => variable('_marqueeStart'),
-
-			'--large-list--' => cbCloseAndOpen('large-list'),
 		]);
 		variable('whatsapp-txt-start', $wame);
 	}
+}
+
+DEFINE('VARKeyOnly', 'key-only');
+
+function _replaceVars($suffix, $set = []) {
+	//TODO: MEDIUM: Warning if called before bootstrap!
+	$replaces = variable(VARHtmlVariables . $suffix);
+	if (!$replaces) {
+		if ($set == VARKeyOnly) return false;
+		variable(VARHtmlVariables . $suffix, $replaces = array_merge(
+			$set['urls']->settings,
+			$set['node']->settings,
+			$set['site']->settings,
+		));
+	}
+
+	return $replaces;
+}
+
+function replaceSiteHtml($html, $relativePath = false) {
+	$suffix = '';
+	if ($relativePath) 
+		$suffix = '_' . str_replace('/', '_', $relativePath);
+	$replaces = _replaceVars($suffix, VARKeyOnly);
+
+	if (!$replaces) {
+		$replaces = _replaceVars($suffix, [
+			'urls' => new urlBuilder(variable('page-url'), variableOr(VARWildcardUrl, variable('assets-url'))),
+			'node' => new nodeBuilder(nodeValue()),
+			'site' => new siteBuilder(),
+		]);
+	}
 
 	if ($hr = variable('htmlReplaces'))
-		$html = replaceItems($html, $hr, '%');
+		$html = replaceItems($html, $hr, WRAPREPLACE);
 
 	$html = replaceNetworkUrls($html);
 
+	//showDebugging('replaceSiteHtml', $replaces, PleaseDie);
 	return replaceItems($html, $replaces);
 }
 
@@ -245,7 +283,7 @@ function replaceIfContained($html, $variable) {
 	return replaceItems($html, [$variable => markdown(pipeToNL(variable($variable)))], '%');
 }
 
-variable('_marqueeStart', '<marquee onmouseover="this.stop();" onmouseout="this.start();">');
+DEFINE('VARMarqueeStart', '<marquee onmouseover="this.stop();" onmouseout="this.start();">');
 
 variable('_engageButtonFormat', '<a href="javascript: void(0);" class="btn btn-primary btn-%class% toggle-engage" data-engage-target="engage-%id%">%name%</a>');
 
@@ -262,24 +300,28 @@ function engageButton($name, $class, $scroll = false) {
 
 /// Expects the whole link(s) html to be provided so href to target blank and mailto can be substituted.
 function prepareLinks($output) {
-	$output = str_replace(pageUrl(), '%url%', $output); //so site urls dont open in new tab. not sure when this became a problem. maybe a double call to prepareLinks as the render methods got more complex.
+	$output = replaceItems($output, [
+		pageUrl() => '%url%', //so site urls dont open in new tab. not sure when this became a problem. maybe a double call to prepareLinks as the render methods got more complex.
+		'<a ' . ($find = 'href="' . WAME) => '<a ' . NOFOLLOWPREFIX . $find,
+		'href="http' => 'target="_blank" href="http', //yea, baby! no need a js solution!
+		'href="mailto' => 'target="_blank" href="mailto', //if gmail in chrome is the default, it will hijack current window
+		'NEWTAB' => '" target="_blank', //pdf links
+		'%url%' => pageUrl(),
 
-	$output = str_replace('<a ' . ($find = 'href="' . WAME), '<a ' . NOFOLLOWPREFIX . $find, $output);
+		//undo wrongly added blanks
+		'rel="preconnect" target="_blank" ' => 'rel="preconnect" ', //new nuance
+		'target="_blank" href="https://fonts.googleapis.com' => 'href="https://fonts.googleapis.com',
+		'target="_blank" target="_blank" ' => 'target="_blank" ',
+		
+		'%gmail-reponses%' => 'https://mail.google.com/mail/u/0/?ogbl#advanced-search/subject=[' . NETWORKABBR . ']',
+		'%site-engage-btn%' => engageButton('Engage With Us', 'btn btn-lg btn-site'),
+	]);
 
-	$output = str_replace('href="http', 'target="_blank" href="http', $output); //yea, baby! no need a js solution!
-	$output = str_replace('href="mailto', 'target="_blank" href="mailto', $output); //if gmail in chrome is the default, it will hijack current window
-	$output = str_replace('~~TARGETNEW', '" target="_blank', $output); //pdf links
-
-	$output = str_replace('%url%', pageUrl(), $output);
-
-	//undo wrongly added blanks
-	$output = str_replace('rel="preconnect" target="_blank" ', 'rel="preconnect" ', $output); //new nuance
-	$output = str_replace('target="_blank" href="https://fonts.googleapis.com', 'href="https://fonts.googleapis.com', $output);
-	$output = str_replace('target="_blank" target="_blank" ', 'target="_blank" ', $output);
 
 	//TODO: " class="analytics-event" data-payload="{clickFrom:'%safeName%' //leave end " as a hack to pile on attributes
 	$campaign = isset($_GET['utm_campaign']) ? '&utm_campaign=' . $_GET['utm_campaign'] : '';
 	$output = str_replace('#utm', '?utm_source=' . variable(VARSafeName) . $campaign, $output);
+
 
 	$output = bootstrapAndUX::toButtons($output);
 	$output = replaceHtmlShortcuts($output);

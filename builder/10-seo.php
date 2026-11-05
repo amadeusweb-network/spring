@@ -71,8 +71,8 @@ function read_seo(string $file, $inContent = false) {
 			}
 		}
 
+		$meta['keywords'] = $keywords = implode(', ', $keywords);
 		if (!$processed) {
-			$meta['keywords'] = $keywords = count($keywords) ? implode(', ', $keywords) : '';
 			if (!$about && !in_array($key, $aboutFields)) { $about = $description; $meta['about'] = $about; }
 		}
 
@@ -173,8 +173,8 @@ function getFolderMeta($folder, $fol, $folName = false, $index = '') {
 			if (isset($vars['title']) && $vars['title'])
 				$title = $vars['title'];
 
-			if (isset($vars['keywords']))
-				$tags = hasPageParameter('generate-index') ? $vars['keywords'] : csvToHashtags($vars['keywords']);
+			if ($val = valueIfSet($vars, 'keywords'))
+				$tags = hasPageParameter('generate-index') ? $val : csvToHashtags($val);
 
 			if (isset($vars['meta']))
 				$inline = hasPageParameter('generate-index') ? '' : inlineMeta($vars['meta']);

@@ -3,11 +3,15 @@ function itemOr($array, $key, $default = false) {
 	return isset($array[$key]) ? $array[$key] : $default;
 }
 
+//needed to not shuffle load order and still allow replaceItems in mediakit
+function contains_4($haystack, $needle) { return stripos($haystack, $needle) !== false; }
+
 function replaceItems($text, $array, $wrap = NOWRAPREPLACE, $arrayCheck = false) {
 	foreach($array as $key => $value) {
 		if ($arrayCheck && is_array($value)) continue;
 		$key = $wrap . $key . $wrap;
-		$text = str_replace($key, $value, $text);
+		if (contains_4($text, $key))
+			$text = str_replace($key, $value, $text);
 	}
 
 	return $text;
