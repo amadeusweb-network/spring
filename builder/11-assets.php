@@ -166,7 +166,8 @@ function assetUrl($file, $location) {
 	$match = $meta['location'];
 
 	$site = site::$current;
-	$match = replaceItems($match, [$site->getUrl(_getUrlKeySansPreview()) => $site->assetUrl]);
+	$match = replaceItems($match, $r = [$site->getUrl(_getUrlKeySansPreview()) => $site->assetUrl]);
+	if (domain::isDebugging(3)) echo bootstrapAndUX::colouredDiv('replacing: ' . printReadable($r), bootstrapAndUX::warning);
 
 	return $match . $file . (contains($file, '.') ? $meta['version'] : '');
 }

@@ -126,6 +126,7 @@ class search {
 
 	public const GoogleAdminUrl = 'https://programmablesearchengine.google.com/controlpanel/overview?cx=';
 
+	const engineId = 'searchEngineId';
 
 	public const dawn = 'dawn';
 	public const imran = 'imran';
@@ -133,7 +134,7 @@ class search {
 	public const names = 'searchNames';
 	public const items = 'searchItems';
 
-	static function getItems($id, search | null &$engine) {
+	static function getItems(&$id, search | null &$engine) {
 		$names = variableOr(self::names, self::defaults);
 		$searches = variableOr(self::items, []);
 
@@ -144,6 +145,9 @@ class search {
 		], $searches);
 
 		$result = [];
+		if (!$id) $id = $names[0];
+		variable(self::engineId, $id);
+
 		foreach ($names as $key) {
 			$item = $searches[$key];
 			if ($item->key == $id) $engine = $item;

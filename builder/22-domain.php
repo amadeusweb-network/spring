@@ -51,7 +51,7 @@ class domain {
 		$search = _skipNodeFiles(scandir(ALLSITESROOT . $this->folder . $folder), ONLYFOLDERS);
 
 		foreach ($search as $item) {
-			$site = getSiteInfo($where = $this->folder . $folder . $item, $urlKey, $this);
+			$site = site::getInfo($where = $this->folder . $folder . $item, $this);
 			if (!$site) {
 				if (is_local() || self::isDebugging()) showDebugging('couldnt get site info: ', $where, PleaseDie, IncludeTrace);
 			}

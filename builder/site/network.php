@@ -6,16 +6,14 @@ function network_menu($renderFn = false) {
 	$wantsRender = $renderFn != false;
 	if (variable(VARDAWNMenu) === BOOLNoString) return;
 
-	$urlKey = _getUrlKeySansPreview();
-
 	$all = [];
 	foreach (domain::$all as $d) {
 		$item = domain::cast($d);
 		if ($wantsRender && !$item->isCurrent && $item->only) continue;
-		$all[] = getSiteInfo($item->mainSites[0], $urlKey);
+		$all[] = site::getInfo($item->mainSites[0], $item);
 	}
 
-	if (!domain::$skipRest) $all[] = getSiteInfo('spring', $urlKey);
+	if (!domain::$skipRest) $all[] = site::getInfo('spring', null); //only here null is allowed
 	$items = [NETWORKABBR . ' DOMAINS' => $all];
 
 	$domains = variableOr('domains-to-loop', domain::$all);
@@ -30,7 +28,7 @@ function network_menu($renderFn = false) {
 		foreach ($wantsRender ? [] : $item->mainSites as $slug) {
 			if (!is_dir(ALLSITESROOT . $slug)) continue;
 			$item->prepareMainSite($slug);
-			$these[] = getSiteInfo($slug, $urlKey, $item);
+			$these[] = site::getInfo($slug, $item);
 		}
 
 		if (!$wantsRender)
@@ -76,7 +74,7 @@ function getWebring() {
 			continue;
 		}
 
-		$item = getSiteInfo($item, $urlKey, domain::$current);
+		$item = site::getInfo($item, null); //assume already in dawn menu
 
 		$sites[] = $item;
 	}

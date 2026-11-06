@@ -11,7 +11,7 @@ function renderSides(string $group) {
 	foreach ($sheet->group[$group] as $item) {
 		$slug = $sheet->getValue($item, 'slug');
 		if (!disk_is_dir(ALLSITESROOT . $relativePrefix . $slug)) continue;
-		$site = getSiteInfo($relativePrefix . $slug, $key, domain::$current);
+		$site = site::getInfo($relativePrefix . $slug, domain::$current);
 		$class = ' site-' . $site->key . '-bgd';
 		echo sprintf(subVariable('network-panels', 'sectionFormat'), $class . ' site-button', '');
 		renderNetworkPanel($site, ['h3-class' => $class, 'side' => true]);
@@ -20,7 +20,7 @@ function renderSides(string $group) {
 }
 
 function renderCenter(string $logo) {
-	$site = getSiteInfo(substr(NETWORKPATH, strlen(ALLSITESROOT)));
+	$site = site::getInfo(substr(NETWORKPATH, strlen(ALLSITESROOT)), domain::$current);
 	
 	renderNetworkPanel($site, ['in-center' => true, 'logo' =>  'assets/' . $logo]);
 	echo '<div class="network-splash-name text-center">' . $site->byline . '</div>';

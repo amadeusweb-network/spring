@@ -677,7 +677,7 @@ class bootstrapAndUX extends builderBase {
 		return replaceItems($html, self::buttonVars());
 	}
 
-	static function colouredDiv($text, $color, $id) {
+	static function colouredDiv($text, $color, $id = '') {
 		return tagUX::tag(tagUX::Div, 'my-1 p-2 bg-' . $color, $id, $text);
 	}
 

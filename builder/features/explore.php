@@ -1,6 +1,5 @@
 <?php
 function showSite($allItems) {
-	$subdomainHack = false;
 	echo tagUX::tagStart(tagUX::Div, cssUX::CenterContainer);
 	$urlKey = _getUrlKeySansPreview();
 	$slim = nodeIs(SITEHOME) || variableOr('slim', getQueryParameter('slim'));
@@ -34,7 +33,7 @@ function showSite($allItems) {
 			}
 
 			$link = $site->getUrl($urlKey);
-			$img = ($imgBase = $site->getUrl($urlKey, $subdomainHack) . $site->key) . '-logo.png';
+			$img = ($imgBase = $site->assetUrl . $site->key) . '-logo.png';
 
 			if ($boxes) {
 				$result[] = '<a href="' . $link . '" target="_blank"><img width="40" src="' . $imgBase . '-icon.png" /> ' . $site->siteName . '</a> &mdash; ' . $site->description . '<hr />';

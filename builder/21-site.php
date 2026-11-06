@@ -74,6 +74,7 @@ class site {
 
 	public string $path;
 	public string $folder;
+	public string $parentFolder = '';
 
 	public string $description;
 	public string $notes;
@@ -90,6 +91,7 @@ class site {
 		$this->localUrl = $site->getValue($site->firstOfGroup($prefix . 'local-url'), 'value');
 		$this->liveUrl = $site->getValue($site->firstOfGroup($prefix . 'live-url'), 'value');
 		$this->folder = self::getFolder($this->path = $relativePath);
+		$this->parentFolder = self::getFolder(str_replace('/' . $this->folder, '', $relativePath));
 
 		$this->description = $site->getValue($site->firstOfGroup($prefix . 'description', '', false), 'value', VAREMPTY, false, BOOLNo);
 		$this->notes = $site->getValue($site->firstOfGroup($prefix . 'notes', '', false), 'value', VAREMPTY, false, BOOLNo);
@@ -98,9 +100,13 @@ class site {
 	}
 	
 	function linkDomain(domain $domain = null) {
-		$this->assetUrl = $domain
-			? $domain->getBaseInfo(removeSlash($domain->siteFolder, 'end')) . $this->folder . '/'
+		$use = $domain && $this->folder != 'www' && !contains($domain->folder, $this->parentFolder);
+		if (domain::isDebugging(4) && $use) showDebugging('linkDomain()', [$this->path, $this->parentFolder, $this, $domain], PleaseDie, IncludeTrace);
+
+		$this->assetUrl = $use
+			? $domain->getBaseInfo($this->parentFolder) . $this->folder . '/'
 			: $this->getUrl(_getUrlKeySansPreview());
+
 		return $this;
 	}
 
@@ -118,39 +124,40 @@ class site {
 	function getUrl(string $key) {
 		return $key == self::local ? $this->localUrl : $this->liveUrl;
 	}
-}
 
-function getSiteInfo($relativePath, $urlKey = false, domain $domain = null) : site | bool {
-	$key = 'siteInfo_' . $relativePath;
-	$result = variable($key);
-	if ($result) return $result;
+	static function getInfo($relativePath, domain $domain = null) : site | bool {
+		$key = 'siteInfo_' . str_replace('/', '_', $relativePath);
+		$result = variable($key);
+		if ($result) return $result;
 
-	$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
-	$prefix = site::getPrefix($relativePath, $file);
-	//showDebugging('getSiteInfo()', [site::getFolder($relativePath), $relativePath, $file, $prefix]);
+		$file = ALLSITESROOT . $relativePath . '/data/site.tsv';
+		$prefix = site::getPrefix($relativePath, $file);
+		//showDebugging('site::getInfo()', [site::getFolder($relativePath), $relativePath, $file, $prefix]);
 
-	//need the check again as it may be called from subsites/
-	if (!sheetExists($file)) {
-		if (is_local()) showDebugging('137 getSiteInfo', ['missing for' => $relativePath, 'TSV missing' => $file], PleaseDie, IncludeTrace);
-		return false;
+		//need the check again as it may be called from subsites/
+		if (!sheetExists($file)) {
+			if (is_local()) showDebugging('site::getInfo()', ['missing for' => $relativePath, 'TSV missing' => $file], PleaseDie, IncludeTrace);
+			return false;
+		}
+
+		$site = (new site(getSheet($file, 'key'), $relativePath, $prefix))->linkDomain($domain);
+
+		//TODO: addNetworkUrl($relativePath, $site->getUrl($urlKey));
+		if (count(domain::$all)) variable($key, $site);
+		return $site;
 	}
 
-	$site = (new site(getSheet($file, 'key'), $relativePath, $prefix))->linkDomain($domain);
-
-	if ($urlKey) addNetworkUrl($relativePath, $site->getUrl($urlKey));
-	if (count(domain::$all)) variable($key, $site);
-	return $site;
 }
 
 function getSiteLink($relativePath, domain $domain) {
-	$site = getSiteInfo($relativePath, false, $domain);
+	$site = site::getInfo($relativePath, $domain);
 	if (!$site) return 'missing: ' . $relativePath;
 	return getLink($site->siteName, $site->getUrl(_getUrlKeySansPreview()));
 }
 
 function getUrlFrom($relativePath, $urlKey = false) {
 	if (!$urlKey) $urlKey = _getUrlKeySansPreview();
-	$result = getSiteInfo($relativePath);
+	$result = site::getInfo($relativePath, null); //assumes already set in dawn menu
 	if (!$result) return '#missing-' . $relativePath;
 	return $result->getUrl($urlKey);
 }
