@@ -121,23 +121,18 @@ DEFINE('COREASSETS', 'Core'); //TODO: HI: remove this alias for assetManager::co
 function getLogoOrIcon($what, $which = 'site') {
 	$suffix = ($what == 'icon' ? '-icon' : '-logo') . '.png';
 
-	$netWorkManaged = variable('network-manages-site-assets');
-	$prefix = $netWorkManaged && DEFINED('SITENAME') ? SITENAME . '/' : '';
-	$nodeIcon = $what == 'icon' && ($which == 'node' || is_array($which)) && variable('use-node-icons');
+	$nodeIcon = $what == 'icon' && ($which == 'node' || is_array($which)) && variable('use-node-icons'); //TODO: what is this variable?
 	$site = variable(VARDontOverwriteLogo) && !$nodeIcon;
 
 	if (is_array($which) && !$site) {
 		$inNode = true;
 		$name = $which[VARNodeSafeName] . $suffix;
-		$where = $which[assetManager::node];
 	} else {
 		$inNode = $which == 'node' && !$site && hasVariable(VARNodeSafeName) && DEFINED('NODEPATH');
 		$name = variableOr($inNode ? VARNodeSafeName : VARSafeName, 'amadeusweb9') . $suffix; //TODO: update when major version changes
-
-		$where = $inNode ? STARTATNODE : ($netWorkManaged ? STARTATNETWORK : STARTATSITE);
 	}
 
-	return _resolveFile($prefix . $name, $where, $inNode);
+	return ($inNode ? getHtmlVariable(urlBuilder::node) : site::$current->assetUrl) . $name;
 }
 
 DEFINE('STARTATSECTION', 0);
@@ -164,10 +159,6 @@ function assetUrl($file, $location) {
 
 	$meta = assetManager::meta($location);
 	$match = $meta['location'];
-
-	$site = site::$current;
-	$match = replaceItems($match, $r = [$site->getUrl(_getUrlKeySansPreview()) => $site->assetUrl]);
-	if (domain::isDebugging(3)) echo bootstrapAndUX::colouredDiv('replacing: ' . printReadable($r), bootstrapAndUX::warning);
 
 	return $match . $file . (contains($file, '.') ? $meta['version'] : '');
 }

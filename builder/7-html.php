@@ -162,6 +162,8 @@ function replaceHtml($html) {
 }
 
 class urlBuilder extends builderBase {
+	const node = 'urlNode';
+
 	public function __construct(site | bool $site = false) {
 		if (!$site) $site = site::$current;
 		$this->set([
