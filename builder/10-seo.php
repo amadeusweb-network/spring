@@ -38,6 +38,7 @@ function read_seo(string $file, $inContent = false) {
 		$descriptionFields = ['Description', 'description'];
 		$excerptFields = ['Excerpt', 'excerpt'];
 		$titleFields = ['Title', 'title'];
+		$imageFields = ['Image', 'image'];
 
 		if (variable('omit-long-keywords'))
 			$keywordsFields = ['Primary Keyword', 'Related Keywords', 'Keywords', 'keywords'];
@@ -48,6 +49,7 @@ function read_seo(string $file, $inContent = false) {
 		$description = false; //if meta exists, this is mandatory (but only single)
 		$excerpt = false;
 		$title = false;
+		$image = false;
 		$keywords = []; //can be multiple
 
 		foreach ($meta as $key => $value) {
@@ -68,6 +70,8 @@ function read_seo(string $file, $inContent = false) {
 			*/
 			} else if (in_array($key, $titleFields)) {
 				$title = $value;
+			} else if (in_array($key, $imageFields)) {
+				$meta['Image'] = $image = replacer::replace($value); //last found field will be used!
 			}
 		}
 
@@ -77,12 +81,13 @@ function read_seo(string $file, $inContent = false) {
 		}
 
 		variable('meta_' . $file, $meta);
-		if ($fileGiven && !$inContent) return compact('about', 'title', 'description', 'excerpt', 'keywords', 'meta');
+		if ($fileGiven && !$inContent) return compact('about', 'title', 'description', 'excerpt', 'keywords', 'meta', 'image');
 
 		if ($description) {
 			variable('description', $description);
 			variable('og:description', $description);
 			if ($title) variable('custom-title', $title);
+			if ($image) variable('og:image', $image);
 			variable('keywords', $keywords);
 			variable('meta_' . $file, $meta);
 		}
@@ -104,7 +109,7 @@ function print_seo() {
 		'Salutation', 'Email To', 'Email Cc', 'WhatsApp To',
 		'Primary Keyword', 'Keywords', 'Related Keywords', 'Long-Tail Keywords',
 		'Date', 'Author', 'Page Custodian', 'Prompted By', 'Published', 'Meta Author',
-		'Born', 'Died',
+		'Born', 'Died', 'Image',
 	];
 
 	$info = [];

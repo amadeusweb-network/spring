@@ -171,9 +171,13 @@ class urlBuilder extends builderBase {
 			'%urlCurrent%' => currentUrl(),
 			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
 
+			//TODO: move to nodeBuilder?
 			'%urlAssets%' => $site->assetUrl,
 			'%urlSection%' => $site->assetUrl . sectionValue() . '/assets/',
 			'%urlNode%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/assets/',
+			'%urlNode2%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/assets/',
+			'%urlNode3%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/' . getPageParameterAt(2) . '/assets/',
+			'%urlNode4%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/' . getPageParameterAt(2) . '/' . getPageParameterAt(3) . '/assets/',
 
 			'##theme##' => getThemeBaseUrl(),
 			'%%cdn%%' => getWhatIsLink('cdn'), //has to be here
