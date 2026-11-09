@@ -239,10 +239,15 @@ function processCanvaShortcode($html) {
 	]);
 }
 
+DEFINE('GOOGLESTART', '<iframe src="https://drive.google.com/file/d/');
+DEFINE('GOOGLEEND', '/preview" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allow="autoplay"></iframe></div>'); 
+
 function processGoogleShortcodes($html) {
 	return replaceItems($html, [
-		'[google-video]' => '<div class="video-container google-video"><iframe src="https://drive.google.com/file/d/',
-		'[/google-video]' => '/preview" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allow="autoplay"></iframe></div>',
+		'[google-video]' => '<div class="video-container google-video">' . GOOGLESTART,
+		'[/google-video]' => GOOGLEEND,
+		'[google-audio]' => '<div class="audio-container google-audio container min-vh-25">' . GOOGLESTART,
+		'[/google-audio]' => GOOGLEEND,
 	]);
 }
 
