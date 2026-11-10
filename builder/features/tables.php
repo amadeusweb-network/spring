@@ -216,7 +216,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	$skipItemFn = isset($values['skipItem']) ? $values['skipItem'] : false;
 	$enrichItemFn = isset($values['enrichItem']) ? $values['enrichItem'] : false;
 
-	if ($beforeContent = valueIfSetAndNotEmpty($values, 'before-content')) echo returnLine(pipeToBR($beforeContent));
+	if ($beforeContent = valueIfSetAndNotEmpty($values, 'before-content')) echo renderAny(pipeToBR($beforeContent));
 	if ($allowCards) echo '<div class="text-center"><button data-table-id="amadeus-table-' . $id . '" class="amadeus-table-' . $id . '-card-view">toggle card view</button></div>' . BRNL;
 
 	if ($engage) {

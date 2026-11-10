@@ -34,6 +34,13 @@ function variableOr($name, $or, $hasVar = null)
 	return hasVariable($name) ? $val : $or;
 }
 
+function variableAppend($name, $default, $key, $val)
+{
+	$vals = variableOr($name, $default);
+	$vals[$key] = $val;
+	variable($name, $vals);
+}
+
 function clearVariable($name) {
 	if (!hasVariable($name)) return;
 	global $cscore;
