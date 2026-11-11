@@ -136,7 +136,7 @@ class site {
 
 		//need the check again as it may be called from subsites/
 		if (!sheetExists($file)) {
-			if (is_local()) showDebugging('site::getInfo()', ['missing for' => $relativePath, 'TSV missing' => $file], PleaseDie, IncludeTrace);
+			if (is_local() && !DEFINED('NOSITEERRORS')) showDebugging('site::getInfo()', ['missing for' => $relativePath, 'TSV missing' => $file], PleaseDie, IncludeTrace);
 			return false;
 		}
 

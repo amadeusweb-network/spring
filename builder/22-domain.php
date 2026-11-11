@@ -44,7 +44,6 @@ class domain {
 	}
 
 	public function getSites($folder = '') {
-		$urlKey = _getUrlKeySansPreview();
 		$items = [];
 		if ($folder) $folder .= '/';
 
@@ -53,6 +52,7 @@ class domain {
 		foreach ($search as $item) {
 			$site = site::getInfo($where = $this->folder . $folder . $item, $this);
 			if (!$site) {
+				if (DEFINED('NOSITEERRORS')) continue;
 				if (is_local() || self::isDebugging()) showDebugging('couldnt get site info: ', $where, PleaseDie, IncludeTrace);
 			}
 			$items[] = $site;
@@ -87,11 +87,13 @@ class domain {
 
 	static function add(string $key, string $folder, bool | string $skipRule, domain $item) {
 		$path = DEFINED('ALLSITENAME') ? ALLSITENAME : (DEFINED('SITEPATH') ? SITEPATH : false);
+		if (DIRECTORY_SEPARATOR == '\\') $key = str_replace('/', '\\', $key);
+		//showDebugging(90, [$path, $key, DIRECTORY_SEPARATOR], PleaseDie);
 		$match = $path && contains($path, $key); //doesnt handle substring collision
 
 		if ($skipRule && $skipRule != self::SkipList && !$match && !DEFINED('ALLSITENAME')) return;
 
-		if ($match) {
+		if ($match && !self::$current) {
 			self::$current = $item;
 			if (!DEFINED('NETWORKPATH'))
 				DEFINE('NETWORKPATH', $folder);
