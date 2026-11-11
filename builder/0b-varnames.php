@@ -104,6 +104,7 @@ DEFINE('FooterWidgetsBelow', 'widgets-below');
 DEFINE('FooterSocialOnly', 'social-only');
 
 //features/engage.php
+DEFINE('VAREngageFields', 'engage-fields');
 DEFINE('VAREngageNote', 'engage-note');
 DEFINE('VAREngageNoteAbove', 'engage-note-above');
 DEFINE('VARWantsNoEngageBox', '<!--no-engage-box-->');

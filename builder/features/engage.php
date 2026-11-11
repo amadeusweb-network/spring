@@ -55,12 +55,12 @@ function getEngageReplaces($email = false, $whatsapp = false) {
 
 	if (!$email) $email = variable(VAREmail);
 	if (!$whatsapp) $whatsapp = variable(VARWhatsapp);
-	return [
+	return array_merge([
 		VAREngageNote => tryEnrichEngageNote('<div class="engage-note-hint d-none">' . returnLine($note) . '</div>', VAREngageNote),
 		VAREngageNoteAbove => disk_file_exists($note2 = (AMADEUSDATA . 'engage-note-above.md')) ? tryEnrichEngageNote(returnLine($note2), VAREngageNoteAbove) : '',
 		VAREmail => $email,
 		VARWhatsapp => $whatsapp . getHtmlVariable('enquiry'),
-	];
+	], variableOr(VAREngageFields, []));
 }
 
 function getEngageToolbox() {
