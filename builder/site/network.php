@@ -59,8 +59,6 @@ function network_menu($renderFn = false) {
 }
 
 function getWebring() {
-	$urlKey = _getUrlKeySansPreview();
-
 	$txt = ALLSITESROOT . 'spring/data/Webring.txt';
 	if (disk_file_exists($txt2 = ALLSITESROOT . domain::$current->mainSites[0] . '/Webring.txt'))
 		$txt = $txt2;
@@ -76,6 +74,7 @@ function getWebring() {
 
 		$item = site::getInfo($item, null); //assume already in dawn menu
 
+		if (!$item) continue;
 		$sites[] = $item;
 	}
 

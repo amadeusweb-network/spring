@@ -100,7 +100,7 @@ class site {
 	}
 	
 	function linkDomain(domain $domain = null) {
-		$use = $domain && $this->folder != 'www' && !contains($domain->folder, $this->parentFolder);
+		$use = is_live() && $domain && $this->folder != 'www' && !contains($domain->folder, $this->parentFolder);
 		if (domain::isDebugging(4) && $use) showDebugging('linkDomain()', [$this->path, $this->parentFolder, $this, $domain], PleaseDie, IncludeTrace);
 
 		$this->assetUrl = $use
@@ -136,7 +136,7 @@ class site {
 
 		//need the check again as it may be called from subsites/
 		if (!sheetExists($file)) {
-			if (is_local() && !DEFINED('NOSITEERRORS')) showDebugging('site::getInfo()', ['missing for' => $relativePath, 'TSV missing' => $file], PleaseDie, IncludeTrace);
+			if (variable('RaiseSiteErrors')) showDebugging('site::getInfo()', ['missing for' => $relativePath, 'TSV missing' => $file], PleaseDie, IncludeTrace);
 			return false;
 		}
 
