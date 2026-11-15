@@ -79,6 +79,7 @@ if (!$check && isset($variables) && isset($variables['items'])) {
 function _pull_and_log($location) {
 	$view = disk_file_exists(ALLSITESROOT . $location . '/data/site.tsv') ? ' ' . getLink('view', 'http://localhost/' . $location . '/', 'btn btn-success') : '';
 	return _getGuiLink($location, 'pull', 'outline-success') . NEWLINE
+		. ' ' . _getGuiLink($location, 'diff', 'outline-primary') . NEWLINE
 		. ' ' . _getGuiLink($location, 'log', 'outline-info') . NEWLINE . $view;
 }
 
