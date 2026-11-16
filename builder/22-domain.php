@@ -105,7 +105,9 @@ class domain {
 		if ($skipRule == self::SkipList) $item->skip = true;
 		if ($skipRule == self::OnlyThis) $item->only = true;
 
-		self::$all[$key] = $item;
+		$bits = explode('/', $key);
+		$last = array_pop($bits);
+		self::$all[$last] = $item;
 		if ($match && $item->skip) self::$skipRest = true;
 	}
 

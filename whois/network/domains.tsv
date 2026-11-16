@@ -7,13 +7,13 @@
 #at	from
 
 amadeusweb/www	https://github.com/amadeusweb-sites/www.git
-h/2/action/www	https://github.com/actionparty-in/www.git
 
-joyfulearth/www	https://github.com/amadeusweb-sites/joyfulearth.git
+networks/action/www	https://github.com/actionparty-in/www.git
+networks/joyfulearth/www	https://github.com/amadeusweb-sites/joyfulearth.git
 
-homes/www	https://github.com/amadeusweb-network/homes.git
-biz/www	https://github.com/amadeusweb-network/biz.git
-missions/www	https://github.com/amadeusweb-network/missions.git
+hub/missions/www	https://github.com/amadeusweb-network/missions.git
+hub/homes/www	https://github.com/amadeusweb-network/homes.git
+hub/biz/www	https://github.com/amadeusweb-network/biz.git
 
 sites/spanda/www	https://github.com/amadeusweb-members/spanda.git
 sites/aztras/www	https://github.com/amadeusweb-members/aztras.git

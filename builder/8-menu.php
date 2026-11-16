@@ -446,6 +446,7 @@ function twoLevelMenu($items, $topName) {
 		echo '	<ul class="' . $ulClass . '">' . NEWLINE;
 
 		foreach ($subItems as $item) {
+			if (!$item) continue; //needs debug to find issue
 			if (is_string($item) && startsWith($item, MENUGROUP)) {
 				echo '			<li class="' . $itemClass . '">' . substr($item, 1) . '</li>' . NEWLINE;
 				continue;
