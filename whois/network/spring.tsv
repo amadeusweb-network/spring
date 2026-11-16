@@ -1,9 +1,9 @@
 |is-table
-||cloneAt: spring/
+||cloneAt: 
 ||renderWith: repos.php
 ||Description: AmadeusWeb Spring and it's Sections
 ||Primary Keyword: AW Spring
 ||Keywords: CMS, Web Builder
 #at	from
-	https://github.com/amadeusweb-network/spring.git
-smithy	https://github.com/amadeusweb-network/smithy.git
+spring	https://github.com/amadeusweb-network/spring.git
+spring/smithy	https://github.com/amadeusweb-network/smithy.git

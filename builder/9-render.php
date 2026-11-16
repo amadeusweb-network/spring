@@ -329,7 +329,7 @@ function _renderImplementation($fileOrRaw, $settings) {
 	if ($notice = valueIfSet($settings, renderSET::notice))
 		$output = '<div class="after-content text-center rounded-6 p-2 mb-4">' . replaceHtml($notice) . '</div>' . NEWLINES2 . $output;
 
-	if (!$noReplaces && isset($settings[renderSET::heading])) $output = variableOr('custom-heading', h2($settings[renderSET::heading], 'amadeus-heading amadeus-icon', BOOLYes)) . NEWLINES2 . $output;
+	if (!$noReplaces && $heading = valueIfSet($settings, renderSET::heading)) $output = variableOr('custom-heading', h2($heading, 'amadeus-heading amadeus-icon', BOOLYes)) . NEWLINES2 . $output;
 
 	if ($engage->endContent) {
 		features::ensureEngage();

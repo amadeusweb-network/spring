@@ -207,12 +207,15 @@ function replaceUPIs($html) {
 
 function textBoxWithCopyOnClick($title, $value, $label = false, $icon = '') {
 	$bits = [];
-	$bits[] = '<div title="' . ($icon == '' ? $title : '') . '">' . ($label ? '<label class="d-block"><i class="' . $icon . '"></i> ' . $label . '<br>' : '');
-	$bits[] = '<textarea class="autofit copyable" style="text-align: center; width: 100%" onfocus="this.select(); document.execCommand(\'copy\'); this.setSelectionRange(0, 0); if (!this.classList.contains(\'text-copied\')) { this.classList.add(\'text-copied\'); alert(\'Copied: \' + $(this).text()); }" rows="3" readonly>' . $value . '</textarea>';
+	$width = $title ? 'width: 100%' : 'field-sizing: content';
+	if ($title)
+		$bits[] = '<div title="' . ($icon == '' ? $title : '') . '">' . ($label ? '<label class="d-block"><i class="' . $icon . '"></i> ' . $label . '<br>' : '');
+	$bits[] = '<textarea class="autofit copyable" style="text-align: center; '. $width . '" onfocus="this.select(); document.execCommand(\'copy\'); this.setSelectionRange(0, 0); if (!this.classList.contains(\'text-copied\')) { this.classList.add(\'text-copied\'); alert(\'Copied: \' + $(this).text()); }" rows="3" readonly>' . $value . '</textarea>';
+
 
 	if ($label) $bits[] = '</label>' . TAGDIVEND;
 
-	return implode(NEWLINE, $bits) . NEWLINES2;
+	return implode(NEWLINE, $bits) . ($title ? NEWLINES2 : '');
 }
 
 function processCtaShortcode($html) {

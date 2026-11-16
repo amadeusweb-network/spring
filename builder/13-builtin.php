@@ -94,7 +94,8 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 
 		if (valueIfSet($meta->values, 'no-title')) $title = false;
 		else if (($mh = variable('menu-humanize')) && isset($mh[nodeValue()])) $title = $mh[nodeValue()];
-		else $title = title(FORHEADING);
+		else if ($useHeading) $title = title(FORHEADING);
+		else $title = false;
 		if ($title) h2($title, 'amadeus-icon');
 
 		$isDeck = contains($raw, '|is-deck');
