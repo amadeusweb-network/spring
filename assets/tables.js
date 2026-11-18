@@ -8,12 +8,12 @@
 if (typeof ($) === 'undefined') $ = jQuery.noConflict();
 
 $(document).ready(function () {
-	const sansTH = $('.table-sans-th');
+	const sansTH = $('.table-sans-th, .table-wants-filter');
 	if (sansTH.length) {
 		sansTH.each(function (ix, el) {
 			const th = $('tr:first', $(this));
 			const tr = []; //You cannot dynamically change headers on an active DataTables instance.
-			$('td', th).each(function() {
+			$('td, th', th).each(function() {
 				var title = $(this).text();
 				const append = '<input class="filter filter-' + title.toLowerCase().replaceAll(' ', '-')
 					+ '" type="text" placeholder="' + title + '" />';

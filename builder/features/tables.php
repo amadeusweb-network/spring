@@ -99,8 +99,10 @@ function _table_link($item, $c, $values, $key, $cols) {
 class tableBuilder extends builderBase {
 	private $id, $data, $cols, $template;
 
-	static function factory($id, $items) {
-		(new tableBuilder($id, $items))->render();
+	static function factory($id, $items, $settings = []) {
+		$cols = valueIfSet($settings, 'columns', 'auto');
+		$tpl = valueIfSet($settings, 'template', 'auto');
+		(new tableBuilder($id, $items, $cols, $tpl, $settings))->render();
 	}
 
 	function __construct($id, $data, $cols = 'auto', $template = 'auto', $settings = [])

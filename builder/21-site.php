@@ -63,10 +63,16 @@ class site {
 	const local = 'local-url';
 	const live = 'live-url';
 
-	public string $key;
-	public string $name;
 	public string $siteName;
 	public string $byline;
+
+	public string $description;
+	public string $notes;
+	public string $year;
+	public string $sections;
+
+	public string $key;
+	public string $name;
 
 	public string $expectedLocalUrl;
 	public string $localUrl;
@@ -76,11 +82,6 @@ class site {
 	public string $path;
 	public string $folder;
 	public string $parentFolder = '';
-
-	public string $description;
-	public string $notes;
-	public string $year;
-	public string $sections;
 
 	public function __construct(sheet $site, $relativePath, $prefix = '') {
 		$this->key = $site->getValue($site->firstOfGroup($prefix . VARSafeName), 'value');

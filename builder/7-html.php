@@ -355,18 +355,24 @@ class tagUX {
 	public const orientations = ['portrait', 'landscape'];
 	public const appearChecked = '<input class="form-check-input" type="radio" checked />';
 
-	static function selfClosetag($name, $classes, $attributes = []) {
+	private static function getAttributes($attributes = []) {
 		$attrs = '';
-		$attributes['class'] = $classes;
 		foreach ($attributes as $attr => $value)
 			$attrs .= concatStrings(VAREMPTY, VARSPACE, $attr, VAREQUAL, VARQUOTE, $value, VARQUOTE);
-		return "<$name$attrs />";
+		return $attrs;
 	}
 
-	static function tag($name, $classes, $id = '', $innerHtml = '') {
-		$attrs = ' class="' . $classes . '"';
-		if ($id) $attrs = ' id="' . $id . '"' . $attrs;
-		return "<$name$attrs>$innerHtml</$name>";
+	static function selfClosetag($name, $classes, $attributes = []) {
+		$attributes['class'] = $classes;
+		$attrs = self::getAttributes($attributes);
+		return "<$name $attrs />";
+	}
+
+	static function tag($name, $classes, $id = '', $innerHtml = '', $attributes = []) {
+		$attributes['class'] = $classes;
+		if ($id) $attributes ['id'] = $id;
+		$attrs = self::getAttributes($attributes);
+		return "<$name $attrs>$innerHtml</$name>";
 	}
 
 	static function tagStart($name, $classes, $id = '') {
@@ -440,6 +446,20 @@ class tagUX {
 			unset($attributes['class']);
 		}
 		return self::selfClosetag('input', 'form-check-input' . $additionalClass, $attributes) . NEWLINE;
+	}
+
+	static function select($name, $items, $checked, $override = []) {
+		$attributes = ['name' => $name];
+		if (count($override)) $attributes = array_merge($attributes, $override);
+		$additionalClass = '';
+		if (array_key_exists('class', $attributes)) {
+			$additionalClass .= ' ' . $attributes['class'];
+			unset($attributes['class']);
+		}
+		$options = [];
+		foreach ($items as $value => $text)
+			$options[] = '<option value="' . $value . '"' . ($value == $checked ? ' selected' : '') . '>' . $text . '</option>';
+		return self::tag('select', 'form-select', '', NEWLINE . implode(NEWLINE, $options), $attributes);
 	}
 }
 
