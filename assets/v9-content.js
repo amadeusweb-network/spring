@@ -8,15 +8,18 @@ $(document).ready(function() {
 		this.style.height = this.scrollHeight + 'px';
 	}
 
-	if ($('body.has-gemini-ai').length) {
+	if ($('body.has-gemini-ai, body.has-chatgpt-ai').length) {
 		let numbers = $('a.prompt-number');
 		if (!numbers.length) {
+			const hadHash = window.location.hash;
+			if (!!hadHash) window.location.hash = '';
 			const prompts = $('.prompt');
 			prompts.each(function(ix, el){
 				ix += 1;
 				$(el).prepend($('<a name="prompt-' + ix + '" class="prompt-number"></a>'));
 			});
 			numbers = $('a.prompt-number');
+			if (!!hadHash) window.location.hash = hadHash;
 		}
 
 		if (numbers.length) {

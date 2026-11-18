@@ -1,17 +1,23 @@
 <?php
 /**
- * This php framework is Proprietary, Source-available software!
+ * This "AmadeusWeb Spring" php framework is Proprietary, Source-available software!
  * It is licensed for distribution at the sole discretion of it's owner Imran.
- * Copyright Oct 2019 -> 2026, JoyfulEarth.org, All Rights Reserved!
- *     
- * Author:    Imran Ali Namazi <imran@joyfulearth.org>
- * Architect: https://imran.joyfulearth.org/
- * Website:   https://spring.joyfulearth.org/
- * Source:    https://github.com/joyfulearth/spring
- * License:   https://github.com/joyfulearth/spring#License-1-ov-file
- * Note: AmadeusWeb Spring v9.4 is based on 25 years of Imran's programming experience.
+ * Copyright Oct 2019 -> 2026, AmadeusWeb.in, All Rights Reserved!
+ * 
+ * Author:    Imran Ali Namazi <imran@amadeusweb.in>
+ * Architect: https://imran.amadeusweb.in/
+ * Website:   https://spring.amadeusweb.in/
+ * Source:    https://github.com/amadeusweb-network/spring
+ * License:   https://spring.amadeusweb.in/license/ (see stringent terms / conditions before live)
+ * 
+ * Note: AmadeusWeb Spring v10.1 is based on 26 years of Imran's programming experience.
  * You MUST agree to the "proprietary" nature and Imran's PULL PLUG RIGHTS
- * Rights:    https://spring.joyfulearth.org/dawn/proprietariness/with-ai/2025-12--16th-chat/
+ * 
+ * Rights / Assertions (only a part of the discussion):
+ *            https://amadeusweb.in/ethos/023--health4-and-terms/#prompt-10
+ *            https://amadeusweb.in/ethos/017--amadeusweb-spring/
+ *            https://imran.amadeusweb.in/2026-01/01-to-05/01--creators-vision--autonomy-and-respect/
+ *            https://amadeusweb.in/log/2025/proprietariness/with-ai/2025-12--16th-chat/
  */
 
 DEFINE('AMADEUSROOT', dirname(__DIR__) . DIRECTORY_SEPARATOR);
