@@ -68,6 +68,7 @@ class site {
 	public string $siteName;
 	public string $byline;
 
+	public string $expectedLocalUrl;
 	public string $localUrl;
 	public string $liveUrl;
 	public string $assetUrl;
@@ -88,10 +89,11 @@ class site {
 		$this->siteName = $site->getValue($site->firstOfGroup($prefix . 'name'), 'value');
 		$this->byline = $site->getValue($site->firstOfGroup($prefix . VARByline), 'value');
 
+		$this->expectedLocalUrl = 'http://localhost/' . str_replace('\\', '/', $relativePath) . '/';
 		$this->localUrl = $site->getValue($site->firstOfGroup($prefix . 'local-url'), 'value');
 		$this->liveUrl = $site->getValue($site->firstOfGroup($prefix . 'live-url'), 'value');
 		$this->folder = self::getFolder($this->path = $relativePath);
-		$this->parentFolder = self::getFolder(str_replace(DIRECTORY_SEPARATOR . $this->folder, '', $relativePath));
+		$this->parentFolder = pathinfo(pathinfo($relativePath, PATHINFO_DIRNAME), PATHINFO_FILENAME);
 
 		$this->description = $site->getValue($site->firstOfGroup($prefix . 'description', '', false), 'value', VAREMPTY, false, BOOLNo);
 		$this->notes = $site->getValue($site->firstOfGroup($prefix . 'notes', '', false), 'value', VAREMPTY, false, BOOLNo);

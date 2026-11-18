@@ -87,7 +87,9 @@ class domain {
 
 	static function add(string $key, string $folder, bool | string $skipRule, domain $item) {
 		$path = DEFINED('ALLSITENAME') ? ALLSITENAME : (DEFINED('SITEPATH') ? SITEPATH : false);
+		$bits = explode('/', $key);
 		if (DIRECTORY_SEPARATOR == '\\') $key = str_replace('/', '\\', $key);
+
 		//showDebugging(90, [$path, $key, DIRECTORY_SEPARATOR], PleaseDie);
 		$match = $path && contains($path, $key); //doesnt handle substring collision
 
@@ -105,7 +107,6 @@ class domain {
 		if ($skipRule == self::SkipList) $item->skip = true;
 		if ($skipRule == self::OnlyThis) $item->only = true;
 
-		$bits = explode('/', $key);
 		$last = array_pop($bits);
 		self::$all[$last] = $item;
 		if ($match && $item->skip) self::$skipRest = true;

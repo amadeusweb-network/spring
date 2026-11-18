@@ -429,6 +429,18 @@ class tagUX {
 	static function listItem($html) {
 		return '	<li>' . $html . '</li>' . NEWLINE;
 	}
+
+	static function checkbox($name, $value, $checked = false, $override = []) {
+		$attributes = ['type' => 'checkbox', 'name' => $name, 'value' => $value];
+		if ($checked) $attributes['checked'] = 'checked';
+		if (count($override)) $attributes = array_merge($attributes, $override);
+		$additionalClass = '';
+		if (array_key_exists('class', $attributes)) {
+			$additionalClass .= ' ' . $attributes['class'];
+			unset($attributes['class']);
+		}
+		return self::selfClosetag('input', 'form-check-input' . $additionalClass, $attributes) . NEWLINE;
+	}
 }
 
 class cssUX {
