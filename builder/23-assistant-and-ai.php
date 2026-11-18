@@ -98,7 +98,7 @@ class aihelper {
 		_includeTableAssets();
 
 		return replaceItems($raw, [
-			'<p>| ' => '<table class="datatables table-sans-th table table-striped table-bordered"><thead></thead><tbody><tr><td>',
+			'<p>| ' => '<table class="datatables ' . VARTableSansTH . ' table table-striped table-bordered"><thead></thead><tbody><tr><td>',
 			'|</p> ' => '</tr></tbody></table>',
 			' | ' => '</td><td>',
 			'| ' => '<tr><td>',

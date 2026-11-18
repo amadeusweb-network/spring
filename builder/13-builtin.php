@@ -109,7 +109,7 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		else if (startsWith($raw, '|is-rich-page'))
 			renderRichPage($file);
 		else if ($istwt || contains($raw, '|is-table'))
-			add_table(pathinfo($file, PATHINFO_FILENAME), $file, valueIfSet($meta->values, 'head-columns', 'auto'), valueIfSet($meta->values, 'row-template', 'auto'), $meta->values);
+			add_table(pathinfo($file, PATHINFO_FILENAME), $file, valueIfSet($meta->values, 'head-columns', VARTableAuto), valueIfSet($meta->values, 'row-template', VARTableAuto), $meta->values);
 		else
 			showDebugging('unsupported tsv file - see line 1 for type definition', $file, true);
 

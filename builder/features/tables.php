@@ -96,16 +96,20 @@ function _table_link($item, $c, $values, $key, $cols) {
 	return makeLink($text, $link, 'external');
 }
 
+DEFINE('VARTableAuto', 'auto');
+DEFINE('VARTableWantsFilter', 'table-wants-filter');
+DEFINE('VARTableSansTH', 'table-sans-th');
+
 class tableBuilder extends builderBase {
 	private $id, $data, $cols, $template;
 
 	static function factory($id, $items, $settings = []) {
-		$cols = valueIfSet($settings, 'columns', 'auto');
-		$tpl = valueIfSet($settings, 'template', 'auto');
+		$cols = valueIfSet($settings, 'columns', VARTableAuto);
+		$tpl = valueIfSet($settings, 'template', VARTableAuto);
 		(new tableBuilder($id, $items, $cols, $tpl, $settings))->render();
 	}
 
-	function __construct($id, $data, $cols = 'auto', $template = 'auto', $settings = [])
+	function __construct($id, $data, $cols = VARTableAuto, $template = VARTableAuto, $settings = [])
 	{
 		$this->id = $id;
 		$this->data = $data;
@@ -120,14 +124,14 @@ class tableBuilder extends builderBase {
 		if (!isset($this->data[0]) && count($this->data))
 			$this->data = array_values($this->data);
 
-		if ($this->cols == 'auto') { 
+		if ($this->cols == VARTableAuto) { 
 			//onus on caller to have rows if cols are auto
 			$this->cols = array_keys($this->data[0]);
 		} else if (is_string($this->cols)) {
 			$this->settings['dont-treat-array'] = false;
 		}
 
-		if ($this->template == 'auto') $this->template = '<tr><td>%' . (implode('%</td><td>%', $this->cols)) . '%</td></tr>' . NEWLINE;
+		if ($this->template == VARTableAuto) $this->template = '<tr><td>%' . (implode('%</td><td>%', $this->cols)) . '%</td></tr>' . NEWLINE;
 
 		add_table(
 			$this->id,
@@ -168,10 +172,10 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 		$rows = $dataFile;
 		$columns = explode(', ', $columnList);
 		$headingNames = array_map('humanize', $columns);
-	} else if ($columnList == 'auto' || is_string($columnList)) {
+	} else if ($columnList == VARTableAuto || is_string($columnList)) {
 		if (!$tsv) { showDebugging('TSV Expected', $dataFile, true); }
 		$sheet = getSheet($dataFile, false);
-		$cols = $columnList == 'auto' ? array_keys($sheet->columns) : explode(', ', $columnList);
+		$cols = $columnList == VARTableAuto ? array_keys($sheet->columns) : explode(', ', $columnList);
 
 		$headingNames = [];
 		foreach ($cols as $item) {
@@ -179,7 +183,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 			$headingNames[] = humanize(explode('_', $item)[0]);
 		}
 
-		if ($template == 'auto') $template = '<tr><td>%' . (implode('%</td><td>%', $cols)) . '%</td></tr>' . NEWLINE;
+		if ($template == VARTableAuto) $template = '<tr><td>%' . (implode('%</td><td>%', $cols)) . '%</td></tr>' . NEWLINE;
 		$rows = $sheet->rows;
 		$columns = $sheet->columns;
 	} else if (!$wantsBSRow) {
