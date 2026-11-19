@@ -1,0 +1,26 @@
+.family {
+	overflow-x: scroll;
+}
+
+.family-tree {
+	border-collapse: collapse!important;
+	font-weight: bold;
+}
+
+.family-tree td {
+	vertical-align: top;
+	border-width: 1px;
+	padding: 4px;
+}
+
+.family-tree em {
+	font-size: 105%;
+}
+
+.family-tree a {
+	text-decoration: underline;
+}
+
+span.male, span.male a { color: #3300FF; }
+span.female, span.female a { color: #CC3366; }
+span.self, span.self a { color: #72b803; }

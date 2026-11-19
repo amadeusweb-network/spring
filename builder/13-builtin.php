@@ -61,8 +61,15 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 			features::runWithFile(features::blurbs, $file);
 		} else if (contains($raw, '<!--is-deck-->')) {
 			_renderDeck($file);
-		} else if (contains($raw, '<!--is-family-tree-->')) {
-			features::runWithFile(features::familyTree, $file);
+		} else if (contains($raw, '<!--has-family-tree-->')) {
+			features::ensureFamily();
+			$bits = explode('<!--//family-->', $raw);
+			if (count($bits) % 2 == 0) showDebugging('expects even number of &lt;!--//family--&gt;', $file, PleaseDie);
+			contentBox('first-family');
+			for ($ix = 0; $ix < count($bits) -1; $ix += 2) {
+				renderMarkdown($bits[$ix]);
+				echo (new Family($bits[$ix + 1]))->renderInfo();
+			}
 		} else {
 			$set = renderSET::create();
 

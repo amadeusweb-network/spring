@@ -111,8 +111,7 @@ class features {
 	const blurbs = 'blurbs';
 	const directory = 'directory';
 	const engage = 'engage';
-	const familyTree = 'family-tree';
-	const pollen = 'pollen';
+	const family = 'family';
 	const share = 'share';
 	const underConstruction = 'under-construction';
 	const tables = 'tables';
@@ -123,10 +122,10 @@ class features {
 	static function ensureDirectory() { runFeature(self::directory); } //call either this, OR runMultiple for sitemap
 	static function ensureEngage() { runFeature(self::engage); }
 	static function ensureTables() { runFeature(self::tables); }
+	static function ensureFamily() { runFeature(self::family); }
 	static function runPage($what) { runFrameworkFile('pages/' . $what); }
 	static function runMultiple($what, $vars = []) { runFeatureMultiple($what, $vars); }
 	static function runWithFile($what, $file) { self::runMultiple($what, ['file' => $file]); }
-	static function runPollen($items = []) { runFeature(self::pollen, ['items' => $items]); }
 
 	static function hasEngageFields($raw) { return contains($raw, '[field'); }
 	static function replaceEngageFields($raw) { self::ensureEngage(); return renderEngageFields($raw); }

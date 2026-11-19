@@ -208,7 +208,7 @@ class replacer extends builderBase {
 function _renderImplementation($fileOrRaw, $settings) {
 	$endsWithMd = BOOLNo;
 	$raw = $fileOrRaw; $fileName = '[RAW]';
-	$treatAsMarkdown = valueIfSet($settings, 'markdown');
+	$treatAsMarkdown = valueIfSet($settings, VARMarkdown);
 	$echo = valueIfSet($settings, VAREcho, BOOLYes);
 	$noReplaces = BOOLNo;
 
