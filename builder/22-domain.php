@@ -13,11 +13,30 @@ class domain {
 	public static $skipRest = false;
 
 	static function includeAll() {
+		$site = site::$current;
+		$www = $site->folder == 'www' ? $site->path : pathinfo(pathinfo($site->path, PATHINFO_DIRNAME), PATHINFO_DIRNAME) . '/www';
+
+		$loadFirstAsSecond = false;
+		if (disk_is_dir(ALLSITESROOT . $www)) {
+			disk_include_once(ALLSITESROOT . $www . '/domain.php');
+			if (self::$current) {
+				if (self::$current->skip)
+					$loadFirstAsSecond = true;
+				
+			}
+		}
+
 		$sheet = getSheet(DEFINED('DOMAINFILE') ? DOMAINFILE : AMADEUSSITEROOT . 'whois/network/domains.tsv', false);
 		foreach ($sheet->rows as $item) {
 			$site = $sheet->getValue($item, 'at');
 			if (!disk_is_dir(ALLSITESROOT . $site)) continue;
 			disk_include_once(ALLSITESROOT . $site . '/domain.php');
+			if ($loadFirstAsSecond) {
+				self::$all[self::$lastKey] = self::$known[self::$lastKey];
+				$loadFirstAsSecond = false;
+			}
+			if (self::$current && self::$current->mainSites[0] == $site)
+				self::$skipRest = true;
 		}
 
 		if (!self::$current && count(self::$all))
@@ -81,16 +100,23 @@ class domain {
 	static $all = [];
 
 	/**
+	 * @var domain[] All Known domains
+	 */
+	static $known = [];
+
+	/**
 	 * @var domain Current domain
 	 */
 	static $current;
+
+	static $lastKey;
 
 	static function add(string $key, string $folder, bool | string $skipRule, domain $item) {
 		$path = DEFINED('ALLSITENAME') ? ALLSITENAME : (DEFINED('SITEPATH') ? SITEPATH : false);
 		$bits = explode('/', $key);
 		if (DIRECTORY_SEPARATOR == '\\') $key = str_replace('/', '\\', $key);
 
-		//showDebugging(90, [$path, $key, DIRECTORY_SEPARATOR], PleaseDie);
+		//showDebugging('domain::add()', [$path, $key]);
 		$match = $path && contains($path, $key); //doesnt handle substring collision
 
 		if ($skipRule && $skipRule != self::SkipList && !$match && !DEFINED('ALLSITENAME')) return;
@@ -101,13 +127,14 @@ class domain {
 				DEFINE('NETWORKPATH', $folder);
 		}
 
-		if (self::$skipRest) return;
-
 		$item->hasRule = is_string($skipRule);
 		if ($skipRule == self::SkipList) $item->skip = true;
 		if ($skipRule == self::OnlyThis) $item->only = true;
 
-		$last = array_pop($bits);
+		self::$lastKey = $last = array_pop($bits);
+		self::$known[$last] = $item;
+
+		if (self::$skipRest) return;
 		self::$all[$last] = $item;
 		if ($match && $item->skip) self::$skipRest = true;
 	}

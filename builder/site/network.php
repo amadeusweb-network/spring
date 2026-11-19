@@ -7,8 +7,7 @@ function network_menu($renderFn = false) {
 	if (variable(VARDAWNMenu) === BOOLNoString) return;
 
 	$all = [];
-	$domains = variableOr('domains-to-loop', domain::$all);
-	foreach ($domains as $d) {
+	foreach (domain::$known as $d) {
 		$item = domain::cast($d);
 		if ($wantsRender && !$item->isCurrent && $item->only) continue;
 		$all[] = site::getInfo($item->mainSites[0], $item);
@@ -17,6 +16,7 @@ function network_menu($renderFn = false) {
 	$all[] = site::getInfo('spring', null); //only here null is allowed
 	$items = [NETWORKABBR . ' DOMAINS' => $all];
 
+	$domains = variableOr('domains-to-loop', domain::$all);
 	foreach ($domains as $d) {
 		$item = domain::cast($d);
 
