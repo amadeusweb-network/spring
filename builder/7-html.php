@@ -164,6 +164,10 @@ function replaceHtml($html) {
 class urlBuilder extends builderBase {
 	const node = 'urlNode';
 
+	static function cdnUrl() {
+		return variableOr('cdn', ((variable('is-mobile') || variable('live-cdn')) ? variable('live-url') : site::$current->assetUrl) . 'assets/cdn/');
+	}
+
 	public function __construct(site | bool $site = false) {
 		if (!$site) $site = site::$current;
 		$this->set([
@@ -181,7 +185,7 @@ class urlBuilder extends builderBase {
 
 			'##theme##' => getThemeBaseUrl(),
 			'%%cdn%%' => getWhatIsLink('cdn'), //has to be here
-			'%cdn%' => variableOr('cdn', ((variable('is-mobile') || variable('live-cdn')) ? variable('live-url') : $site->assetUrl) . 'assets/cdn/'),
+			'%cdn%' => self::cdnUrl(),
 
 			//TODO: cleanup all usages
 			'%wildcard-safe-url%' => $site->assetUrl,

@@ -5,6 +5,7 @@ DEFINE('MENUGROUP', '~');
 DEFINE('MENUSEPARATOR', '----');
 DEFINE('MENUPADLEFT', '							');
 DEFINE('NOPAGESTART', '--page-start--'); //todo: document this!
+
 function _menuULStart($endAndName = false) {
 	if ($endAndName && $endAndName != NOPAGESTART) { echo MENUPADLEFT . '</ul><!-- #end ' . $endAndName . ' menu -->' . NEWLINES2; return; }
 
@@ -37,8 +38,12 @@ function _skipNodeFiles($files, $excludeExtensions = 'pdf', array $excludeNames 
 
 define('ONLYFOLDERS', 'FOLDER'); //only folders without dots
 define('SKIPFOLDERS', 'NOFOLDER');
+define('EXCLUDENAMES', 'home');
+define('EXCLUDEEXTENSIONS', 'jpg, png');
+define('VARExcludeNames', 'excludeNames');
+define('VARExcludeExtensions', 'excludeExtensions');
 
-function _skipExcludedFiles($files, $excludeNames = 'home', $excludeExtensions = 'jpg, png', $stripExtension = false) {
+function _skipExcludedFiles($files, $excludeNames = EXCLUDENAMES, $excludeExtensions = EXCLUDEEXTENSIONS, $stripExtension = false) {
 	$op = [];
 
 	if (!is_array($excludeNames))
@@ -188,7 +193,9 @@ function menu($folderRelative = false, $settings = []) {
 		} else {
 			$files = disk_scandir($folder);
 			natsort($files);
-			$files = _skipExcludedFiles($files);
+			$names = valueIfSet($settings, VARExcludeNames, EXCLUDENAMES);
+			$extensions = valueIfSet($settings, VARExcludeExtensions, EXCLUDEEXTENSIONS);
+			$files = _skipExcludedFiles($files, $names, $extensions);
 		}
 
 		$config = getConfigValues($folder . '_menu-config-values.txt'); //for some reason, . in the filename doesnt work - does for .template.html though
