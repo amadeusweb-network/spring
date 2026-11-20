@@ -17,6 +17,10 @@ class sectionsTsv extends sheet {
 			if ($local && $this->getValue($item, 'local') == 'Y') continue;
 			$group = $this->getValue($item, 'group');
 			$items[] = $name = $this->getValue($item, 'section');
+			if (!$group) {
+				$groups[] = $name;
+				continue;
+			}
 			if (!isset($groups[$group])) $groups[$group] = [];
 			$groups[$group][] = $name;
 		}

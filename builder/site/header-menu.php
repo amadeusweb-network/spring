@@ -83,7 +83,7 @@ function renderHeaderMenu($slug, $node = '', $name = false) {
 	$parentSlug = $node ? $node : $slug;
 
 	if ($name) ; //noop
-	else if (contains($node, '/'))  { $bits = explode('/', $node); $name = humanize(array_pop($bits)) . ' (' . humanize(array_pop($bits)) . ')'; }
+	else if (contains($node, textUtil::slash))  { $name = textUtil::secondInParentheses($node); }
 	else if ($node) { $name = humanize($node) . ' (' . humanize($slug) . ')'; }
 	else { $name = humanize($parentSlug); }
 

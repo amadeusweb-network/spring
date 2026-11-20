@@ -97,6 +97,7 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		if ($meta && isset($meta->values['use-template']))
 			$meta->values = array_merge($meta->values, getSheet(getTableTemplate($meta), false)->values);
 
+		$sectionClass = valueIfSet($meta ? $meta->values : [], 'section-class', 'container');
 		$noCB = $meta ? valueIfSet($meta->values, 'no-content-box') : false;
 
 		if (valueIfSet($meta->values, 'no-title')) $title = false;
@@ -108,8 +109,8 @@ function builtinOrRender($file, $type = false, $useHeading = true) {
 		$isDeck = contains($raw, '|is-deck');
 		$notRendering = !hasPageParameter('embed') && !hasPageParameter('expanded');
 
-		if ($noCB) sectionId('special-table', 'container'); else
-		if (!$embed) sectionId('special-table', _getCBClassIfWanted('container' . ($isDeck && !$notRendering ? ' deck deck-from-sheet' : '')));
+		if ($noCB) sectionId('special-table', $sectionClass); else
+		if (!$embed) sectionId('special-table', _getCBClassIfWanted($sectionClass . ($isDeck && !$notRendering ? ' deck deck-from-sheet' : '')));
 
 		if ($isDeck)
 			renderSheetAsDeck($file, variableOr('all_page_parameters', nodeValue()) . '/');

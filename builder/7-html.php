@@ -116,19 +116,26 @@ function pipeToNL($raw) {
 	return replaceItems($raw, [ '|' => NEWLINE ]);
 }
 
-function csvToHashtags($raw) {
-	if (!contains(',', $raw)) $raw = ', ' . $raw;
+DEFINE('VarHashToSite', 'site');
+DEFINE('VarHashToGoogle', 'google');
+DEFINE('VarHashToYoutube', 'youtube');
 
-	$begin = '<a class="hashtag">#';
-	$end = '</a>';
-	$replaces = [
-		', ' => $end . NEWLINE . ' ' . $begin,
-	];
+function csvToHashtags($raw, $on = 'site') {
+	$tags = explode(', ', $raw ?? '');
+	if ($on == VarHashToSite)
+		$link = searchUrl() . '#gsc.q=';
+	else if ($on == VarHashToGoogle)
+		$link = 'https://www.google.com/search?q=';
+	else if ($on == VarHashToYoutube)
+		$link = 'https://www.youtube.com/results?search_query=';
+	else
+		$link = $on;
 
-	$offset = strlen('#">' . $end);
-	$result = substr(replaceItems($raw, $replaces), $offset);
-	if (startsWith($result, $begin . $begin)) $result = substr($result, strlen($begin));
-	return $result;
+	$op = [];
+	foreach ($tags as $item)
+		if ($item) $op[] = getLink('#' . $item, $link . $item);
+
+	return implode(NEWLINE, $op);
 }
 
 function replaceSpecialChars($html) {
@@ -640,15 +647,14 @@ class htmlUX {
 }
 
 function url_r($url, $domainOnly = false) {
-	$url = replaceItems($url, [
+	$url = textUtil::removeSlash(replaceItems($url, [
 		'preview.' => '',
 		'https://' => '',
 		'http://' => '',
 		'www.' => '',
 		'//' => '',
-	]);
-	if (endsWith($url, '/')) $url = substr($url, 0, strlen($url) - 1);
-	return $domainOnly ? explode('/', $url)[0] : $url;
+	]), textUtil::end);
+	return $domainOnly ? textUtil::first($url) : $url;
 }
 
 DEFINE('NOFOLLOWSUFFIX', '" rel="nofollow');

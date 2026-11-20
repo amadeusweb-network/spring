@@ -63,9 +63,10 @@ function recurseList($fol, $base, $node, $baseSno, &$items) {
 	foreach ($files as $item) {
 		$sno = $baseSno . $ix++;
 		$name = substr($base, 0, -1);
+		$title = humanize($item == 'home' ? textUtil::last($base) : $item);
 		$items[$sno] = [
 			'SNo' => $sno,
-			'Page' => getLink(humanize($item), pageUrl($node . ($item != 'home' ? $item : ''))),
+			'Page' => getLink($title, pageUrl($node . ($item != 'home' ? $item : ''))),
 			'In' => substr($baseSno, 0, -1),
 			'Locate' => getLink($name, pageUrl('sitemap/?at=' . $name) . NOFOLLOWSUFFIX),
 		];

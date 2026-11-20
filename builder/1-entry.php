@@ -173,13 +173,13 @@ function bootstrap($config) {
 	if ($noRewrite) $node = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '';
 	else $node = getQueryParameter(VARNode, '');
 
-	$node = removeSlash($node, 'both');
+	$node = textUtil::removeSlash($node, textUtil::both);
 
 	if ($node == '') $node = SITEHOME;
 	variable('all_page_parameters', $node); //let it always be available
 
-	if (strpos($node, '/') !== false) {
-		$slugs = explode('/', $node);
+	if (strpos($node, textUtil::slash) !== false) {
+		$slugs = explode(textUtil::slash, $node);
 		$node = array_shift($slugs);
 		variable('page_parameters', $slugs);
 		foreach ($slugs as $ix => $slug) variable('page_parameter' . ($ix + 1), $slug);
@@ -193,18 +193,12 @@ function getPageParameterAt($index = 1, $or = false) {
 	return variableOr('page_parameter' . $index, $or);
 }
 
-function removeSlash($node, $where) {
-	if (in_array($where, ['both', 'end']) AND endsWith($node, '/')) $node = substr($node, 0, strlen($node) - 1);
-	if (in_array($where, ['both', 'start']) AND startsWith($node, '/')) $node = substr($node, 1);
-	return $node;
-}
-
 function getPageParameters($trail = '/', $baseUrl = true) {
 	$base = $baseUrl ? getHtmlVariable('url') : '';
 	$all = variable('all_page_parameters');
 	if ($all == SITEHOME) {
 		$all = '';
-		$trail = removeSlash($trail, 'start');
+		$trail = textUtil::removeSlash($trail, textUtil::start);
 	}
 	return $base . ($all ? $all : '') . $trail;
 }

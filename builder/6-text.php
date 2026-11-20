@@ -85,3 +85,40 @@ function explodeByArray(array $delimeters, string $input, int $limit = -1): arra
 	$step = str_replace($delimeters, $unidelim, $input);
 	return explode($unidelim, $step, $limit);
 }
+
+class textUtil {
+	const slash = '/';
+	const windows = '\\';
+	const both = 'both';
+	const start = 'start';
+	const end = 'end';
+
+	static function removeSlash($text, $where) {
+		if (in_array($where, [self::both, self::end]) AND endsWith($text, '/'))
+			$text = substr($text, 0, -1);
+		if (in_array($where, [self::both, self::start]) AND startsWith($text, '/'))
+			$text = substr($text, 1);
+		return $text;
+	}
+
+	static function windowsSafe($path) {
+		return (DIRECTORY_SEPARATOR == self::windows) ? str_replace(self::slash, self::windows, $path) : $path;
+	}
+
+	static function first($text) {
+		return explode(self::slash, $text)[0];
+	}
+
+	static function last($text, $removeEnd = true) {
+		if ($removeEnd) $text = self::removeSlash($text, self::end);
+		$bits = explode(self::slash, $text);
+		return array_pop($bits);
+	}
+
+	static function secondInParentheses($text) {
+		$bits = explode(self::slash, $text);
+		$result = humanize(array_pop($bits));
+		if (count($bits)) $result .= ' (' . humanize(array_pop($bits)) . ')';
+		return $result;
+	}
+}

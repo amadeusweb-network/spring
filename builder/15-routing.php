@@ -2,12 +2,6 @@
 DEFINE('OURNETWORK', '');
 DEFINE('DOMAINKEY', 'showIn');
 
-function sluggize($relPath) {
-	if (!contains($relPath, '/')) return $relPath;
-	$slugs = explode('/', $relPath);
-	return end($slugs);
-}
-
 DEFINE('SITEURLKEY', 'site-url-key'); //typo proof
 
 function _getUrlKeySansPreview() {
@@ -177,10 +171,11 @@ function autoSetNode($level, $where, $overrides = []) {
 	if (nodeIs(SITEHOME) OR nodeIsSection()) return;
 	nodeVarsInUse($level);
 
+	//TODO: test this
 	$relPath = $level == 0 ? nodeValue() : str_replace('\\', '/', 
 		substr($where, strlen(SITEPATH . '/' . $section) + 1));
 	$endSlug = nodeValue();
-	if ($level > 1) { $bits = explode('/', $relPath); $endSlug = array_pop($bits); }
+	if ($level > 1) $endSlug = textUtil::last($relPath);
 
 	$prefix = valueIfSet($overrides, 'prefix-safeName') ? variable(VARSafeName) . '-' : '';
 	if ($prefix && isset($overrides[VARNodeSafeName]))

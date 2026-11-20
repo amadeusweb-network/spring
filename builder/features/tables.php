@@ -11,10 +11,10 @@ function getTableTemplate($nameOrMeta) {
 	return AMADEUSDATA . 'table-templates/' . $nameOrMeta . '.tsv';
 }
 
-function _table_row_values($item, $cols, $tsv, $values, $template) {
+function _table_row_values($item, $cols, $tsv, $values, $template, $sno) {
 	//TODO: MED: use $tsv for sticking with old code path.. seems buggy
 	if (!$tsv && $tsv != 'array') { $r = []; foreach ($cols as $c) $r[$c] = !is_int($item) && $item[$c] ? $item[$c] : ''; return $r; }
-	$r = [];
+	$r = ['SNo' => $sno];
 
 	//parameterError('Table Debugger', [$item, $cols], false); die();
 	foreach ($cols as $key => $c) {
@@ -40,7 +40,7 @@ function _table_row_values($item, $cols, $tsv, $values, $template) {
 		else if (endsWith($key, '_date'))
 			$r[$key] = replaceItems((new DateTime($value))->format('D, d-/S/- M Y // h:mA'), ['-/' => '<sup class="plain">', '/-' => '</sup>', '//' => '&mdash;']);
 		else if (contains($key, 'tags'))
-			$r[$key] = csvToHashtags($value);
+			$r[$key] = csvToHashtags($value, valueIfSet($values, 'hashtags-on', VarHashToSite));
 		else
 			$r[$key] = $value; 
 
@@ -48,13 +48,21 @@ function _table_row_values($item, $cols, $tsv, $values, $template) {
 			$r[$key . '_slug'] = urlize($value);
 
 		if (contains($template, $key . '_sluggized'))
-			$r[$key . '_sluggized'] = sluggize($value);
+			$r[$key . '_sluggized'] = textUtil::last($value);
 
 		if (endsWith($key, '_urlized')) {
 			$wrap = $start ? ['<b>', '</b>'] : ['', ''];
 			if ($start) $value = substr($value, 2);
 			$hzeKey = str_replace('_urlized', '', $key) . '_humanized';
 			$r[$hzeKey] = $wrap[0] . ((isset($item[$hzeKey])) ? $item[$hzeKey] : humanize($value)) . $wrap[1];
+		}
+	}
+
+	foreach ($cols as $key => $c) {
+		if (is_numeric($key)) $key = $c;
+		if ($tpl = valueIfSet($values, $key . '_format')) {
+			$r[$key . '_value'] = $r[$key];
+			$r[$key] = runAllMacros(replaceItems($tpl, $r, WRAPREPLACE));
 		}
 	}
 
@@ -181,7 +189,7 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 		$headingNames = [];
 		foreach ($cols as $item) {
 			if (startsWith($item, '_')) continue;
-			$headingNames[] = humanize(explode('_', $item)[0]);
+			$headingNames[] = valueIfSet($values, $item . '_heading', humanize(explode('_', $item)[0]));
 		}
 
 		if ($template == VARTableAuto) $template = '<tr><td>%' . (implode('%</td><td>%', $cols)) . '%</td></tr>' . NEWLINE;
@@ -246,19 +254,19 @@ function add_table($id, $dataFile, $columnList, $template, $values = []) {
 	<tbody>
 ';
 
-	foreach ($rows as $item) {
+	foreach ($rows as $sno => $item) {
 		if ($dontTreat) {
 			$row = $item;
 		} else if($wantsBSRow && $lineTemplateForBS) {
 			if (isset($item[0]) && $item[0] == '') continue;
 			if ($wantsBSEnricher)
-				$row = _table_row_values($item, $columns, $tsv, $values, $lineTemplateForBS);
+				$row = _table_row_values($item, $columns, $tsv, $values, $lineTemplateForBS, $sno + 1);
 			else
 				$row = $sheet->asObject($item);
 		} else {
 			$more = isset($item[0]) && $item[0] == MORETAG;
 			if ($more) { if (variable('is-in-directory')) break; else continue; }
-			$row = _table_row_values($item, $columns, $tsv, $values, $template);
+			$row = _table_row_values($item, $columns, $tsv, $values, $template, $sno + 1);
 		}
 
 		if ($skipItemFn && $skipItemFn($row)) continue;

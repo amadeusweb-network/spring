@@ -11,10 +11,8 @@ function cssTag($url) {
 }
 
 function getPageName($tailOnly = true) {
-	if ($tailOnly) {
-		$tail = explode('/', variableOr('all_page_parameters', nodeValue()));
-		return end($tail);
-	}
+	if ($tailOnly)
+		return textUtil::last(variableOr('all_page_parameters', nodeValue()));
 	//todo - alternatives??
 }
 

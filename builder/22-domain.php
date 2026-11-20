@@ -115,8 +115,8 @@ class domain {
 
 	static function add(string $key, string $folder, bool | string $skipRule, domain $item) {
 		$path = DEFINED('ALLSITENAME') ? ALLSITENAME : (DEFINED('SITEPATH') ? SITEPATH : false);
-		$bits = explode('/', $key);
-		if (DIRECTORY_SEPARATOR == '\\') $key = str_replace('/', '\\', $key);
+		$last = textUtil::last($key); //do before making windows safe
+		$key = textUtil::windowsSafe($key);
 
 		//showDebugging('domain::add()', [$path, $key]);
 		$match = $path && contains($path, $key); //doesnt handle substring collision
@@ -133,7 +133,7 @@ class domain {
 		if ($skipRule == self::SkipList) $item->skip = true;
 		if ($skipRule == self::OnlyThis) $item->only = true;
 
-		self::$lastKey = $last = array_pop($bits);
+		self::$lastKey = $last;
 		self::$known[$last] = $item;
 
 		if (self::$skipRest) return;
@@ -167,6 +167,7 @@ class domain {
 	public array $mainSites;
 	public array | bool $subFolders;
 
+	//TODO: fix this hack
 	public function prepareMainSite($site) {
 		$site = substr($site, strlen($this->folder));
 		if (!contains($site, '/')) return;
@@ -176,7 +177,7 @@ class domain {
 
 	public function __construct(array $vars, array $mainSites, $subFolders = []) {
 		$this->folder = $vars['folder'];
-		$this->key = removeSlash($this->folder, 'end');
+		$this->key = textUtil::removeSlash($this->folder, textUtil::end);
 		$this->heading = $vars['heading'];
 		$this->local = $vars['local'];
 		$this->live = $vars['live'];
@@ -187,7 +188,7 @@ class domain {
 				$val = replaceItems($val, ['folder' => $this->folder], WRAPREPLACE);
 
 			if (endsWith($val, '/'))
-				$val = removeSlash($val, 'end');
+				$val = textUtil::removeSlash($val, textUtil::end);
 
 			$mainSites[$ix] = $val;
 		}

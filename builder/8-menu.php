@@ -24,6 +24,7 @@ function _handleSlashes($file, $handle, $useMDash) {
 	if (!$handle || contains($file, '#') || !contains($file, '/'))
 		return $file;
 
+	//TODO: fix
 	$test = humanize($file);
 	if (!contains($test, '/'))
 		return $test;
@@ -225,7 +226,6 @@ function menu($folderRelative = false, $settings = []) {
 	$noLinks = valueIfSet($settings, 'no-links');
 	$blogHeading = valueIfSet($settings, 'blog-heading');
 
-	$section = explode('/', $folderRelative)[1];
 	$last = false;
 
 	if (isset($settings['link-to-home']) && $settings['link-to-home']) {
