@@ -181,7 +181,7 @@ class urlBuilder extends builderBase {
 		if ($level == 2)
 			return $base . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/assets/';
 
-		$base . sectionValue() . '/' . nodeValue() . '/assets/';
+		return $base . sectionValue() . '/' . nodeValue() . '/assets/';
 	}
 
 	public function __construct(site | bool $site = false) {
@@ -491,6 +491,9 @@ class cssUX {
 	const AlsoContent = 'also-content';
 	const container = 'container';
 	const standout = 'standout';
+	const dark = 'dark';
+	const p1 = 'p-1';
+	const p2 = 'p-2';
 	const pt4 = 'pt-4';
 	const m0 = 'm-0';
 	const m1 = 'm-1';

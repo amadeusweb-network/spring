@@ -129,10 +129,7 @@ $safeName = $siteVars[VARSafeName];
 variables($op = [
 	'folder' => 'content/',
 	'siteHumanizeReplaces' => siteHumanize(),
-	'scaffold' => isset($siteVars['scaffold'])
-		? explode(', ', $siteVars['scaffold'])
-		: ['search'], //TODO: sitemap
-
+	'scaffold' => array_merge(isset($siteVars['scaffold']) ? explode(', ', $siteVars['scaffold']) : [], ['search', 'sitemap']),
 	'path' => SITEPATH,
 	'assets-url' => $url,
 	'page-url' => scriptSafeUrl($url),

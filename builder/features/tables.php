@@ -99,6 +99,7 @@ function _table_link($item, $c, $values, $key, $cols) {
 DEFINE('VARTableAuto', 'auto');
 DEFINE('VARTableWantsFilter', 'table-wants-filter');
 DEFINE('VARTableSansTH', 'table-sans-th');
+DEFINE('FILTERTABLE', ['classes' => VARTableWantsFilter]);
 
 class tableBuilder extends builderBase {
 	private $id, $data, $cols, $template;

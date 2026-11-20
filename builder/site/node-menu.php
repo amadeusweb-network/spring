@@ -66,6 +66,9 @@ function renderNodeMenu() {
 		echo '</li>' . NEWLINES2;
 	}
 
+	$wrap = $wrapTextInADiv ? ['<div>', '</div>'] : ['', ''];
+	echo '<li class="' . $itemClass . '">' . getLink($wrap[0] . '<i class="fa fa-sitemap"></i><span class="hide-up-md"> Sitemap</span>' . $wrap[1], pageUrl('sitemap/?at=' . sectionValue()), $anchorClass) . '</li>';
+
 	if ($social = variable('node-social')) {
 		//echo '<li class="' . $itemClass . ' ms-sm-3">social: </li>';
 		foreach ($social as $item) {
