@@ -19,7 +19,7 @@ function renderNodeMenu() {
 
 	_menuULStart(NOPAGESTART);
 
-	if (variable('link-to-node-home'))
+	if (variable(VARLinkToNodeHome))
 		echo '<li class="' . $itemClass . '"><a href="' . pageUrl(variable(SAFENODEVAR)) . '" class="' . $anchorClass . '">' . getHtmlVariable('nodeName') . '</a>';
 
 	foreach ($files as $key => $page) {
@@ -53,7 +53,7 @@ function renderNodeMenu() {
 		if ($items || disk_is_dir(NODEPATH . '/' . $page)) {
 			echo '<li class="' . $itemClass . '"><a class="' . $anchorClass . '">' . $page_r . '</a>';
 			menu('/' . variable('section') . '/' . $nodeIf . $pageIf, [
-				'link-to-home' => variable('link-to-sub-node-home'),
+				'link-to-home' => variable(VARLinkToSubnodeHome),
 				'files' => $items, 'this-is-standalone-section' => $tiss,
 				'ul-class' => $ulClass,
 				'li-class' => $itemClass,

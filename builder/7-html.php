@@ -168,20 +168,37 @@ class urlBuilder extends builderBase {
 		return variableOr('cdn', ((variable('is-mobile') || variable('live-cdn')) ? variable('live-url') : site::$current->assetUrl) . 'assets/cdn/');
 	}
 
+	static function nodeUrl($level = 1, site | bool $site = false) {
+		if (!$site) $site = site::$current;
+		$base = site::$current->assetUrl;
+
+		if ($level == 4)
+			return $base . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/' . getPageParameterAt(2) . '/' . getPageParameterAt(3) . '/assets/';
+
+		if ($level == 3)
+			return $base . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/' . getPageParameterAt(2) . '/assets/';
+
+		if ($level == 2)
+			return $base . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/assets/';
+
+		$base . sectionValue() . '/' . nodeValue() . '/assets/';
+	}
+
 	public function __construct(site | bool $site = false) {
 		if (!$site) $site = site::$current;
 		$this->set([
 			'%url%' => variable('page-url'),
 			'%urlCurrent%' => currentUrl(),
 			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
+			'#search=' => searchUrl() . '#gsc.q=',
 
 			//TODO: move to nodeBuilder?
 			'%urlAssets%' => $site->assetUrl,
 			'%urlSection%' => $site->assetUrl . sectionValue() . '/assets/',
-			'%urlNode%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/assets/',
-			'%urlNode2%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/assets/',
-			'%urlNode3%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/' . getPageParameterAt(2) . '/assets/',
-			'%urlNode4%' => $site->assetUrl . sectionValue() . '/' . nodeValue() . '/' . getPageParameterAt() . '/' . getPageParameterAt(2) . '/' . getPageParameterAt(3) . '/assets/',
+			'%urlNode%' => self::nodeUrl(1),
+			'%urlNode2%' => self::nodeUrl(2),
+			'%urlNode3%' => self::nodeUrl(3),
+			'%urlNode4%' => self::nodeUrl(4),
 
 			'##theme##' => getThemeBaseUrl(),
 			'%%cdn%%' => getWhatIsLink('cdn'), //has to be here

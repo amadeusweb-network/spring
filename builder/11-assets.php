@@ -121,6 +121,7 @@ DEFINE('COREASSETS', 'Core'); //TODO: HI: remove this alias for assetManager::co
 function getLogoOrIcon($what, $which = 'site') {
 	$suffix = ($what == 'icon' ? '-icon' : '-logo') . '.png';
 
+	if ($which == 'node') $which = lastNodeVars();
 	$nodeIcon = $what == 'icon' && ($which == 'node' || is_array($which)) && variable('use-node-icons'); //TODO: what is this variable?
 	$site = variable(VARDontOverwriteLogo) && !$nodeIcon;
 
@@ -132,7 +133,7 @@ function getLogoOrIcon($what, $which = 'site') {
 		$name = variableOr($inNode ? VARNodeSafeName : VARSafeName, 'amadeusweb9') . $suffix; //TODO: update when major version changes
 	}
 
-	return ($inNode ? getHtmlVariable(urlBuilder::node) : site::$current->assetUrl) . $name;
+	return ($inNode ? urlBuilder::nodeUrl(valueIfSet($which, 'level', 1)) : site::$current->assetUrl) . $name;
 }
 
 DEFINE('STARTATSECTION', 0);

@@ -14,15 +14,17 @@ class domain {
 
 	static function includeAll() {
 		$site = site::$current;
-		$www = $site->folder == 'www' ? $site->path : pathinfo(pathinfo($site->path, PATHINFO_DIRNAME), PATHINFO_DIRNAME) . '/www';
-
 		$loadFirstAsSecond = false;
-		if (disk_is_dir(ALLSITESROOT . $www)) {
-			disk_include_once(ALLSITESROOT . $www . '/domain.php');
-			if (self::$current) {
-				if (self::$current->skip)
-					$loadFirstAsSecond = true;
-				
+		if ($site) {
+			$www = $site->folder == 'www' ? $site->path : pathinfo(pathinfo($site->path, PATHINFO_DIRNAME), PATHINFO_DIRNAME) . '/www';
+
+			if (disk_is_dir(ALLSITESROOT . $www)) {
+				disk_include_once(ALLSITESROOT . $www . '/domain.php');
+				if (self::$current) {
+					if (self::$current->skip)
+						$loadFirstAsSecond = true;
+					
+				}
 			}
 		}
 

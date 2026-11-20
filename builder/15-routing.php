@@ -187,6 +187,7 @@ function autoSetNode($level, $where, $overrides = []) {
 		$overrides[VARNodeSafeName] = $prefix . $overrides[VARNodeSafeName];
 
 	$vars = array_merge([
+		'level' => $level,
 		'nodeSlug' => $relPath,
 		assetManager::node => fileUrl($section . '/' . nodeValue() . '/assets/'),
 		VARNodeSiteName => humanize($endSlug),
@@ -219,6 +220,10 @@ function autosetPageMenu($overrides = []) {
 
 function lastNodeVarsIndex() {
 	return count(nodeVarsInUse());
+}
+
+function lastNodeVars() {
+	return variable('NodeVarsAt' . lastNodeVarsIndex());
 }
 
 function ensureNodeVar() {
