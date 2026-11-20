@@ -492,6 +492,7 @@ class cssUX {
 	const container = 'container';
 	const standout = 'standout';
 	const dark = 'dark';
+	const light = 'light';
 	const p1 = 'p-1';
 	const p2 = 'p-2';
 	const pt4 = 'pt-4';
@@ -754,6 +755,7 @@ class bootstrapAndUX extends builderBase {
 		return self::button($color) . $suffix;
 	}
 
+	static function buttonBg($color) { return cssUX::concat('bg-' . $color, cssUX::m1, cssUX::p2, $color == self::warning ? cssUX::light : cssUX::dark); }
 	static function button($color) { return 'btn btn-' . $color; }
 	static function buttonOutline($color) { return 'btn btn-outline-' . $color; }
 	static function buttonLarge($color) { return 'btn btn-lg btn-' . $color; }
