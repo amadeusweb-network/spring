@@ -198,6 +198,8 @@ class urlBuilder extends builderBase {
 			'%urlCurrent%' => currentUrl(),
 			getSiteKey(SITESPRING) => getSiteUrl(SITESPRING),
 			'#search=' => searchUrl() . '#gsc.q=',
+			'#google=' => 'https://www.google.com/search?q=',
+			'#youtube=' => 'https://www.youtube.com/results?search_query=',
 
 			//TODO: move to nodeBuilder?
 			'%urlAssets%' => $site->assetUrl,
@@ -535,8 +537,8 @@ class htmlUX {
 		self::artHAuto1, self::artHAuto2, self::artHAuto3, self::artHAuto4, self::artHAuto6, self::artHAuto12, self::art1, self::art2, self::art3, self::art4, self::artAlways4,self::art6, self::art12,
 		//7 - whitespace (4)
 		self::wsNewLines2, self::wsNewLine, self::wsJustBR, self::wsCrLf,
-		//8 - generic html (8)
-		self::hintOpen, self::hintClose, self::cbOPEN, self::cbCNO, self::cbCC, self::cbOWC, self::cbCLOSE, self::tagDivStart, self::tagCloseGT,
+		//8 - generic html (11)
+		self::hintOpen, self::hintClose, self::cbOPEN, self::cbCNO, self::cbCC, self::cbOWC, self::cbCLOSE, self::copyable, self::copyableClose, self::tagDivStart, self::tagCloseGT,
 	];
 
 	private static function ensureVars() {
@@ -576,16 +578,17 @@ class htmlUX {
 
 	//1 - divs (5)
 	const divLargeListSep = ['DIV-LARGELISTWITHITEMSEPARATOR', '<div class="large-list item-separator">'];
-	const divLargeListLA = [
-	'DIV-LARGELISTLOWERALPHA', '<div class="large-list lower-alpha item-separator">'];
+	const divLargeListLA = ['DIV-LARGELISTLOWERALPHA', '<div class="large-list lower-alpha item-separator">'];
 	const divLargeListLR = ['DIV-LARGELISTLOWERROMAN', '<div class="large-list lower-roman item-separator">'];
 	const divLargeList = ['DIV-LARGELIST', '<div class="large-list">'];
+
 	//2 - divs (5)
 	const divContainer = ['DIV-PLAINCONTAINER', '<div class="container">'];
 	const divContainerBox = ['DIV-CONTAINERBOX', '<div class="container content-box">'];
 	const divCenter500 = ['DIV-MAX-500-CENTER', '<div class="m-auto img-max-500">'];
 	const divCenter = ['DIV-CENTER', '<div class="text-center">'];
 	const divRight = ['DIV-RIGHT', '<div class="float-right">'];
+
 	//3 - divs (8)
 	const divClear = ['DIV-CLEAR', '<div class="clearfix"></div>'];
 	const divBox = ['DIV-WITHBOX', '<div class="content-box">'];
@@ -595,6 +598,7 @@ class htmlUX {
 	const divClose = ['DIV-CLOSE', TAGDIVEND];
 	const divSFClose = ['DIV-SPACEFIX-CLOSE', TAGDIVEND];
 	const divSF = ['DIV-SPACEFIX', '<div>'];
+
 	//4 - bs grid (6)
 	const gridRow = ['DIV-ROW', '<div class="row">'];
 	const grid3 = ['DIV-CELL3', '<div class="col-md-3 col-sm-12">'];
@@ -604,11 +608,13 @@ class htmlUX {
 	const grid7 = ['DIV-CELL7', '<div class="col-md-7 col-sm-12">'];
 	const grid8 = ['DIV-CELL8', '<div class="col-md-8 col-sm-12">'];
 	const grid9 = ['DIV-CELL9', '<div class="col-md-9 col-sm-12">'];
+
 	//5 - articles / grid (4)
 	const artAllClose = ['ALLARTICLES-CLOSE', TAGDIVEND];
 	const artAllHAuto = ['ALLARTICLES-HAUTO', '<div class="row">'];
 	const artAll = ['ALLARTICLES', '<div class="portfolio row grid-container">'];
 	const artClose = ['ARTICLE-CLOSE', '</div></article>'];
+
 	//6 - articles / box (14)
 	const aSet1 = '-1COL'; const aSet2 = '-2COL'; const aSet3 = '-3COL'; const aSet4 = ''; const aSet50 = '-50'; const aSet100 = '-100'; const hAuto = '-HAUTO';
 	static function article($aSet = 4, $hauto = true) { return 'ARTICLE' . $aSet . ($hauto ? self::hAuto : '') . '-BOX'; }
@@ -627,12 +633,14 @@ class htmlUX {
 	const art4 = ['ARTICLE-BOX', '<article class="portfolio-item col-lg-3 col-md-6 col-xs-12 mb-4"><div class="grid-inner content-box">'];
 	const art6 = ['ARTICLE-50-BOX', '<article class="portfolio-item col-6 mb-4"><div class="grid-inner content-box">'];
 	const art12 = ['ARTICLE-100-BOX', '<article class="portfolio-item col-12 mb-4"><div class="grid-inner content-box">'];
+
 	//7 - whitespace (4)
 	const wsNewLines2 = [' NEWLINES2', '<br /><br />' . NEWLINE];
 	const wsNewLine = [' NEWLINE', '<br />' . NEWLINE];
 	const wsJustBR = [' JUSTBR', '<br />'];
 	const wsCrLf = [' CRLF', NEWLINE];
-	//8 - generic html (8)
+
+	//8 - generic html (11)
 	const hintOpen = ['[hint]', '<br /> &mdash; <small class="hint">'];
 	const hintClose = ['[/hint]', '</small><!--end .hint-->'];
 
@@ -642,9 +650,14 @@ class htmlUX {
 	const cbOWC = ['[cb-open-with-container]', VARCustom];
 	const cbCLOSE = ['[cb-close]', VARCustom];
 
+	const copyable = ['[copyable]', '<input type="text" class="autofit copyable px-2"' . CopyOnFocus . ' style="field-sizing: content;" value="'];
+	const copyableClose = ['[/copyable]', '" />'];
+
 	const tagDivStart = ['STARTDIV ', '<div '];
 	const tagCloseGT = [' CLOSETAG', '>'];
 }
+
+DEFINE('CopyOnFocus', ' onfocus="this.select(); document.execCommand(\'copy\'); this.setSelectionRange(0, 0); if (!this.classList.contains(\'text-copied\')) { this.classList.add(\'text-copied\'); alert(\'Copied: \' + $(this).val()); }"');
 
 function url_r($url, $domainOnly = false) {
 	$url = textUtil::removeSlash(replaceItems($url, [

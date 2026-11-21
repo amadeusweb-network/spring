@@ -146,11 +146,14 @@ class socialBuilder {
 
 	function addImranPersonal($who = true, $technologist = true, $builder = true) {
 		$base = getSiteUrl(SITEIMRAN);
+		$prometheus = 'https://prometheus.amadeusweb.in/';
 		return $this
 			->addLinkedIn('in/imran-ali-namazi/', 'Imran Ali Namazi')
 			->addInternal($base . 'whoami/', 'Who Is Imran', 'fa-brands fa-redhat bg-danger', !$who)
 			->addInternal($base . 'whoami/the-humanist/world-family/', 'The Humanist', 'fa-brands fa-redhat bg-danger', !$who)
 			->addInternal($base . 'whoami/the-technologist/', 'The IT Guy', 'fa-brands fa-linkedin bg-linkedin text-light', !$technologist)
+			->addInternal($prometheus . 'imran/profile/', 'Prometheus', 'fa fa-fire bg-success', !$technologist)
+			->addInternal('https://open.spotify.com/user/315lvkcpusfoibsyecvo45qb3cnm', 'Spotify', 'fab fa-spotify bg-spotify')
 			->addInternal($base . 'at-42/selections/dare-i-build--2018/', 'Dare I Build', self::imranBtn, !$builder)
 			;
 	}

@@ -192,6 +192,7 @@ variable('specialHumanizeReplaces', [
 	'aop' => 'AO Projects',
 	'faqs' => 'FAQs',
 	'whois' => 'Who Is',
+	'youtube' => 'YouTube',
 	'whoami' => 'Who Am I',
 	'2025 02' => 'Feb 2025',
 	'2025 04' => 'Apr 2025',

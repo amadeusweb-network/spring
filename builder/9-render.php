@@ -156,6 +156,7 @@ class replacer extends builderBase {
 	const siteReplaces = 'siteReplaces';
 	const siteRawReplaces = 'siteRawReplaces';
 	const rawReplaces = 'rawReplaces';
+	const secondPassVar = '2ndPassVarPlainReplaces';
 	const secondPassPlain = '2ndPassPlainReplaces';
 
 	private const known = [
@@ -164,6 +165,7 @@ class replacer extends builderBase {
 		self::siteReplaces,
 		self::siteRawReplaces,
 		self::rawReplaces,
+		self::secondPassVar,
 		self::secondPassPlain,
 	];
 
@@ -173,10 +175,11 @@ class replacer extends builderBase {
 		self::siteReplaces => ['wrap' => WRAPREPLACE, 'array' => true],
 		self::siteRawReplaces => ['wrap' => NOWRAPREPLACE, 'array' => true],
 		self::rawReplaces => ['wrap' => WRAPREPLACE],
+		self::secondPassVar => ['wrap' => WRAPREPLACE, 'second' => true],
 		self::secondPassPlain => ['wrap' => NOWRAPREPLACE, 'second' => true],
 	];
 
-	private const site = [self::siteReplaces, self::siteRawReplaces];
+	private const site = [self::siteReplaces, self::siteRawReplaces, self::secondPassVar];
 
 	function __construct($settings)
 	{
