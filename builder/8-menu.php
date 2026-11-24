@@ -164,7 +164,7 @@ function menu($folderRelative = false, $settings = []) {
 		if (disk_file_exists($itemsTsv = $folder . '_menu-items.tsv')) {
 			$allNamesOfFiles = variableOr('menu-humanize', []);
 
-			$itemsSheet = getSheet($itemsTsv, 'slug');
+			$itemsSheet = getSheet($itemsTsv, false);
 			$filesGiven = true;
 			$files = [];
 
@@ -172,15 +172,15 @@ function menu($folderRelative = false, $settings = []) {
 			$hasName = $itemsSheet->hasColumn('name');
 			if ($hasSNo || $hasName) $namesOfFiles = [];
 
-			foreach ($itemsSheet->group as $slug => $error) {
-				$item = $itemsSheet->firstOfGroup($slug);
-				$files[] = $name = $itemsSheet->getValue($item, 'slug');
-				$sno = $hasSNo ? $itemsSheet->getValue($item, 'sno') . '. ' : '';
-				if ($hasName) {
+			foreach ($itemsSheet->rows as $item) {
+				$files[] = $slug = $itemsSheet->getValue($item, 'slug');
+				$sno = $hasSNo ? $itemsSheet->getValue($item, 'sno') : '';
+				if ($sno) $sno .= '. ';
+				if ($hasName && !startsWith($slug, '~')) {
 					$nameOrEmpty = $itemsSheet->getValue($item, 'name');
 					$name = $nameOrEmpty ? $nameOrEmpty : humanize($name);
 				} else {
-					$name = humanize($name);
+					$name = humanize($slug);
 				}
 				//showDebugging('157', [$sno, $name, $slug, $name]);
 				if ($hasSNo || $hasName)

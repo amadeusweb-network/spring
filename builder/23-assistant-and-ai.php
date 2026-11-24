@@ -12,6 +12,7 @@ class aihelper {
 		switch ($this->type) {
 			case 'gemini': return self::GeminiClasses;
 			case 'chatgpt': return self::ChatgptClasses;
+			case 'generic': return self::GenericClasses;
 		}
 		throw new Exception('cannot call getCss on type: ' . $this->type);
 	}
@@ -20,15 +21,18 @@ class aihelper {
 	function __construct($raw) {
 		$hasGemini = contains($raw, self::HasGemini);
 		$hasChatgpt = contains($raw, self::HasChatgpt);
+		$hasGeneric = contains($raw, self::HasGeneric);
 
 		if ($hasGemini || contains($raw, self::FromGemini))
 			$this->type = 'gemini';
 		else if ($hasChatgpt || contains($raw, self::FromChatgpt))
 			$this->type = 'chatgpt';
+		else if ($hasGeneric)
+			$this->type = 'generic';
 		else
 			$this->type = 'none';
 
-		if ($hasGemini || $hasChatgpt)
+		if ($hasGemini || $hasChatgpt || $hasGeneric)
 			$this->adjust = true;
 		else
 			$this->adjust = false;
@@ -44,6 +48,9 @@ class aihelper {
 
 		add_body_class($css);
 	}
+
+	private const HasGeneric = '<!--has-ai-elements-->';
+	private const GenericClasses = 'with-ai';
 
 	private const FromGemini = '<!--exported-from-gemini-ai-->';
 	private const HasGemini = '<!--has-gemini-ai-elements-->';

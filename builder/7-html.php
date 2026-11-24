@@ -349,6 +349,7 @@ function prepareLinks($output) {
 		'href="http' => 'target="_blank" href="http', //yea, baby! no need a js solution!
 		'href="mailto' => 'target="_blank" href="mailto', //if gmail in chrome is the default, it will hijack current window
 		'NEWTAB' => '" target="_blank', //pdf links
+		'FIRSTHEADING' => '" data-append="first-heading"',
 		'%url%' => pageUrl(),
 
 		//undo wrongly added blanks
@@ -527,8 +528,8 @@ class htmlUX {
 		self::divLargeListSep, self::divLargeListLA, self::divLargeListLR, self::divLargeList, self::divLargeList,
 		//2 - divs (5)
 		self::divContainer, self::divContainerBox, self::divCenter500, self::divCenter, self::divRight,
-		//3 - divs (8)
-		self::divClear, self::divBox, self::divLinks, self::divStart, self::divSalutation, self::divClose, self::divSFClose, self::divSF,
+		//3 - divs (9)
+		self::divClear, self::divBox, self::divLinks, self::divFileLinks, self::divStart, self::divSalutation, self::divClose, self::divSFClose, self::divSF,
 		//4 - bs grid (6)
 		self::gridRow, self::grid3, self::grid4, self::grid5, self::grid6, self::grid7, self::grid8, self::grid9,
 		//5 - articles / grid (4)
@@ -589,10 +590,11 @@ class htmlUX {
 	const divCenter = ['DIV-CENTER', '<div class="text-center">'];
 	const divRight = ['DIV-RIGHT', '<div class="float-right">'];
 
-	//3 - divs (8)
+	//3 - divs (9)
 	const divClear = ['DIV-CLEAR', '<div class="clearfix"></div>'];
 	const divBox = ['DIV-WITHBOX', '<div class="content-box">'];
 	const divLinks = ['DIV-LINKS', '<div class="aws-links content-box float-right mr-3 mb-2 p-1 small">'];
+	const divFileLinks = ['DIV-FILELINKS', '<div class="border border-3 p-2"><div class="bg-warning p-2 fs-small">These file links will not work in the browser and are meant to be used in VS Code for quick edit</div>'];
 	const divStart = ['DIV-START', '<div>'];
 	const divSalutation = ['DIV-SALUTATION', '<div class="p-2 rounded-3 bg-secondary dark salutation">'];
 	const divClose = ['DIV-CLOSE', TAGDIVEND];

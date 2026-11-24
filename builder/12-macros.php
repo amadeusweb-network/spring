@@ -68,9 +68,12 @@ function runAllMacros($html) {
 DEFINE('CORESNIPPET', 'use-core');
 DEFINE('NODESNIPPET', 'use-node');
 
+function setNodeSnippetPath($fol) { variable('NodeSnippetPath', $fol . '/'); }
+
 function _getSnippetPath($fol, $type = 'plain') {
 	if ($type == 'node') {
-		$base = pathinfo(variable('file'), PATHINFO_DIRNAME) . '/data/';
+
+		$base = variableOr('NodeSnippetPath', pathinfo(variable('file'), PATHINFO_DIRNAME)) . '/data/';
 		return $base . ($type != 'code' ? 'node-snippets/' : 'node-code-snippets/');
 	}
 
