@@ -58,11 +58,14 @@ function _table_row_values($item, $cols, $tsv, $values, $template, $sno) {
 		}
 	}
 
+	$renderAny = valueIfSet($values, 'use-render-any');
 	foreach ($cols as $key => $c) {
 		if (is_numeric($key)) $key = $c;
 		if ($tpl = valueIfSet($values, $key . '_format')) {
 			$r[$key . '_value'] = $r[$key];
-			$r[$key] = runAllMacros(replaceItems($tpl, $r, WRAPREPLACE));
+			$r[$key . '_urlsafe'] = str_replace(' ', '+', $r[$key]);
+			$text = replaceItems($tpl, $r, WRAPREPLACE);
+			$r[$key] = $renderAny ? renderMarkdown($text, [VAREcho => BOOLDontEcho]) : runAllMacros($text);
 		}
 	}
 
